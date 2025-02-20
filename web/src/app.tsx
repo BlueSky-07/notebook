@@ -1,5 +1,8 @@
+import { lazy, Suspense } from 'react'
 import { Outlet, Routes, Route } from "react-router"
-import Welcome from "./pages/welcome"
+const Welcome = lazy(() => import("@/pages/welcome"))
+const Flow = lazy(() => import("@/pages/flow"))
+import "@arco-design/web-react/dist/css/arco.css"
 
 const App = () => {
   return (
@@ -7,9 +10,12 @@ const App = () => {
       <Route path="/" element={(
         <div>
           <h1>Notebook</h1>
-          <Outlet />
+          <Suspense fallback={<div>Loading</div>}>
+            <Outlet />
+          </Suspense>
         </div>
       )}>
+        <Route path="flow" element={<Flow />} />
         <Route index element={<Welcome />} />
       </Route>
     </Routes>

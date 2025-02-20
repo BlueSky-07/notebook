@@ -11,27 +11,35 @@ export default defineConfig((env, argv) => {
   return {
     target: 'web',
     entry: {
-      main: './src/index.tsx',
+      index: './src/index.tsx',
     },
     output: {
-      path: path.resolve(__dirname, 'dist/assets'),
+      path: path.resolve(__dirname, 'dist'),
       filename: '[name].[contenthash].bundle.js',
+      chunkFilename: '[id].[contenthash].chunk.js',
+      cssChunkFilename: '[id].[contenthash].chunk.css',
+      clean: true
     },
     devtool: isDev ? 'source-map' : 'eval',
     devServer: {
-      port: 5000,
+      port: 9000,
       client: {
         progress: true,
         overlay: true,
       },
+      historyApiFallback: true,
     },
     resolve: {
       extensions: ['...', '.tsx', '.ts', '.jsx'],
+      alias: {
+        "@assets": path.resolve(__dirname, 'assets'),
+        "@": path.resolve(__dirname, 'src'),
+      }
     },
     module: {
       rules: [
         {
-          test: /\.(t|j)sx$/,
+          test: /\.[jt]sx?$/,
           use: {
             loader: 'builtin:swc-loader',
             options: {
@@ -50,7 +58,26 @@ export default defineConfig((env, argv) => {
           },
           type: 'javascript/auto',
         },
+        {
+          test: /\.less$/,
+          use: [
+            {
+              loader: 'less-loader',
+            },
+          ],
+          type: 'css/auto',
+        },
+        {
+          test: /\.svg$/i,
+          issuer: /\.[jt]sx?$/,
+          use: ['@svgr/webpack'],
+        },
       ],
+      parser: {
+        'css/auto': {
+          namedExports: false,
+        },
+      },
     },
     plugins: [
       new rspack.HtmlRspackPlugin({
@@ -61,5 +88,8 @@ export default defineConfig((env, argv) => {
       isDev && new ReactRefreshPlugin(),
       isDev && new rspack.HotModuleReplacementPlugin(),
     ],
+    experiments: {
+      css: true,
+    },
   }
 })

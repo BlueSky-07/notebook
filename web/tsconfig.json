@@ -13,7 +13,12 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "declaration": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*",
