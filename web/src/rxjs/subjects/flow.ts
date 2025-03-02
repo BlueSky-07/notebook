@@ -19,8 +19,10 @@ export default class FlowSubject {
         if (lastStore) {
           this.subject = new BehaviorSubject(JSON.parse(lastStore))
         }
-      } catch (e) {
-        this.subject = new BehaviorSubject(DEFAULT_FLOW_MODEL)
+      } finally {
+        if (!this.subject) {
+          this.subject = new BehaviorSubject(DEFAULT_FLOW_MODEL)
+        }
       }
     }
     this.observable = this.subject.pipe(
