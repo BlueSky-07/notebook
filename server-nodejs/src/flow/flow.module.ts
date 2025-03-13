@@ -10,5 +10,6 @@ import { FlowEntity } from './flow.entity'
   ],
   controllers: [FlowController],
   providers: [FlowService],
+  exports: [FlowService]
 })
 export class FlowModule {}

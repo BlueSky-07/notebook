@@ -23,7 +23,10 @@ export class FlowService {
     await this.getFlow(id)
     const res = await this.flowRepository.update(
       id,
-      flowPatchInput
+      {
+        ...flowPatchInput,
+        updatedAt: new Date()
+      },
     )
     if (res.affected) {
       return this.getFlow(id)

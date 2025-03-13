@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  name: 'flows'
+})
 export class FlowEntity {
   @PrimaryGeneratedColumn()
   id: number;

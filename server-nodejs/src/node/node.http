@@ -1,0 +1,26 @@
+POST {{endpoint}}/node
+Content-Type: application/json
+
+{
+  "flowId": 1
+}
+
+###
+PATCH {{endpoint}}/node/1
+Content-Type: application/json
+
+{
+  "dataType": "IMAGE",
+  "positionX": 123,
+  "data": "http://image.com/image.png"
+}
+
+###
+GET {{endpoint}}/node/1
+Accept: application/json
+
+###
+DELETE {{endpoint}}/node/1
+Accept: application/json
+
+###
