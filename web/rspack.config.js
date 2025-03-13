@@ -28,6 +28,13 @@ export default defineConfig((env, argv) => {
         overlay: true,
       },
       historyApiFallback: true,
+      proxy: [
+        {
+          context: ['/api'],
+          target: 'http://localhost:9001',
+          pathRewrite: { '^/api': '/' },
+        },
+      ],
     },
     resolve: {
       extensions: ['...', '.tsx', '.ts', '.jsx'],
