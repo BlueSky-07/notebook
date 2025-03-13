@@ -1,7 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { DocumentService } from './document.service'
 import { DocumentFull, DocumentSlim } from './document.type'
-import { FlowEntity } from '../flow/flow.entity'
 
 @Controller('document')
 export class DocumentController {
@@ -9,12 +8,12 @@ export class DocumentController {
   }
 
   @Get('full/:flowId')
-  getFullDocument(@Param('flowId') flowId: FlowEntity['id']): Promise<DocumentFull> {
+  getFullDocument(@Param('flowId') flowId: number): Promise<DocumentFull> {
     return this.documentService.getDocumentFull(flowId)
   }
 
   @Get('slim/:flowId')
-  getSlimDocument(@Param('flowId') flowId: FlowEntity['id']): Promise<DocumentSlim> {
+  getSlimDocument(@Param('flowId') flowId: number): Promise<DocumentSlim> {
     return this.documentService.getDocumentSlim(flowId)
   }
 }

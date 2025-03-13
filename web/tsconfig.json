@@ -17,7 +17,8 @@
     "baseUrl": "./",
     "paths": {
       "@assets/*": ["assets/*"],
-      "@/*": ["src/*"]
+      "@api/*": ["api-generated/*"],
+      "@/*": ["src/*"],
     }
   },
   "include": [

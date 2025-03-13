@@ -40,6 +40,7 @@ export default defineConfig((env, argv) => {
       extensions: ['...', '.tsx', '.ts', '.jsx'],
       alias: {
         "@assets": path.resolve(__dirname, 'assets'),
+        "@api": path.resolve(__dirname, 'api-generated'),
         "@": path.resolve(__dirname, 'src'),
       }
     },

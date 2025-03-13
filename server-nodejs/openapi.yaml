@@ -1,0 +1,515 @@
+openapi: 3.0.0
+paths:
+  /document/full/{flowId}:
+    get:
+      operationId: getFullDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentFull"
+      tags:
+        - Document
+  /document/slim/{flowId}:
+    get:
+      operationId: getSlimDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentSlim"
+      tags:
+        - Document
+  /flow:
+    post:
+      operationId: addFlow
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlowAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowAddResponse"
+      tags:
+        - Flow
+  /flow/{id}:
+    patch:
+      operationId: patchFlow
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlowPatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowEntity"
+      tags:
+        - Flow
+    get:
+      operationId: getFlow
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowEntity"
+      tags:
+        - Flow
+    delete:
+      operationId: deleteFlow
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowDeleteResponse"
+      tags:
+        - Flow
+  /node:
+    post:
+      operationId: addNode
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NodeAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeAddResponse"
+      tags:
+        - Node
+  /node/{id}:
+    patch:
+      operationId: patchNode
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NodePatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    get:
+      operationId: getNode
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    delete:
+      operationId: deleteNode
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeDeleteResponse"
+      tags:
+        - Node
+  /edge:
+    post:
+      operationId: addEdge
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EdgeAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EdgeAddResponse"
+      tags:
+        - Edge
+  /edge/{id}:
+    patch:
+      operationId: patchEdge
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EdgePatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EdgeEntity"
+      tags:
+        - Edge
+    get:
+      operationId: getEdge
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EdgeEntity"
+      tags:
+        - Edge
+    delete:
+      operationId: deleteEdge
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EdgeDeleteResponse"
+      tags:
+        - Edge
+info:
+  title: Notebook Server
+  description: ""
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    NodeEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        flowId:
+          type: number
+        positionX:
+          type: number
+        positionY:
+          type: number
+        data:
+          type: string
+        dataType:
+          enum:
+            - TEXT
+            - IMAGE
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - flowId
+        - positionX
+        - positionY
+        - data
+        - dataType
+        - updatedAt
+    EdgeEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        flowId:
+          type: number
+        label:
+          type: string
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - flowId
+        - updatedAt
+    DocumentFull:
+      type: object
+      properties:
+        flowId:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeEntity"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/EdgeEntity"
+      required:
+        - flowId
+        - name
+        - author
+        - updatedAt
+        - nodes
+        - edges
+    DocumentSlim:
+      type: object
+      properties:
+        flowId:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        nodeIds:
+          type: array
+          items:
+            type: string
+        edgeIds:
+          type: array
+          items:
+            type: string
+      required:
+        - flowId
+        - name
+        - author
+        - updatedAt
+        - nodeIds
+        - edgeIds
+    FlowAddInput:
+      type: object
+      properties:
+        name:
+          type: string
+        author:
+          type: string
+      required:
+        - name
+        - author
+    FlowAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    FlowPatchInput:
+      type: object
+      properties:
+        name:
+          type: string
+        author:
+          type: string
+    FlowEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - author
+        - updatedAt
+    FlowDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
+    NodeAddInput:
+      type: object
+      properties:
+        flowId:
+          type: number
+        positionX:
+          type: number
+          default: 0
+        positionY:
+          type: number
+          default: 0
+        data:
+          type: string
+          default: ""
+        dataType:
+          type: string
+          enum:
+            - TEXT
+            - IMAGE
+          default: TEXT
+      required:
+        - flowId
+    NodeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    NodePatchInput:
+      type: object
+      properties:
+        positionX:
+          type: number
+        positionY:
+          type: number
+        data:
+          type: string
+        dataType:
+          type: string
+          enum:
+            - TEXT
+            - IMAGE
+    NodeDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
+    EdgeAddInput:
+      type: object
+      properties:
+        flowId:
+          type: number
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        label:
+          type: string
+      required:
+        - flowId
+    EdgeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    EdgePatchInput:
+      type: object
+      properties:
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        label:
+          type: string
+    EdgeDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done

@@ -2,6 +2,7 @@ import { DEFAULT_FLOW_MODEL, FlowModel } from '@/models/flow'
 import { BehaviorSubject, Observable, share } from "rxjs"
 import log from '../operators/log'
 import put from '../operators/put'
+import API from '@/services/api'
 
 const LOCAL_STORAGE_KEY = 'flow'
 
@@ -14,6 +15,10 @@ export default class FlowSubject {
     if (data) {
       this.subject = new BehaviorSubject(data)
     } else {
+      // test api
+      API.document.getFullDocument(1).then(r => {
+        console.log('full document', r.data)
+      })
       try {
         const lastStore = localStorage.getItem(LOCAL_STORAGE_KEY)
         if (lastStore) {
