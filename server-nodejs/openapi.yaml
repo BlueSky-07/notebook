@@ -300,6 +300,15 @@ tags: []
 servers: []
 components:
   schemas:
+    NodeData:
+      type: object
+      properties:
+        content:
+          type: string
+          description: text content
+        src:
+          type: string
+          description: image src
     NodeEntity:
       type: object
       properties:
@@ -312,11 +321,11 @@ components:
         positionY:
           type: number
         data:
-          type: string
+          $ref: "#/components/schemas/NodeData"
         dataType:
           enum:
-            - TEXT
-            - IMAGE
+            - Text
+            - Image
           type: string
         updatedAt:
           format: date-time
@@ -463,6 +472,11 @@ components:
           type: boolean
       required:
         - done
+    NodeDataTypeEnum:
+      type: string
+      enum:
+        - Text
+        - Image
     NodeAddInput:
       type: object
       properties:
@@ -475,14 +489,14 @@ components:
           type: number
           default: 0
         data:
-          type: string
-          default: ""
+          default:
+            content: ""
+          allOf:
+            - $ref: "#/components/schemas/NodeData"
         dataType:
-          type: string
-          enum:
-            - TEXT
-            - IMAGE
-          default: TEXT
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
       required:
         - flowId
     NodeAddResponse:
@@ -500,12 +514,11 @@ components:
         positionY:
           type: number
         data:
-          type: string
+          $ref: "#/components/schemas/NodeData"
         dataType:
-          type: string
-          enum:
-            - TEXT
-            - IMAGE
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
     NodeDeleteResponse:
       type: object
       properties:

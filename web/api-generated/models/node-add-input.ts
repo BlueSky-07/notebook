@@ -13,6 +13,12 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NodeData } from './node-data';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NodeDataTypeEnum } from './node-data-type-enum';
 
 /**
  * 
@@ -40,23 +46,17 @@ export interface NodeAddInput {
     'positionY'?: number;
     /**
      * 
-     * @type {string}
+     * @type {NodeData}
      * @memberof NodeAddInput
      */
-    'data'?: string;
+    'data'?: NodeData;
     /**
      * 
-     * @type {string}
+     * @type {NodeDataTypeEnum}
      * @memberof NodeAddInput
      */
-    'dataType'?: DataTypeEnum;
+    'dataType'?: NodeDataTypeEnum;
 }
 
-export const DataTypeEnum = {
-    Text: 'TEXT',
-    Image: 'IMAGE'
-} as const;
-
-export type DataTypeEnum = typeof DataTypeEnum[keyof typeof DataTypeEnum];
 
 

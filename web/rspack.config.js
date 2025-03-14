@@ -81,6 +81,11 @@ export default defineConfig((env, argv) => {
           use: ['@svgr/webpack'],
         },
       ],
+      generator: {
+        "css/auto": {
+          exportsConvention: 'camel-case',
+        },
+      },
       parser: {
         'css/auto': {
           namedExports: false,

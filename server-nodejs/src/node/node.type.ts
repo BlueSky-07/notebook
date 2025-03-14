@@ -1,11 +1,7 @@
-import { NodeEntity } from './node.entity'
-import { ApiProperty } from '@nestjs/swagger'
+import { NodeDataType, NodeEntity, NodeData } from './node.entity'
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger'
 
-export enum NodeDataType {
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-}
-
+@ApiExtraModels(NodeData)
 export class NodeAddInput {
   @ApiProperty({ type: Number })
   flowId: NodeEntity['flowId']
@@ -13,9 +9,9 @@ export class NodeAddInput {
   positionX?: NodeEntity['positionX']
   @ApiProperty({ type: Number, required: false, default: 0 })
   positionY?: NodeEntity['positionY']
-  @ApiProperty({ type: String, required: false, default: '' })
+  @ApiProperty({ type: NodeData, required: false, default: { content: '' } })
   data?: NodeEntity['data']
-  @ApiProperty({ type: String, required: false, enum: NodeDataType, default: NodeDataType.TEXT })
+  @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
   dataType?: NodeEntity['dataType']
 }
 
@@ -29,9 +25,9 @@ export class NodePatchInput {
   positionX?: NodeEntity['positionX']
   @ApiProperty({ type: Number, required: false })
   positionY?: NodeEntity['positionY']
-  @ApiProperty({ type: String, required: false })
+  @ApiProperty({ type: NodeData, required: false })
   data?: NodeEntity['data']
-  @ApiProperty({ type: String, required: false, enum: NodeDataType })
+  @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
   dataType?: NodeEntity['dataType']
 }
 

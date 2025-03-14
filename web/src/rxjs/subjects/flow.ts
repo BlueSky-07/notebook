@@ -1,54 +1,64 @@
-import { DEFAULT_FLOW_MODEL, FlowModel } from '@/models/flow'
-import { BehaviorSubject, Observable, share } from "rxjs"
+import { convertFullDocumentToFlowModel, DEFAULT_FLOW_MODEL, FlowModel } from '@/models/flow'
+import { BehaviorSubject, Observable, pipe, share } from "rxjs"
 import log from '../operators/log'
-import put from '../operators/put'
 import API from '@/services/api'
 
-const LOCAL_STORAGE_KEY = 'flow'
-
 export default class FlowSubject {
+  private flowId: number
+  private localStorageKey: string
   private subject: BehaviorSubject<FlowModel>
   private observable: Observable<FlowModel>
   private unsubscribeMap = new WeakMap<Function, Function>()
+  private enabledAutoSaveToLocalStorage = false
 
-  constructor(data?: FlowModel) {
-    if (data) {
-      this.subject = new BehaviorSubject(data)
-    } else {
-      // test api
-      API.document.getFullDocument(1).then(r => {
-        console.log('full document', r.data)
-      }).catch(e => {
-        console.error(e)
-      })
-      try {
-        const lastStore = localStorage.getItem(LOCAL_STORAGE_KEY)
-        if (lastStore) {
-          this.subject = new BehaviorSubject(JSON.parse(lastStore))
-        }
-      } finally {
-        if (!this.subject) {
-          this.subject = new BehaviorSubject(DEFAULT_FLOW_MODEL)
-        }
-      }
-    }
+  constructor(flowId: number) {
+    this.flowId = flowId
+    this.localStorageKey = `flow_${flowId}`
+    this.subject = new BehaviorSubject(DEFAULT_FLOW_MODEL)
     this.observable = this.subject.pipe(
-        log({
-          prefix: 'flow changed:'
-        }),
-        put<FlowModel, string>({
-          instance: {
-            put: (key, data) => {
-              localStorage.setItem(key, data)
-              return key
-            }
-          },
-          key: LOCAL_STORAGE_KEY,
-          getData: (d) => JSON.stringify(d)
-        }),
-        share(),
-      )
+      log({
+        prefix: 'flow changed:'
+      }),
+      share(),
+    )
   }
+
+  loadFromAPI() {
+    API.document.getFullDocument(this.flowId)
+      .then(r => {
+        this.subject.next(
+          convertFullDocumentToFlowModel(r.data)
+        )
+      }).catch(e => {
+      console.error(e)
+    })
+    this.enableAutoSaveToLocalStorage()
+  }
+
+  loadFromLocalStorage() {
+    try {
+      const lastStore = localStorage.getItem(this.localStorageKey)
+      if (lastStore) {
+        this.subject.next(JSON.parse(lastStore))
+      }
+    } catch (error) {
+      this.subject.next(DEFAULT_FLOW_MODEL)
+    }
+    this.enableAutoSaveToLocalStorage()
+  }
+
+  enableAutoSaveToLocalStorage() {
+    if (!this.enabledAutoSaveToLocalStorage) {
+      this.subscribe((data) => {
+        localStorage.setItem(
+          this.localStorageKey,
+          JSON.stringify(data)
+        )
+      })
+      this.enabledAutoSaveToLocalStorage = true
+    }
+  }
+
 
   subscribe(nextFn: (data: FlowModel) => void) {
     const subscription = this.observable.subscribe(nextFn)

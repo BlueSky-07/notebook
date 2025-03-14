@@ -13,6 +13,8 @@ export * from './flow-list-response';
 export * from './flow-patch-input';
 export * from './node-add-input';
 export * from './node-add-response';
+export * from './node-data';
+export * from './node-data-type-enum';
 export * from './node-delete-response';
 export * from './node-entity';
 export * from './node-patch-input';

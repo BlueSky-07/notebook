@@ -26,6 +26,8 @@ models/flow-patch-input.ts
 models/index.ts
 models/node-add-input.ts
 models/node-add-response.ts
+models/node-data-type-enum.ts
+models/node-data.ts
 models/node-delete-response.ts
 models/node-entity.ts
 models/node-patch-input.ts

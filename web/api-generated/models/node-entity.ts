@@ -13,6 +13,9 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NodeData } from './node-data';
 
 /**
  * 
@@ -46,10 +49,10 @@ export interface NodeEntity {
     'positionY': number;
     /**
      * 
-     * @type {string}
+     * @type {NodeData}
      * @memberof NodeEntity
      */
-    'data': string;
+    'data': NodeData;
     /**
      * 
      * @type {string}
@@ -65,8 +68,8 @@ export interface NodeEntity {
 }
 
 export const DataTypeEnum = {
-    Text: 'TEXT',
-    Image: 'IMAGE'
+    Text: 'Text',
+    Image: 'Image'
 } as const;
 
 export type DataTypeEnum = typeof DataTypeEnum[keyof typeof DataTypeEnum];
