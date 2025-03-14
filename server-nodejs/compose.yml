@@ -9,7 +9,7 @@ services:
       MYSQL_DATABASE: notebook
       TZ: Asia/Shanghai
     ports:
-      - "3306:3306"
+      - "9106:3306"
     command:
       --max_connections=1000
       --character-set-server=utf8mb4

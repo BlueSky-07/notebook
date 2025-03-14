@@ -13,7 +13,7 @@ import { DocumentModule } from './document/document.module'
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      port: 9106,
       username: 'root',
       password: 'password',
       database: 'notebook',
