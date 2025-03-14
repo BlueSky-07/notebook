@@ -55,6 +55,30 @@ paths:
                 $ref: "#/components/schemas/FlowAddResponse"
       tags:
         - Flow
+    get:
+      operationId: getAllFlows
+      parameters:
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            default: 10
+            type: number
+        - name: pageNumber
+          required: false
+          in: query
+          schema:
+            default: 1
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowListResponse"
+      tags:
+        - Flow
   /flow/{id}:
     patch:
       operationId: patchFlow
@@ -420,6 +444,18 @@ components:
         - name
         - author
         - updatedAt
+    FlowListResponse:
+      type: object
+      properties:
+        count:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FlowEntity"
+      required:
+        - count
+        - items
     FlowDeleteResponse:
       type: object
       properties:

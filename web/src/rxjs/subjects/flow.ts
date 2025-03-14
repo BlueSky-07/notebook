@@ -18,6 +18,8 @@ export default class FlowSubject {
       // test api
       API.document.getFullDocument(1).then(r => {
         console.log('full document', r.data)
+      }).catch(e => {
+        console.error(e)
       })
       try {
         const lastStore = localStorage.getItem(LOCAL_STORAGE_KEY)

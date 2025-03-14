@@ -92,6 +92,7 @@ export default defineConfig((env, argv) => {
         template: 'src/index.ejs',
         title: "Notebook",
         minify: true,
+        publicPath: '/',
       }),
       isDev && new ReactRefreshPlugin(),
       isDev && new rspack.HotModuleReplacementPlugin(),

@@ -20,6 +20,10 @@ GET {{endpoint}}/flow/2
 Accept: application/json
 
 ###
+GET {{endpoint}}/flow
+Accept: application/json
+
+###
 DELETE {{endpoint}}/flow/1
 Accept: application/json
 

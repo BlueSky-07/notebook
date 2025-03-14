@@ -1,7 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { FlowService } from './flow.service'
 import { FlowEntity } from './flow.entity'
-import { FlowAddInput, FlowAddResponse, FlowDeleteResponse, FlowPatchInput } from './flow.type'
+import {
+  FlowAddInput,
+  FlowAddResponse,
+  FlowDeleteResponse,
+  FlowListInput,
+  FlowListResponse,
+  FlowPatchInput
+} from './flow.type'
+import { convertListInputPaginationToFindOptions } from '../utils/pagination'
 
 @Controller('flow')
 export class FlowController {
@@ -22,6 +30,13 @@ export class FlowController {
   @Get(':id')
   async getFlow(@Param('id') id: number): Promise<FlowEntity> {
     return this.flowService.getFlow(id)
+  }
+
+  @Get('')
+  async getAllFlows(@Query() flowListInput: FlowListInput): Promise<FlowListResponse> {
+    return this.flowService.getAllFlows(
+      convertListInputPaginationToFindOptions(flowListInput)
+    )
   }
 
   @Delete(':id')

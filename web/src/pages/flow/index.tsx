@@ -1,49 +1,34 @@
-import {
-  ReactFlow,
-  MiniMap,
-  Panel,
-  Background,
-  BackgroundVariant,
-} from '@xyflow/react'
-import { useShallow } from 'zustand/react/shallow'
-import useFlowStore, { type FlowState } from '@/stores/flow'
-
 import '@xyflow/react/dist/style.css'
+import FlowBrowser from './components/flow-browser'
+import { useParams, useNavigate } from 'react-router'
+import { Layout, Typography } from '@arco-design/web-react'
+import FlowDashboard from '@/pages/flow/components/flow-dashboard'
 
-export default function App() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'nodes' | 'edges' | 'onNodesChange' | 'onEdgesChange' | 'onConnect'>>((state) => ({
-      nodes: state.nodes,
-      edges: state.edges,
-      onNodesChange: state.onNodesChange,
-      onEdgesChange: state.onEdgesChange,
-      onConnect: state.onConnect,
-    }))
-  )
+export default function FlowPage() {
+  const { flowId } = useParams<{ flowId?: string }>()
+  const navigate = useNavigate()
 
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView={true}
+    <Layout style={{ width: '100vw', height: '100vh' }}>
+      <Layout.Sider
+        style={{ width: 300, padding: 10 }}
       >
-        <MiniMap pannable={true} zoomable={true} />
-        <Panel position="top-left">
-          <div style={{ background: 'white', width: 300, height: 'calc(100vh - 30px)', border: '1px solid gray' }}>
-            Panel
-          </div>
-        </Panel>
-        <Background
-          id="base"
-          gap={10}
-          color="#ccc"
-          variant={BackgroundVariant.Dots}
+        <FlowBrowser
+          flowId={flowId ? parseInt(flowId, 10) : undefined}
+          onViewFlow={flow => navigate(`/flow/${flow.id}`)}
         />
-      </ReactFlow>
-    </div>
+      </Layout.Sider>
+      <Layout.Content>
+        {flowId && <FlowDashboard flowId={flowId}/>}
+        {!flowId && (
+          <div style={{ height: 400, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Typography.Title style={{ color: 'gray' }}>
+              Welcome @User!<br/>
+              Open a flow at left panel to start.
+            </Typography.Title>
+          </div>
+        )}
+      </Layout.Content>
+    </Layout>
   )
 }

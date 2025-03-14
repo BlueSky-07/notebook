@@ -16,8 +16,10 @@
   "dependencies": {
     "@arco-design/web-react": "^2.65.0",
     "@xyflow/react": "^12.4.4",
+    "ahooks": "^3.8.4",
     "axios": "^1.8.3",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "lodash-es": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

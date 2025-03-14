@@ -1,5 +1,6 @@
 import { FlowEntity } from './flow.entity'
 import { ApiProperty } from '@nestjs/swagger'
+import { ListInput, ListResponse } from '../utils/pagination'
 
 export class FlowAddInput {
   @ApiProperty({ type: String })
@@ -23,3 +24,11 @@ export class FlowDeleteResponse {
   done: boolean
 }
 
+export class FlowListInput extends ListInput<{}> {
+  filter?: {}
+}
+
+export class FlowListResponse extends ListResponse<FlowEntity> {
+  @ApiProperty({ type: FlowEntity, isArray: true })
+  items: FlowEntity[]
+}

@@ -2,7 +2,8 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FlowEntity } from './flow.entity'
-import { FlowAddInput, FlowPatchInput } from './flow.type'
+import { FlowAddInput, FlowListResponse, FlowPatchInput } from './flow.type'
+import { PaginationFindOptions } from '../utils/pagination'
 
 @Injectable()
 export class FlowService {
@@ -43,6 +44,15 @@ export class FlowService {
       throw new NotFoundException(`Flow does not exist: ${id}`)
     }
     return record
+  }
+
+  async getAllFlows(paginationOptions: PaginationFindOptions): Promise<FlowListResponse> {
+    const [items, count] = await this.flowRepository.findAndCount({
+      ...paginationOptions
+    })
+    return {
+      items, count
+    }
   }
 
   async deleteFlow(id: FlowEntity['id']): Promise<boolean> {
