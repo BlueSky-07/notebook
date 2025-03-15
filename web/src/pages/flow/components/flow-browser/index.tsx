@@ -47,7 +47,9 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
         />
         <Button
           type="primary"
+          disabled={!newName}
           onClick={async () => {
+            if (!newName) return
             try {
               await createReq.runAsync(newName)
               setNewName('')

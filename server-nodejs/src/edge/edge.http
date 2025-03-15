@@ -10,7 +10,10 @@ PATCH {{endpoint}}/edge/1
 Content-Type: application/json
 
 {
-  "label": "label-1",
+  "dataType": "Label",
+  "data": {
+    "label": "label-1"
+  },
   "targetNodeId": 1
 }
 

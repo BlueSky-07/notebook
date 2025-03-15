@@ -1,5 +1,5 @@
-import { type Edge, type Node } from '@xyflow/react'
-import { EdgeEntity, NodeEntity, NodeDataTypeEnum, DocumentFull } from '@api/models'
+import { MarkerType, type Edge, type Node } from '@xyflow/react'
+import { EdgeEntity, NodeEntity, NodeDataTypeEnum, DocumentFull, EdgeDataTypeEnum, EdgeHandleEnum } from '@api/models'
 
 export interface FlowModel {
   nodes: Node[]
@@ -12,16 +12,44 @@ export const DEFAULT_FLOW_MODEL: FlowModel = {
 }
 
 export function getFlowNode(
-  id: number,
+  id: string,
   dataType: NodeEntity['dataType'] = NodeDataTypeEnum.Text
 ): Node {
   return {
-    id: id.toString(),
+    id,
     position: {
       x: 0,
       y: 0
     },
-    data: { content: '' },
+    data: {
+      ...dataType === NodeDataTypeEnum.Text && {
+        content: ''
+      },
+      ...dataType === NodeDataTypeEnum.Image && {
+        src: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp'
+      },
+    },
+    type: dataType,
+  }
+}
+
+export function getFlowEdge(
+  id: string,
+  source: string, target: string,
+  sourceHandle: string, targetHandle: string,
+  dataType: EdgeEntity['dataType'] = EdgeDataTypeEnum.Label
+): Edge {
+  return {
+    id,
+    source,
+    target,
+    sourceHandle,
+    targetHandle,
+    data: {
+      ...dataType === EdgeDataTypeEnum.Label && {
+        label: ''
+      },
+    },
     type: dataType,
   }
 }
@@ -60,7 +88,20 @@ export function convertEdgeEntityToFlowEdge(
   return {
     id: edgeEntity.id.toString(),
     source: edgeEntity.sourceNodeId.toString(),
-    target: edgeEntity.targetNodeId.toString()
+    target: edgeEntity.targetNodeId.toString(),
+    sourceHandle: edgeEntity.sourceHandle,
+    targetHandle: edgeEntity.targetHandle,
+    data: edgeEntity.data as Edge['data'],
+    type: edgeEntity.dataType,
+    markerEnd: {
+      type: MarkerType.Arrow,
+      width: 40,
+      height: 40,
+      orient: {
+        [EdgeHandleEnum.Left]: 'horizontal',
+        // [EdgeHandleEnum.Top]: 'vertical'
+      }[edgeEntity.targetHandle]
+    },
   }
 }
 
@@ -73,6 +114,10 @@ export function convertFlowEdgeToEdgeEntity(
     flowId,
     sourceNodeId: parseInt(flowEdge.source, 10),
     targetNodeId: parseInt(flowEdge.target, 10),
+    sourceHandle: flowEdge.sourceHandle as EdgeEntity['sourceHandle'],
+    targetHandle: flowEdge.targetHandle as EdgeEntity['targetHandle'],
+    data: flowEdge.data,
+    dataType: flowEdge.type as EdgeEntity['dataType']
   }
 }
 

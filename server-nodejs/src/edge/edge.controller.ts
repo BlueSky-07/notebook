@@ -10,14 +10,14 @@ export class EdgeController {
   }
 
   @Post('')
-  async addEdge(@Body() flowAddInput: EdgeAddInput): Promise<EdgeAddResponse> {
-    const id = await this.edgeService.addEdge(omit(flowAddInput, 'id'))
+  async addEdge(@Body() edgeAddInput: EdgeAddInput): Promise<EdgeAddResponse> {
+    const id = await this.edgeService.addEdge(omit(edgeAddInput, 'id'))
     return { id }
   }
 
   @Patch(':id')
-  patchEdge(@Param('id') id: number, @Body() flowPatchInput: EdgePatchInput): Promise<EdgeEntity> {
-    return this.edgeService.patchEdge(id, flowPatchInput)
+  patchEdge(@Param('id') id: number, @Body() edgePatchInput: EdgePatchInput): Promise<EdgeEntity> {
+    return this.edgeService.patchEdge(id, edgePatchInput)
   }
 
   @Get(':id')

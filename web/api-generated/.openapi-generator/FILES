@@ -14,8 +14,11 @@ models/document-full.ts
 models/document-slim.ts
 models/edge-add-input.ts
 models/edge-add-response.ts
+models/edge-data-type-enum.ts
+models/edge-data.ts
 models/edge-delete-response.ts
 models/edge-entity.ts
+models/edge-handle-enum.ts
 models/edge-patch-input.ts
 models/flow-add-input.ts
 models/flow-add-response.ts

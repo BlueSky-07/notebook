@@ -300,6 +300,11 @@ tags: []
 servers: []
 components:
   schemas:
+    NodeDataTypeEnum:
+      type: string
+      enum:
+        - Text
+        - Image
     NodeData:
       type: object
       properties:
@@ -312,6 +317,10 @@ components:
     NodeEntity:
       type: object
       properties:
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
         id:
           type: number
         flowId:
@@ -322,11 +331,6 @@ components:
           type: number
         data:
           $ref: "#/components/schemas/NodeData"
-        dataType:
-          enum:
-            - Text
-            - Image
-          type: string
         updatedAt:
           format: date-time
           type: string
@@ -336,27 +340,56 @@ components:
         - positionX
         - positionY
         - data
-        - dataType
         - updatedAt
+    EdgeHandleEnum:
+      type: string
+      enum:
+        - Top
+        - Right
+        - Bottom
+        - Left
+    EdgeDataTypeEnum:
+      type: string
+      enum:
+        - Label
+    EdgeData:
+      type: object
+      properties:
+        label:
+          type: string
+          description: label content
     EdgeEntity:
       type: object
       properties:
+        sourceHandle:
+          default: Right
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        targetHandle:
+          default: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
         id:
           type: number
         flowId:
           type: number
-        label:
-          type: string
         sourceNodeId:
           type: number
         targetNodeId:
           type: number
+        data:
+          $ref: "#/components/schemas/EdgeData"
         updatedAt:
           format: date-time
           type: string
       required:
         - id
         - flowId
+        - data
         - updatedAt
     DocumentFull:
       type: object
@@ -472,11 +505,6 @@ components:
           type: boolean
       required:
         - done
-    NodeDataTypeEnum:
-      type: string
-      enum:
-        - Text
-        - Image
     NodeAddInput:
       type: object
       properties:
@@ -535,8 +563,23 @@ components:
           type: number
         targetNodeId:
           type: number
-        label:
-          type: string
+        sourceHandle:
+          default: Right
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        targetHandle:
+          default: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        data:
+          default:
+            label: ""
+          allOf:
+            - $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
       required:
         - flowId
     EdgeAddResponse:
@@ -553,8 +596,20 @@ components:
           type: number
         targetNodeId:
           type: number
-        label:
-          type: string
+        sourceHandle:
+          default: Right
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        targetHandle:
+          default: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        data:
+          $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
     EdgeDeleteResponse:
       type: object
       properties:

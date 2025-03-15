@@ -1,8 +1,8 @@
 import { type Edge, type Node } from '@xyflow/react'
-import { convertFlowNodeToNodeEntity, convertFullDocumentToFlowModel, DEFAULT_FLOW_MODEL, FlowModel, getFlowNode } from '@/models/flow'
+import { convertFlowEdgeToEdgeEntity, convertFlowNodeToNodeEntity, convertFullDocumentToFlowModel, DEFAULT_FLOW_MODEL, FlowModel, getFlowEdge, getFlowNode } from '@/models/flow'
 import { BehaviorSubject, Observable, share } from "rxjs"
 import API from '@/services/api'
-import { NodeEntity } from '@api/models'
+import { EdgeDataTypeEnum, EdgeEntity, NodeEntity } from '@api/models'
 import { produce } from 'immer'
 import { debounceRequest } from '@/utils/debounce-request'
 
@@ -104,7 +104,7 @@ export default class FlowSubject {
   async addNode(
     dataType: NodeEntity['dataType']
   ) {
-    const newNode = getFlowNode(Date.now(), dataType)
+    const newNode = getFlowNode(Date.now().toString(), dataType)
     const createResp = await this.dispatchStorage(
       async () => {
         const resp = await API.node.addNode(
@@ -179,8 +179,77 @@ export default class FlowSubject {
       })
       this.dispatchStorage(
         debounceRequest(
-          `delete-node-data-${id}`,
+          `delete-node-${id}`,
           () => API.node.deleteNode(
+            parseInt(id)
+          ),
+        )
+      )()
+    }
+  }
+
+  async addEdge(
+    source: string,
+    target: string,
+    sourceHandle: string,
+    targetHandle: string,
+    dataType: EdgeEntity['dataType'] = EdgeDataTypeEnum.Label,
+  ) {
+    const newEdge = getFlowEdge(Date.now().toString(), source, target, sourceHandle, targetHandle, dataType)
+    const createResp = await this.dispatchStorage(
+      async () => {
+        const resp = await API.edge.addEdge(
+          convertFlowEdgeToEdgeEntity(newEdge, this.flowId)
+        )
+        newEdge.id = resp.data.id.toString()
+        return newEdge
+      },
+      () => newEdge
+    )()
+    this.next({
+      edges: produce(this.getValue('edges'), draft => {
+        draft.push(createResp)
+      })
+    })
+  }
+
+  async updateEdgeData(
+    id: string, data: Edge['data']
+  ) {
+    const edges = this.getValue('edges')
+    const edgeIndex = edges.findIndex(edge => edge.id === id)
+    if (edgeIndex !== -1) {
+      this.next({
+        edges: produce(edges, draft => {
+          draft[edgeIndex].data = data
+        })
+      })
+      this.dispatchStorage(
+        debounceRequest(
+          `update-edge-data-${id}`,
+          () => API.edge.patchEdge(
+            parseInt(id), { data }
+          ),
+        )
+      )()
+    }
+  }
+
+  async deleteEdge(
+    id: string
+  ) {
+    const edges = this.getValue('edges')
+    const edgeIndex = edges.findIndex(edge => edge.id === id)
+    if (edgeIndex !== -1) {
+      this.next({
+        edges: produce(edges, draft => {
+          draft.splice(edgeIndex, 1)
+        })
+      })
+      this.dispatchStorage(
+        debounceRequest(
+          `delete-edge-${id}`,
+          () => API.edge.deleteEdge(
             parseInt(id)
           ),
         )

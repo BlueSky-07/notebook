@@ -10,7 +10,7 @@ PATCH {{endpoint}}/node/1
 Content-Type: application/json
 
 {
-  "dataType": "IMAGE",
+  "dataType": "Image",
   "positionX": 123,
   "data": "http://image.com/image.png"
 }

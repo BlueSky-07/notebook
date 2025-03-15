@@ -28,6 +28,7 @@ export interface FlowState extends FlowModel {
   // User Actions Callbacks
   addNode: (type: NodeEntity['dataType']) => void
   updateNodeData: (id: string, data: Node['data']) => void
+  updateEdgeData: (id: string, data: Edge['data']) => void
 }
 
 const useFlowStore = create<FlowState>((set, get) => {
@@ -67,16 +68,23 @@ const useFlowStore = create<FlowState>((set, get) => {
       }
     },
     onEdgesChange: (changes) => {
-      const nextEdges = applyEdgeChanges(changes, get().edges)
-      get().subject?.next({
-        edges: nextEdges,
-      })
+      for (const change of changes) {
+        switch (change.type) {
+          case 'remove': {
+            get().subject?.deleteEdge(change.id)
+            break
+          }
+          default: {
+            const nextEdges = applyEdgeChanges(changes, get().edges)
+            get().subject?.next({
+              edges: nextEdges,
+            })
+          }
+        }
+      }
     },
     onConnect: (connection) => {
-      const nextEdges = addEdge(connection, get().edges)
-      get().subject?.next({
-        edges: nextEdges,
-      })
+      get().subject?.addEdge(connection.source, connection.target, connection.sourceHandle, connection.targetHandle)
     },
     setNodes: (nodes) => {
       get().subject?.next({
@@ -93,6 +101,9 @@ const useFlowStore = create<FlowState>((set, get) => {
     },
     updateNodeData: (id: string, data: Node['data']) => {
       get().subject?.updateNodeData(id, data)
+    },
+    updateEdgeData: (id: string, data: Edge['data']) => {
+      get().subject?.updateEdgeData(id, data)
     }
   }
 })

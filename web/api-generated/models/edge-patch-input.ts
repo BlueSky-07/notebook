@@ -13,6 +13,15 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeData } from './edge-data';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeDataTypeEnum } from './edge-data-type-enum';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeHandleEnum } from './edge-handle-enum';
 
 /**
  * 
@@ -34,9 +43,29 @@ export interface EdgePatchInput {
     'targetNodeId'?: number;
     /**
      * 
-     * @type {string}
+     * @type {EdgeHandleEnum}
      * @memberof EdgePatchInput
      */
-    'label'?: string;
+    'sourceHandle'?: EdgeHandleEnum;
+    /**
+     * 
+     * @type {EdgeHandleEnum}
+     * @memberof EdgePatchInput
+     */
+    'targetHandle'?: EdgeHandleEnum;
+    /**
+     * 
+     * @type {EdgeData}
+     * @memberof EdgePatchInput
+     */
+    'data'?: EdgeData;
+    /**
+     * 
+     * @type {EdgeDataTypeEnum}
+     * @memberof EdgePatchInput
+     */
+    'dataType'?: EdgeDataTypeEnum;
 }
+
+
 

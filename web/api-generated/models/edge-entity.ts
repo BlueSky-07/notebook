@@ -13,6 +13,15 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeData } from './edge-data';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeDataTypeEnum } from './edge-data-type-enum';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EdgeHandleEnum } from './edge-handle-enum';
 
 /**
  * 
@@ -20,6 +29,24 @@
  * @interface EdgeEntity
  */
 export interface EdgeEntity {
+    /**
+     * 
+     * @type {EdgeHandleEnum}
+     * @memberof EdgeEntity
+     */
+    'sourceHandle'?: EdgeHandleEnum;
+    /**
+     * 
+     * @type {EdgeHandleEnum}
+     * @memberof EdgeEntity
+     */
+    'targetHandle'?: EdgeHandleEnum;
+    /**
+     * 
+     * @type {EdgeDataTypeEnum}
+     * @memberof EdgeEntity
+     */
+    'dataType'?: EdgeDataTypeEnum;
     /**
      * 
      * @type {number}
@@ -34,12 +61,6 @@ export interface EdgeEntity {
     'flowId': number;
     /**
      * 
-     * @type {string}
-     * @memberof EdgeEntity
-     */
-    'label'?: string;
-    /**
-     * 
      * @type {number}
      * @memberof EdgeEntity
      */
@@ -52,9 +73,17 @@ export interface EdgeEntity {
     'targetNodeId'?: number;
     /**
      * 
+     * @type {EdgeData}
+     * @memberof EdgeEntity
+     */
+    'data': EdgeData;
+    /**
+     * 
      * @type {string}
      * @memberof EdgeEntity
      */
     'updatedAt': string;
 }
+
+
 

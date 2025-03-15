@@ -33,6 +33,7 @@ export class NodeEntity {
   @Column({ type: 'simple-json' })
   data: NodeData
 
+  @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
   @Column({ type: 'enum', enum: NodeDataType, default: NodeDataType.Text })
   dataType: NodeDataType
 

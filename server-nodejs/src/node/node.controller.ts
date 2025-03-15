@@ -10,14 +10,14 @@ export class NodeController {
   }
 
   @Post('')
-  async addNode(@Body() flowAddInput: NodeAddInput): Promise<NodeAddResponse> {
-    const id = await this.nodeService.addNode(omit(flowAddInput, 'id'))
+  async addNode(@Body() nodeAddInput: NodeAddInput): Promise<NodeAddResponse> {
+    const id = await this.nodeService.addNode(omit(nodeAddInput, 'id'))
     return { id }
   }
 
   @Patch(':id')
-  patchNode(@Param('id') id: number, @Body() flowPatchInput: NodePatchInput): Promise<NodeEntity> {
-    return this.nodeService.patchNode(id, flowPatchInput)
+  patchNode(@Param('id') id: number, @Body() nodePatchInput: NodePatchInput): Promise<NodeEntity> {
+    return this.nodeService.patchNode(id, nodePatchInput)
   }
 
   @Get(':id')

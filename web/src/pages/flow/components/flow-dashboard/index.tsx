@@ -8,10 +8,11 @@ import {
 import { useShallow } from 'zustand/react/shallow'
 import useFlowStore, { type FlowState } from '@/stores/flow'
 import { Space, Button } from '@arco-design/web-react'
-import { DataTypeEnum } from '@api/models'
-import { useEffect, useMemo } from 'react'
-import CustomNodeText from '../custom-nodes/Text'
+import { NodeDataTypeEnum } from '@api/models'
+import { useEffect } from 'react'
 import { IconPlusCircle } from '@arco-design/web-react/icon'
+import { useCustomNodes } from '../custom-nodes'
+import { useCustomEdges } from '../custom-edges'
 
 interface FlowDashboardProps {
   flowId?: string
@@ -20,12 +21,8 @@ interface FlowDashboardProps {
 export const FlowDashboard = (props: FlowDashboardProps) => {
   const { flowId } = props
 
-  const nodeTypes = useMemo(() => {
-    return {
-      [DataTypeEnum.Text]: CustomNodeText
-    }
-  }, [])
-
+  const nodeTypes = useCustomNodes()
+  const edgeTypes = useCustomEdges()
   const {
     bootstrap,
     nodes,
@@ -67,15 +64,16 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      fitView={true}
+      // fitView={true}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
     >
       <MiniMap pannable={true} zoomable={true} />
       <Panel position="bottom-left" style={{ backgroundColor: 'white', padding: 10,  }}>
         <Space>
           <IconPlusCircle /> Add
-          <Button onClick={() => addNode(DataTypeEnum.Text)} type='text' size='mini'>Text</Button>
-          <Button onClick={() => addNode(DataTypeEnum.Image)} type='text' size='mini'>Image</Button>
+          <Button onClick={() => addNode(NodeDataTypeEnum.Text)} type='text' size='mini'>Text</Button>
+          <Button onClick={() => addNode(NodeDataTypeEnum.Image)} type='text' size='mini'>Image</Button>
         </Space>
       </Panel>
       <Background
