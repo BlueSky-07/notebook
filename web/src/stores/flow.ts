@@ -8,7 +8,7 @@ import {
 import { create } from 'zustand'
 import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react'
 import FlowSubject from '@/rxjs/subjects/flow'
-import { FlowModel, getFlowNode } from '@/models/flow'
+import { FlowModel } from '@/models/flow'
 import { FlowEntity, NodeEntity } from '@api/models'
 
 export interface FlowState extends FlowModel {
@@ -20,14 +20,14 @@ export interface FlowState extends FlowModel {
 
   // Flow Internal Callbacks
   onNodesChange: OnNodesChange<Node>
-  onEdgesChange: OnEdgesChange
+  onEdgesChange: OnEdgesChange<Edge>
   onConnect: OnConnect
   setNodes: (nodes: Node[]) => void
   setEdges: (edges: Edge[]) => void
 
   // User Actions Callbacks
   addNode: (type: NodeEntity['dataType']) => void
-  updateNode: (id: string, data: Node['data']) => void
+  updateNodeData: (id: string, data: Node['data']) => void
 }
 
 const useFlowStore = create<FlowState>((set, get) => {
@@ -41,64 +41,58 @@ const useFlowStore = create<FlowState>((set, get) => {
       const subject = new FlowSubject(flowId)
       subject.subscribe(data => set({ ...data }))
       set({ subject })
-      // subject.loadFromAPI()
-      subject.loadFromLocalStorage()
+      subject.loadFromAPI()
+      // subject.loadFromLocalStorage()
     },
     nodes: [],
     edges: [],
     onNodesChange: (changes) => {
-      const nextNodes = applyNodeChanges(changes, get().nodes)
-      get().subject?.next({
-        nodes: nextNodes,
-        edges: get().edges,
-      })
+      for (const change of changes) {
+        switch (change.type) {
+          case 'position': {
+            get().subject?.updateNodePosition(change.id, change.position)
+            break
+          }
+          case 'remove': {
+            get().subject?.deleteNode(change.id)
+            break
+          }
+          default: {
+            const nextNodes = applyNodeChanges(changes, get().nodes)
+            get().subject?.next({
+              nodes: nextNodes,
+            })
+          }
+        }
+      }
     },
     onEdgesChange: (changes) => {
       const nextEdges = applyEdgeChanges(changes, get().edges)
       get().subject?.next({
-        nodes: get().nodes,
         edges: nextEdges,
       })
     },
     onConnect: (connection) => {
       const nextEdges = addEdge(connection, get().edges)
       get().subject?.next({
-        nodes: get().nodes,
         edges: nextEdges,
       })
     },
     setNodes: (nodes) => {
       get().subject?.next({
         nodes,
-        edges: get().edges,
       })
     },
     setEdges: (edges) => {
       get().subject?.next({
-        nodes: get().nodes,
         edges,
       })
     },
     addNode: (dataType: NodeEntity['dataType']) => {
-      const newNodeId = Date.now()
-      get().subject?.next({
-        nodes: [...get().nodes, getFlowNode(newNodeId, dataType)],
-        edges: get().edges,
-      })
+      get().subject?.addNode(dataType)
     },
-    updateNode: (id: string, data: NodeEntity['data']) => {
-      const nodes = get().nodes
-      const nodeIndex = nodes.findIndex(node => node.id === id)
-      if (nodeIndex !== -1) {
-        nodes[nodeIndex] = {
-          ...nodes[nodeIndex],
-          data: data as Node['data'],
-        }
-      }
-      get().subject?.next({
-        nodes: [...nodes],
-        edges: get().edges,
-      })
+    updateNodeData: (id: string, data: Node['data']) => {
+      get().subject?.updateNodeData(id, data)
     }
   }
 })

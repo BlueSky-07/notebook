@@ -10,6 +10,7 @@ import {
   FlowPatchInput
 } from './flow.type'
 import { convertListInputPaginationToFindOptions } from '../utils/pagination'
+import { omit } from 'lodash'
 
 @Controller('flow')
 export class FlowController {
@@ -18,7 +19,7 @@ export class FlowController {
 
   @Post('')
   async addFlow(@Body() flowAddInput: FlowAddInput): Promise<FlowAddResponse> {
-    const id = await this.flowService.addFlow(flowAddInput)
+    const id = await this.flowService.addFlow(omit(flowAddInput, 'id'))
     return { id }
   }
 

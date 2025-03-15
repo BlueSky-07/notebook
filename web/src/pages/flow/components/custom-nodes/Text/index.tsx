@@ -14,9 +14,9 @@ type CustomNodeTextProps = NodeProps<
 export const CustomNodeText  = (props: CustomNodeTextProps) => {
   const { data, id } = props
 
-  const { updateNode } = useFlowStore(
+  const { updateNodeData: updateNode } = useFlowStore(
     useShallow<FlowState, Pick<FlowState, 'updateNode'>>((state) => ({
-      updateNode: state.updateNode,
+      updateNodeData: state.updateNodeData,
     }))
   )
 

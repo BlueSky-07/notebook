@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { NodeService } from './node.service'
 import { NodeEntity } from './node.entity'
 import { NodeAddInput, NodeAddResponse, NodeDeleteResponse, NodePatchInput } from './node.type'
+import { omit } from 'lodash'
 
 @Controller('node')
 export class NodeController {
@@ -10,7 +11,7 @@ export class NodeController {
 
   @Post('')
   async addNode(@Body() flowAddInput: NodeAddInput): Promise<NodeAddResponse> {
-    const id = await this.nodeService.addNode(flowAddInput)
+    const id = await this.nodeService.addNode(omit(flowAddInput, 'id'))
     return { id }
   }
 

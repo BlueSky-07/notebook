@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { EdgeService } from './edge.service'
 import { EdgeEntity } from './edge.entity'
 import { EdgeAddInput, EdgeAddResponse, EdgeDeleteResponse, EdgePatchInput } from './edge.type'
+import { omit } from 'lodash'
 
 @Controller('edge')
 export class EdgeController {
@@ -10,7 +11,7 @@ export class EdgeController {
 
   @Post('')
   async addEdge(@Body() flowAddInput: EdgeAddInput): Promise<EdgeAddResponse> {
-    const id = await this.edgeService.addEdge(flowAddInput)
+    const id = await this.edgeService.addEdge(omit(flowAddInput, 'id'))
     return { id }
   }
 
