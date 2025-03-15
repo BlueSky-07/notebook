@@ -63,7 +63,10 @@ export function convertNodeEntityToFlowNode(
       x: nodeEntity.positionX,
       y: nodeEntity.positionY
     },
-    data: nodeEntity.data as Node['data'],
+    data: {
+      ...nodeEntity.data,
+      $state: nodeEntity.state,
+    } as Node['data'],
     type: nodeEntity.dataType
   }
 }
@@ -71,7 +74,7 @@ export function convertNodeEntityToFlowNode(
 export function convertFlowNodeToNodeEntity(
   flowNode: Node,
   flowId: number
-): Omit<NodeEntity, 'updatedAt'> {
+): Omit<NodeEntity, 'updatedAt' | 'state'> {
   return {
     id: parseInt(flowNode.id, 10),
     flowId,

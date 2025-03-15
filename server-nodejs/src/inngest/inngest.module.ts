@@ -1,10 +1,14 @@
 import { FlowModule } from '../flow/flow.module';
-import { Logger, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { InngestService } from './inngest.service';
+import { NodeModule } from '../node/node.module'
+import { GeneratingTaskModule } from '../generating-task/generating-task.module'
 
 @Module({
   imports: [
-    FlowModule
+    FlowModule,
+    forwardRef(() => NodeModule),
+    forwardRef(() => GeneratingTaskModule),
   ],
   providers: [
     InngestService,

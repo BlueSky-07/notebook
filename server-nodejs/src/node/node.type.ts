@@ -1,4 +1,4 @@
-import { NodeDataType, NodeEntity, NodeData } from './node.entity'
+import { NodeDataType, NodeEntity, NodeData, NodeState } from './node.entity'
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger'
 
 @ApiExtraModels(NodeData)
@@ -29,6 +29,8 @@ export class NodePatchInput {
   data?: NodeEntity['data']
   @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
   dataType?: NodeEntity['dataType']
+  @ApiProperty({ type: NodeState, required: false })
+  state?: NodeEntity['state']
 }
 
 export class NodeDeleteResponse {

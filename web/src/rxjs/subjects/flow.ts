@@ -30,6 +30,10 @@ export default class FlowSubject {
     )
   }
 
+  getFlowId() {
+    return this.flowId
+  }
+
   loadFromAPI() {
     this.storage = FLOW_SUBJECT_STORAGE.API
     API.document.getFullDocument(this.flowId)

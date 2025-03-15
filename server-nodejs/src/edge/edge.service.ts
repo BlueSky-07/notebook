@@ -1,10 +1,12 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { EdgeEntity } from './edge.entity';
 import { EdgeAddInput, EdgePatchInput } from './edge.type';
 import { FlowEntity } from '../flow/flow.entity';
@@ -16,6 +18,7 @@ export class EdgeService {
   constructor(
     @InjectRepository(EdgeEntity)
     private edgeRepository: Repository<EdgeEntity>,
+    @Inject(forwardRef(() => InngestService))
     private inngestService: InngestService,
   ) {}
 
@@ -24,7 +27,7 @@ export class EdgeService {
       ...edgeAddInput,
       updatedAt: new Date(),
     });
-    FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+    await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: edgeAddInput.flowId,
     });
     return res.generatedMaps[0].id;
@@ -40,7 +43,7 @@ export class EdgeService {
       updatedAt: new Date(),
     });
     if (res.affected) {
-      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,
       });
       return this.getEdge(id);
@@ -61,6 +64,15 @@ export class EdgeService {
     return record;
   }
 
+  getEdgesByIds(ids: EdgeEntity['id'][]): Promise<EdgeEntity[]>{
+    if (!ids.length) return Promise.resolve([] as EdgeEntity[])
+    return this.edgeRepository.find({
+      where: {
+        id: In(ids)
+      }
+    })
+  }
+
   getEdgesByFlowId(flowId: FlowEntity['id']): Promise<EdgeEntity[]> {
     return this.edgeRepository.findBy({
       flowId,
@@ -73,7 +85,7 @@ export class EdgeService {
       id,
     });
     if (res.affected) {
-      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,
       });
       return true;

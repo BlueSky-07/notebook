@@ -15,66 +15,60 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NodeData } from './node-data';
+import type { GeneratingTaskInput } from './generating-task-input';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NodeDataTypeEnum } from './node-data-type-enum';
+import type { GeneratingTaskOutput } from './generating-task-output';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NodeState } from './node-state';
+import type { GeneratingTaskStatusEnum } from './generating-task-status-enum';
 
 /**
  * 
  * @export
- * @interface NodeEntity
+ * @interface GeneratingTaskEntity
  */
-export interface NodeEntity {
+export interface GeneratingTaskEntity {
     /**
      * 
-     * @type {NodeDataTypeEnum}
-     * @memberof NodeEntity
+     * @type {GeneratingTaskStatusEnum}
+     * @memberof GeneratingTaskEntity
      */
-    'dataType'?: NodeDataTypeEnum;
+    'status': GeneratingTaskStatusEnum;
     /**
      * 
      * @type {number}
-     * @memberof NodeEntity
+     * @memberof GeneratingTaskEntity
      */
     'id': number;
     /**
      * 
      * @type {number}
-     * @memberof NodeEntity
+     * @memberof GeneratingTaskEntity
      */
     'flowId': number;
     /**
      * 
      * @type {number}
-     * @memberof NodeEntity
+     * @memberof GeneratingTaskEntity
      */
-    'positionX': number;
+    'targetNodeId': number;
     /**
      * 
-     * @type {number}
-     * @memberof NodeEntity
+     * @type {GeneratingTaskInput}
+     * @memberof GeneratingTaskEntity
      */
-    'positionY': number;
+    'input': GeneratingTaskInput;
     /**
      * 
-     * @type {NodeData}
-     * @memberof NodeEntity
+     * @type {GeneratingTaskOutput}
+     * @memberof GeneratingTaskEntity
      */
-    'data': NodeData;
-    /**
-     * 
-     * @type {NodeState}
-     * @memberof NodeEntity
-     */
-    'state': NodeState;
+    'output': GeneratingTaskOutput;
     /**
      * 
      * @type {string}
-     * @memberof NodeEntity
+     * @memberof GeneratingTaskEntity
      */
     'updatedAt': string;
 }

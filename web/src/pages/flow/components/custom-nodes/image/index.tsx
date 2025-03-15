@@ -1,5 +1,5 @@
 import { NodeEntity, NodeDataTypeEnum } from '@api/models'
-import { Image } from '@arco-design/web-react';
+import { Image, Space } from '@arco-design/web-react';
 import { NodeProps, Node } from '@xyflow/react';
 import styles from './styles.module.less'
 import DefaultHandles from '../../custom-handles'
@@ -15,8 +15,8 @@ export const CustomNodeImage  = (props: CustomNodeImageProps) => {
 
   return (
     <>
-      <div className={styles.customImageNode}>
-        Image Node @{id}
+      <Space className={styles.customImageNode} direction='vertical'>
+        <span>Image Node @{id}</span>
 
         <Image
           width={300}
@@ -24,7 +24,7 @@ export const CustomNodeImage  = (props: CustomNodeImageProps) => {
           src={data.src}
           alt='lamp'
         />
-      </div>
+      </Space>
       <DefaultHandles />
     </>
   );

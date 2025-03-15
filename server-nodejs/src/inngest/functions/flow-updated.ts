@@ -27,7 +27,7 @@ const createFlowUpdatedFunction = (
     async (props) => {
       const { step } = props;
       const event = props.event as FlowUpdatedEvent;
-      await step.run(`flow updated`, async () => {
+      await step.run(`update flow udpatedAt field`, async () => {
         logger.log(`[FlowUpdatedFunction] flowId: ${event.data.flowId}`);
         return await flowService.patchFlow(event.data.flowId, {});
       });

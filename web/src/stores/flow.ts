@@ -17,6 +17,7 @@ export interface FlowState extends FlowModel {
 
   // Life Cycles
   bootstrap: (flowId: FlowEntity['id']) => void
+  getFlowId: () => FlowEntity['id']
 
   // Flow Internal Callbacks
   onNodesChange: OnNodesChange<Node>
@@ -44,6 +45,9 @@ const useFlowStore = create<FlowState>((set, get) => {
       set({ subject })
       subject.loadFromAPI()
       // subject.loadFromLocalStorage()
+    },
+    getFlowId: () => {
+      return get().subject?.getFlowId()
     },
     nodes: [],
     edges: [],

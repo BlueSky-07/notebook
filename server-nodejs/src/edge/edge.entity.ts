@@ -42,7 +42,7 @@ export class EdgeEntity {
   @Column({ type: 'enum', enum: EdgeHandle, default: EdgeHandle.Top })
   targetHandle?: EdgeHandle
 
-  @Column({ type: 'simple-json' })
+  @Column({ type: 'simple-json', default: () => `('${JSON.stringify({ label: '' })}')` })
   data: EdgeData
 
   @ApiProperty({ enum: EdgeDataType, enumName: 'EdgeDataTypeEnum', required: false, default: EdgeDataType.Label })

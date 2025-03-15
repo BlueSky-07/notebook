@@ -14,9 +14,20 @@
 
 
 
-export * from './clients/document-api';
-export * from './clients/edge-api';
-export * from './clients/flow-api';
-export * from './clients/generating-task-api';
-export * from './clients/node-api';
+/**
+ * AI genarating task status
+ * @export
+ * @enum {string}
+ */
+
+export const GeneratingTaskStatusEnum = {
+    Pending: 'Pending',
+    Generating: 'Generating',
+    Done: 'Done',
+    Failed: 'Failed'
+} as const;
+
+export type GeneratingTaskStatusEnum = typeof GeneratingTaskStatusEnum[keyof typeof GeneratingTaskStatusEnum];
+
+
 

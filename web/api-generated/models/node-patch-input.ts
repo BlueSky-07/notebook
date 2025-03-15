@@ -19,6 +19,9 @@ import type { NodeData } from './node-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { NodeDataTypeEnum } from './node-data-type-enum';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NodeState } from './node-state';
 
 /**
  * 
@@ -50,6 +53,12 @@ export interface NodePatchInput {
      * @memberof NodePatchInput
      */
     'dataType'?: NodeDataTypeEnum;
+    /**
+     * 
+     * @type {NodeState}
+     * @memberof NodePatchInput
+     */
+    'state'?: NodeState;
 }
 
 

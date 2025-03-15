@@ -101,42 +101,6 @@ paths:
                 $ref: "#/components/schemas/FlowDeleteResponse"
       tags:
         - Flow
-  /document/full/{flowId}:
-    get:
-      operationId: getFullDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentFull"
-      tags:
-        - Document
-  /document/slim/{flowId}:
-    get:
-      operationId: getSlimDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentSlim"
-      tags:
-        - Document
   /node:
     post:
       operationId: addNode
@@ -214,6 +178,43 @@ paths:
                 $ref: "#/components/schemas/NodeDeleteResponse"
       tags:
         - Node
+  /generating-task:
+    post:
+      operationId: addGeneratingTask
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneratingTaskAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskAddResponse"
+      tags:
+        - GeneratingTask
+  /generating-task/{id}:
+    get:
+      operationId: getGeneratingTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskEntity"
+      tags:
+        - GeneratingTask
   /edge:
     post:
       operationId: addEdge
@@ -291,6 +292,42 @@ paths:
                 $ref: "#/components/schemas/EdgeDeleteResponse"
       tags:
         - Edge
+  /document/full/{flowId}:
+    get:
+      operationId: getFullDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentFull"
+      tags:
+        - Document
+  /document/slim/{flowId}:
+    get:
+      operationId: getSlimDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentSlim"
+      tags:
+        - Document
 info:
   title: Notebook Server
   description: ""
@@ -360,11 +397,6 @@ components:
           type: boolean
       required:
         - done
-    NodeDataTypeEnum:
-      type: string
-      enum:
-        - Text
-        - Image
     NodeData:
       type: object
       properties:
@@ -374,6 +406,74 @@ components:
         src:
           type: string
           description: image src
+    NodeDataTypeEnum:
+      type: string
+      enum:
+        - Text
+        - Image
+    NodeAddInput:
+      type: object
+      properties:
+        flowId:
+          type: number
+        positionX:
+          type: number
+          default: 0
+        positionY:
+          type: number
+          default: 0
+        data:
+          default:
+            content: ""
+          allOf:
+            - $ref: "#/components/schemas/NodeData"
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
+      required:
+        - flowId
+    NodeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    GeneratingTaskStatusEnum:
+      type: string
+      enum:
+        - Pending
+        - Generating
+        - Done
+        - Failed
+      description: AI genarating task status
+    NodeState:
+      type: object
+      properties:
+        generatingTaskId:
+          type: number
+          description: AI generating task id
+        generatingTaskStatus:
+          default: Pending
+          description: AI genarating task status
+          allOf:
+            - $ref: "#/components/schemas/GeneratingTaskStatusEnum"
+    NodePatchInput:
+      type: object
+      properties:
+        positionX:
+          type: number
+        positionY:
+          type: number
+        data:
+          $ref: "#/components/schemas/NodeData"
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
+        state:
+          $ref: "#/components/schemas/NodeState"
     NodeEntity:
       type: object
       properties:
@@ -391,6 +491,8 @@ components:
           type: number
         data:
           $ref: "#/components/schemas/NodeData"
+        state:
+          $ref: "#/components/schemas/NodeState"
         updatedAt:
           format: date-time
           type: string
@@ -400,7 +502,51 @@ components:
         - positionX
         - positionY
         - data
+        - state
         - updatedAt
+    NodeDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
+    GeneratingTaskInputInAddInput:
+      type: object
+      properties:
+        sourceNodeIds:
+          description: generating from source nodes
+          type: array
+          items:
+            type: number
+        edgeIds:
+          description: generating from source edges
+          type: array
+          items:
+            type: number
+      required:
+        - sourceNodeIds
+        - edgeIds
+    GeneratingTaskAddInput:
+      type: object
+      properties:
+        flowId:
+          type: number
+        targetNodeId:
+          type: number
+        input:
+          $ref: "#/components/schemas/GeneratingTaskInputInAddInput"
+      required:
+        - flowId
+        - targetNodeId
+        - input
+    GeneratingTaskAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
     EdgeHandleEnum:
       type: string
       enum:
@@ -451,109 +597,61 @@ components:
         - flowId
         - data
         - updatedAt
-    DocumentFull:
+    GeneratingTaskInput:
       type: object
       properties:
-        flowId:
-          type: number
-        name:
+        prompt:
           type: string
-        author:
-          type: string
-        updatedAt:
-          format: date-time
-          type: string
-        nodes:
+          description: prompt to trigger generating task
+        sourceNodeSnapshots:
           type: array
           items:
-            $ref: "#/components/schemas/NodeEntity"
-        edges:
+            required: false
+            description: generating from source nodes
+            type: array
+            items:
+              $ref: "#/components/schemas/NodeEntity"
+        edgeSnapshots:
+          description: generating from source edges
           type: array
           items:
             $ref: "#/components/schemas/EdgeEntity"
       required:
-        - flowId
-        - name
-        - author
-        - updatedAt
-        - nodes
-        - edges
-    DocumentSlim:
+        - sourceNodeSnapshots
+    GeneratingTaskOutput:
       type: object
       properties:
+        generatedContent:
+          type: string
+          description: generated content
+    GeneratingTaskEntity:
+      type: object
+      properties:
+        status:
+          default: Pending
+          allOf:
+            - $ref: "#/components/schemas/GeneratingTaskStatusEnum"
+        id:
+          type: number
         flowId:
           type: number
-        name:
-          type: string
-        author:
-          type: string
+        targetNodeId:
+          type: number
+        input:
+          $ref: "#/components/schemas/GeneratingTaskInput"
+        output:
+          $ref: "#/components/schemas/GeneratingTaskOutput"
         updatedAt:
           format: date-time
           type: string
-        nodeIds:
-          type: array
-          items:
-            type: string
-        edgeIds:
-          type: array
-          items:
-            type: string
       required:
-        - flowId
-        - name
-        - author
-        - updatedAt
-        - nodeIds
-        - edgeIds
-    NodeAddInput:
-      type: object
-      properties:
-        flowId:
-          type: number
-        positionX:
-          type: number
-          default: 0
-        positionY:
-          type: number
-          default: 0
-        data:
-          default:
-            content: ""
-          allOf:
-            - $ref: "#/components/schemas/NodeData"
-        dataType:
-          default: Text
-          allOf:
-            - $ref: "#/components/schemas/NodeDataTypeEnum"
-      required:
-        - flowId
-    NodeAddResponse:
-      type: object
-      properties:
-        id:
-          type: number
-      required:
+        - status
         - id
-    NodePatchInput:
-      type: object
-      properties:
-        positionX:
-          type: number
-        positionY:
-          type: number
-        data:
-          $ref: "#/components/schemas/NodeData"
-        dataType:
-          default: Text
-          allOf:
-            - $ref: "#/components/schemas/NodeDataTypeEnum"
-    NodeDeleteResponse:
-      type: object
-      properties:
-        done:
-          type: boolean
-      required:
-        - done
+        - flowId
+        - targetNodeId
+        - input
+        - output
+        - updatedAt
     EdgeAddInput:
       type: object
       properties:
@@ -617,3 +715,57 @@ components:
           type: boolean
       required:
         - done
+    DocumentFull:
+      type: object
+      properties:
+        flowId:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeEntity"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/EdgeEntity"
+      required:
+        - flowId
+        - name
+        - author
+        - updatedAt
+        - nodes
+        - edges
+    DocumentSlim:
+      type: object
+      properties:
+        flowId:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        nodeIds:
+          type: array
+          items:
+            type: string
+        edgeIds:
+          type: array
+          items:
+            type: string
+      required:
+        - flowId
+        - name
+        - author
+        - updatedAt
+        - nodeIds
+        - edgeIds

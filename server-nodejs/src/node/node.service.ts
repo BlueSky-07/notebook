@@ -1,10 +1,12 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { NodeEntity } from './node.entity';
 import { NodeAddInput, NodePatchInput } from './node.type';
 import { FlowEntity } from '../flow/flow.entity';
@@ -16,6 +18,7 @@ export class NodeService {
   constructor(
     @InjectRepository(NodeEntity)
     private nodeRepository: Repository<NodeEntity>,
+    @Inject(forwardRef(() => InngestService))
     private inngestService: InngestService,
   ) {}
 
@@ -24,7 +27,7 @@ export class NodeService {
       ...nodeAddInput,
       updatedAt: new Date(),
     });
-    FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+    await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: nodeAddInput.flowId,
     });
     return res.generatedMaps[0].id;
@@ -40,7 +43,7 @@ export class NodeService {
       updatedAt: new Date(),
     });
     if (res.affected) {
-      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,
       });
       return this.getNode(id);
@@ -61,6 +64,15 @@ export class NodeService {
     return record;
   }
 
+  getNodesByIds(ids: NodeEntity['id'][]): Promise<NodeEntity[]> {
+    if (!ids.length) return Promise.resolve([] as NodeEntity[])
+    return this.nodeRepository.find({
+      where: {
+        id: In(ids)
+      }
+    });
+  }
+
   getNodesByFlowId(flowId: FlowEntity['id']): Promise<NodeEntity[]> {
     return this.nodeRepository.findBy({
       flowId,
@@ -73,7 +85,7 @@ export class NodeService {
       id,
     });
     if (res.affected) {
-      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,
       });
       return true;

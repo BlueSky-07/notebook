@@ -5,6 +5,7 @@ base.ts
 clients/document-api.ts
 clients/edge-api.ts
 clients/flow-api.ts
+clients/generating-task-api.ts
 clients/node-api.ts
 common.ts
 configuration.ts
@@ -26,6 +27,13 @@ models/flow-delete-response.ts
 models/flow-entity.ts
 models/flow-list-response.ts
 models/flow-patch-input.ts
+models/generating-task-add-input.ts
+models/generating-task-add-response.ts
+models/generating-task-entity.ts
+models/generating-task-input-in-add-input.ts
+models/generating-task-input.ts
+models/generating-task-output.ts
+models/generating-task-status-enum.ts
 models/index.ts
 models/node-add-input.ts
 models/node-add-response.ts
@@ -34,3 +42,4 @@ models/node-data.ts
 models/node-delete-response.ts
 models/node-entity.ts
 models/node-patch-input.ts
+models/node-state.ts

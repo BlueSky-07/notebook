@@ -14,9 +14,17 @@
 
 
 
-export * from './clients/document-api';
-export * from './clients/edge-api';
-export * from './clients/flow-api';
-export * from './clients/generating-task-api';
-export * from './clients/node-api';
+/**
+ * 
+ * @export
+ * @interface GeneratingTaskAddResponse
+ */
+export interface GeneratingTaskAddResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof GeneratingTaskAddResponse
+     */
+    'id': number;
+}
 

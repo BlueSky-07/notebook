@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { EdgeController } from './edge.controller';
 import { EdgeService } from './edge.service';
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -8,7 +8,7 @@ import { InngestModule } from '../inngest/inngest.module'
 @Module({
   imports: [
     TypeOrmModule.forFeature([EdgeEntity]),
-    InngestModule,
+    forwardRef(() => InngestModule),
   ],
   controllers: [EdgeController],
   providers: [EdgeService],
