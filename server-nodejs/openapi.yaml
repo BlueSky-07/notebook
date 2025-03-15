@@ -1,41 +1,5 @@
 openapi: 3.0.0
 paths:
-  /document/full/{flowId}:
-    get:
-      operationId: getFullDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentFull"
-      tags:
-        - Document
-  /document/slim/{flowId}:
-    get:
-      operationId: getSlimDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentSlim"
-      tags:
-        - Document
   /flow:
     post:
       operationId: addFlow
@@ -137,6 +101,42 @@ paths:
                 $ref: "#/components/schemas/FlowDeleteResponse"
       tags:
         - Flow
+  /document/full/{flowId}:
+    get:
+      operationId: getFullDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentFull"
+      tags:
+        - Document
+  /document/slim/{flowId}:
+    get:
+      operationId: getSlimDocument
+      parameters:
+        - name: flowId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentSlim"
+      tags:
+        - Document
   /node:
     post:
       operationId: addNode
@@ -300,6 +300,66 @@ tags: []
 servers: []
 components:
   schemas:
+    FlowAddInput:
+      type: object
+      properties:
+        name:
+          type: string
+        author:
+          type: string
+      required:
+        - name
+        - author
+    FlowAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    FlowPatchInput:
+      type: object
+      properties:
+        name:
+          type: string
+        author:
+          type: string
+    FlowEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        author:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - author
+        - updatedAt
+    FlowListResponse:
+      type: object
+      properties:
+        count:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FlowEntity"
+      required:
+        - count
+        - items
+    FlowDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
     NodeDataTypeEnum:
       type: string
       enum:
@@ -445,66 +505,6 @@ components:
         - updatedAt
         - nodeIds
         - edgeIds
-    FlowAddInput:
-      type: object
-      properties:
-        name:
-          type: string
-        author:
-          type: string
-      required:
-        - name
-        - author
-    FlowAddResponse:
-      type: object
-      properties:
-        id:
-          type: number
-      required:
-        - id
-    FlowPatchInput:
-      type: object
-      properties:
-        name:
-          type: string
-        author:
-          type: string
-    FlowEntity:
-      type: object
-      properties:
-        id:
-          type: number
-        name:
-          type: string
-        author:
-          type: string
-        updatedAt:
-          format: date-time
-          type: string
-      required:
-        - id
-        - name
-        - author
-        - updatedAt
-    FlowListResponse:
-      type: object
-      properties:
-        count:
-          type: number
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/FlowEntity"
-      required:
-        - count
-        - items
-    FlowDeleteResponse:
-      type: object
-      properties:
-        done:
-          type: boolean
-      required:
-        - done
     NodeAddInput:
       type: object
       properties:

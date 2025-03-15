@@ -1,66 +1,86 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NodeEntity } from './node.entity'
-import { NodeAddInput, NodePatchInput } from './node.type'
-import { FlowEntity } from '../flow/flow.entity'
+import { NodeEntity } from './node.entity';
+import { NodeAddInput, NodePatchInput } from './node.type';
+import { FlowEntity } from '../flow/flow.entity';
+import { InngestService } from '../inngest/inngest.service';
+import FlowUpdatedFunction from '../inngest/functions/flow-updated';
 
 @Injectable()
 export class NodeService {
   constructor(
     @InjectRepository(NodeEntity)
     private nodeRepository: Repository<NodeEntity>,
+    private inngestService: InngestService,
   ) {}
 
   async addNode(nodeAddInput: NodeAddInput): Promise<NodeEntity['id']> {
     const res = await this.nodeRepository.insert({
       ...nodeAddInput,
-      updatedAt: new Date()
-    })
-    return res.generatedMaps[0].id
+      updatedAt: new Date(),
+    });
+    FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+      flowId: nodeAddInput.flowId,
+    });
+    return res.generatedMaps[0].id;
   }
 
-  async patchNode(id: NodeEntity['id'], nodePatchInput: NodePatchInput): Promise<NodeEntity> {
-    await this.getNode(id)
-    const res = await this.nodeRepository.update(
-      id,
-      {
-        ...nodePatchInput,
-        updatedAt: new Date()
-      }
-    )
+  async patchNode(
+    id: NodeEntity['id'],
+    nodePatchInput: NodePatchInput,
+  ): Promise<NodeEntity> {
+    const record = await this.getNode(id);
+    const res = await this.nodeRepository.update(id, {
+      ...nodePatchInput,
+      updatedAt: new Date(),
+    });
     if (res.affected) {
-      return this.getNode(id)
+      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+        flowId: record.flowId,
+      });
+      return this.getNode(id);
     } else {
-      throw new InternalServerErrorException(`Node does not update successfully`)
+      throw new InternalServerErrorException(
+        `Node does not update successfully`,
+      );
     }
   }
 
   async getNode(id: NodeEntity['id']): Promise<NodeEntity> {
     const record = await this.nodeRepository.findOneBy({
-      id
-    })
+      id,
+    });
     if (!record) {
-      throw new NotFoundException(`Node does not exist: ${id}`)
+      throw new NotFoundException(`Node does not exist: ${id}`);
     }
-    return record
+    return record;
   }
 
   getNodesByFlowId(flowId: FlowEntity['id']): Promise<NodeEntity[]> {
     return this.nodeRepository.findBy({
-      flowId
-    })
+      flowId,
+    });
   }
 
   async deleteNode(id: NodeEntity['id']): Promise<boolean> {
-    await this.getNode(id)
+    const record = await this.getNode(id);
     const res = await this.nodeRepository.delete({
-      id
-    })
+      id,
+    });
     if (res.affected) {
-      return true
+      FlowUpdatedFunction.trigger(this.inngestService.inngest, {
+        flowId: record.flowId,
+      });
+      return true;
     } else {
-      throw new InternalServerErrorException(`Node does not delete successfully`)
+      throw new InternalServerErrorException(
+        `Node does not delete successfully`,
+      );
     }
   }
 }

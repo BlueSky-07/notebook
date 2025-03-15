@@ -40,6 +40,14 @@ services:
     networks:
       - notebook-server
 
+  inngest:
+    image: inngest/inngest
+    command: 'inngest dev -u http://host.docker.internal:9001/inngest'
+    ports:
+      - '9108:8288'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
   minio:
     image: minio/minio
     restart: always

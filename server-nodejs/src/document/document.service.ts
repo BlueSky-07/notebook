@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { FlowService } from '../flow/flow.service'
 import { DocumentSlim, DocumentFull } from './document.type'
 import { NodeService } from '../node/node.service'
@@ -38,7 +38,7 @@ export class DocumentService {
       author: documentFull.author,
       updatedAt: documentFull.updatedAt,
       nodeIds: documentFull.nodes.map(node => node.id),
-      edgeIds: documentFull.edges.map(node => node.id),
+      edgeIds: documentFull.edges.map(edge => edge.id),
     }
   }
 }
