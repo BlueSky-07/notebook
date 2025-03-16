@@ -18,6 +18,7 @@ export interface FlowState extends FlowModel {
   // Life Cycles
   bootstrap: (flowId: FlowEntity['id']) => void
   getFlowId: () => FlowEntity['id']
+  getNode: (nodeId: string) => Node | undefined
 
   // Flow Internal Callbacks
   onNodesChange: OnNodesChange<Node>
@@ -27,7 +28,10 @@ export interface FlowState extends FlowModel {
   setEdges: (edges: Edge[]) => void
 
   // User Actions Callbacks
-  addNode: (type: NodeEntity['dataType']) => void
+  addNode: (
+    type: NodeEntity['dataType'],
+    copyFrom?: Node
+  ) => void
   updateNodeData: (id: string, data: Node['data']) => void
   updateEdgeData: (id: string, data: Edge['data']) => void
 }
@@ -48,6 +52,9 @@ const useFlowStore = create<FlowState>((set, get) => {
     },
     getFlowId: () => {
       return get().subject?.getFlowId()
+    },
+    getNode: (nodeId: string) => {
+      return get().nodes.find(node => node.id === nodeId)
     },
     nodes: [],
     edges: [],
@@ -100,8 +107,8 @@ const useFlowStore = create<FlowState>((set, get) => {
         edges,
       })
     },
-    addNode: (dataType: NodeEntity['dataType']) => {
-      get().subject?.addNode(dataType)
+    addNode: (dataType: NodeEntity['dataType'], copyFrom?: Node) => {
+      get().subject?.addNode(dataType, copyFrom)
     },
     updateNodeData: (id: string, data: Node['data']) => {
       get().subject?.updateNodeData(id, data)

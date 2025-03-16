@@ -1,17 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
-  name: 'flows'
+  name: 'flows',
 })
 export class FlowEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string
+  name: string;
 
   @Column()
-  author: string
+  author: string;
 
   @Column()
   updatedAt: Date;

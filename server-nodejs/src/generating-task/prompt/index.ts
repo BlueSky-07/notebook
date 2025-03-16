@@ -18,7 +18,7 @@ ${sourceNode.data.content}
 </reference>`);
   }
   if (!prompts.length) {
-    return targetNode.data.content || ''
+    return targetNode.data.content || '';
   }
   return [
     `有一组文字材料，格式如下：
@@ -40,6 +40,5 @@ ${sourceNode.data.content}
     ...prompts,
     `
 请你理解以上材料，${targetNode.data.content || '续写一段长度大约200字的文章'}，请不要做任何额外的解释。续写内容如下：`,
-    ...prompts,
   ].join('\n');
 }

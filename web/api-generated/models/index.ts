@@ -1,3 +1,4 @@
+export * from './ai-info-response';
 export * from './document-full';
 export * from './document-slim';
 export * from './edge-add-input';
@@ -21,6 +22,7 @@ export * from './generating-task-input';
 export * from './generating-task-input-in-add-input';
 export * from './generating-task-output';
 export * from './generating-task-status-enum';
+export * from './generating-task-stop-response';
 export * from './node-add-input';
 export * from './node-add-response';
 export * from './node-data';

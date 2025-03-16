@@ -1,21 +1,22 @@
-import { Logger, Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { FlowModule } from './flow/flow.module'
-import { FlowEntity } from './flow/flow.entity'
-import { NodeModule } from './node/node.module'
-import { NodeEntity } from './node/node.entity'
-import { EdgeModule } from './edge/edge.module'
-import { EdgeEntity } from './edge/edge.entity'
-import { DocumentModule } from './document/document.module'
-import { InngestModule } from './inngest/inngest.module'
-import { GeneratingTaskModule } from './generating-task/generating-task.module'
-import { GeneratingTaskEntity } from './generating-task/generating-task.entity'
+import { Logger, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FlowModule } from './flow/flow.module';
+import { FlowEntity } from './flow/flow.entity';
+import { NodeModule } from './node/node.module';
+import { NodeEntity } from './node/node.entity';
+import { EdgeModule } from './edge/edge.module';
+import { EdgeEntity } from './edge/edge.entity';
+import { DocumentModule } from './document/document.module';
+import { InngestModule } from './inngest/inngest.module';
+import { GeneratingTaskModule } from './generating-task/generating-task.module';
+import { GeneratingTaskEntity } from './generating-task/generating-task.entity';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.aksk.env', '.development.env']
+      envFilePath: ['.aksk.env', '.development.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -28,8 +29,8 @@ import { GeneratingTaskEntity } from './generating-task/generating-task.entity'
           password: configService.get('MYSQL_PASSWORD'),
           database: configService.get('MYSQL_DATABASE'),
           entities: [FlowEntity, NodeEntity, EdgeEntity, GeneratingTaskEntity],
-          synchronize: true
-        }
+          synchronize: true,
+        };
       },
       inject: [ConfigService],
     }),
@@ -39,7 +40,8 @@ import { GeneratingTaskEntity } from './generating-task/generating-task.entity'
     NodeModule,
     EdgeModule,
     GeneratingTaskModule,
+    AiModule,
   ],
-  providers: [Logger]
+  providers: [Logger],
 })
 export class AppModule {}

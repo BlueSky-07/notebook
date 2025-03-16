@@ -2,6 +2,7 @@
 .npmignore
 api.ts
 base.ts
+clients/ai-api.ts
 clients/document-api.ts
 clients/edge-api.ts
 clients/flow-api.ts
@@ -11,6 +12,7 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/ai-info-response.ts
 models/document-full.ts
 models/document-slim.ts
 models/edge-add-input.ts
@@ -34,6 +36,7 @@ models/generating-task-input-in-add-input.ts
 models/generating-task-input.ts
 models/generating-task-output.ts
 models/generating-task-status-enum.ts
+models/generating-task-stop-response.ts
 models/index.ts
 models/node-add-input.ts
 models/node-add-response.ts

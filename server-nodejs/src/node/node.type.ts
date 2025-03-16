@@ -1,40 +1,49 @@
-import { NodeDataType, NodeEntity, NodeData, NodeState } from './node.entity'
-import { ApiExtraModels, ApiProperty } from '@nestjs/swagger'
+import { NodeDataType, NodeEntity, NodeData, NodeState } from './node.entity';
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 
 @ApiExtraModels(NodeData)
 export class NodeAddInput {
   @ApiProperty({ type: Number })
-  flowId: NodeEntity['flowId']
+  flowId: NodeEntity['flowId'];
   @ApiProperty({ type: Number, required: false, default: 0 })
-  positionX?: NodeEntity['positionX']
+  positionX?: NodeEntity['positionX'];
   @ApiProperty({ type: Number, required: false, default: 0 })
-  positionY?: NodeEntity['positionY']
+  positionY?: NodeEntity['positionY'];
   @ApiProperty({ type: NodeData, required: false, default: { content: '' } })
-  data?: NodeEntity['data']
-  @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
-  dataType?: NodeEntity['dataType']
+  data?: NodeEntity['data'];
+  @ApiProperty({
+    enum: NodeDataType,
+    enumName: 'NodeDataTypeEnum',
+    required: false,
+    default: NodeDataType.Text,
+  })
+  dataType?: NodeEntity['dataType'];
 }
 
-export class NodeAddResponse  {
+export class NodeAddResponse {
   @ApiProperty({ type: Number })
-  id: NodeEntity['id']
+  id: NodeEntity['id'];
 }
 
 export class NodePatchInput {
   @ApiProperty({ type: Number, required: false })
-  positionX?: NodeEntity['positionX']
+  positionX?: NodeEntity['positionX'];
   @ApiProperty({ type: Number, required: false })
-  positionY?: NodeEntity['positionY']
+  positionY?: NodeEntity['positionY'];
   @ApiProperty({ type: NodeData, required: false })
-  data?: NodeEntity['data']
-  @ApiProperty({ enum: NodeDataType, enumName: 'NodeDataTypeEnum', required: false, default: NodeDataType.Text })
-  dataType?: NodeEntity['dataType']
+  data?: NodeEntity['data'];
+  @ApiProperty({
+    enum: NodeDataType,
+    enumName: 'NodeDataTypeEnum',
+    required: false,
+    default: NodeDataType.Text,
+  })
+  dataType?: NodeEntity['dataType'];
   @ApiProperty({ type: NodeState, required: false })
-  state?: NodeEntity['state']
+  state?: NodeEntity['state'];
 }
 
 export class NodeDeleteResponse {
   @ApiProperty({ type: Boolean })
-  done: boolean
+  done: boolean;
 }
-

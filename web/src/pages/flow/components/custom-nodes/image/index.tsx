@@ -3,6 +3,7 @@ import { Image, Space } from '@arco-design/web-react';
 import { NodeProps, Node } from '@xyflow/react';
 import styles from './styles.module.less'
 import DefaultHandles from '../../custom-handles'
+import { IconImage } from '@arco-design/web-react/icon'
 
 type CustomNodeImageData = Pick<NodeEntity['data'], 'src'>
 
@@ -16,7 +17,7 @@ export const CustomNodeImage  = (props: CustomNodeImageProps) => {
   return (
     <>
       <Space className={styles.customImageNode} direction='vertical'>
-        <span>Image Node @{id}</span>
+        <span><IconImage /> Image Node @{id}</span>
 
         <Image
           width={300}

@@ -17,20 +17,26 @@
 /**
  * 
  * @export
- * @interface GeneratingTaskOutput
+ * @interface AiInfoResponse
  */
-export interface GeneratingTaskOutput {
+export interface AiInfoResponse {
     /**
-     * generated content
-     * @type {string}
-     * @memberof GeneratingTaskOutput
+     * 
+     * @type {boolean}
+     * @memberof AiInfoResponse
      */
-    'generatedContent'?: string;
+    'enabled': boolean;
     /**
-     * error message
+     * 
      * @type {string}
-     * @memberof GeneratingTaskOutput
+     * @memberof AiInfoResponse
      */
-    'errorMessage'?: string;
+    'provider'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AiInfoResponse
+     */
+    'modelName'?: string;
 }
 

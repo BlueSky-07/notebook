@@ -106,9 +106,10 @@ export default class FlowSubject {
   }
 
   async addNode(
-    dataType: NodeEntity['dataType']
+    dataType: NodeEntity['dataType'],
+    copyFrom?: Node
   ) {
-    const newNode = getFlowNode(Date.now().toString(), dataType)
+    const newNode = copyFrom ?? getFlowNode(Date.now().toString(), dataType)
     const createResp = await this.dispatchStorage(
       async () => {
         const resp = await API.node.addNode(

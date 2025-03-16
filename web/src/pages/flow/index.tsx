@@ -3,6 +3,7 @@ import FlowBrowser from './components/flow-browser'
 import { useParams, useNavigate } from 'react-router'
 import { Layout, Typography } from '@arco-design/web-react'
 import FlowDashboard from '@/pages/flow/components/flow-dashboard'
+import { AiInfo } from './components/ai-info'
 
 export default function FlowPage() {
   const { flowId } = useParams<{ flowId?: string }>()
@@ -17,6 +18,7 @@ export default function FlowPage() {
           flowId={flowId ? parseInt(flowId, 10) : undefined}
           onViewFlow={flow => navigate(`/flow/${flow.id}`)}
         />
+        <AiInfo />
       </Layout.Sider>
       <Layout.Content>
         {flowId && <FlowDashboard flowId={flowId}/>}

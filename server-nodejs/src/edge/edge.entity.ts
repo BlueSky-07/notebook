@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum EdgeDataType {
   Label = 'Label',
@@ -14,12 +14,11 @@ export enum EdgeHandle {
 
 export class EdgeData {
   @ApiProperty({ type: String, required: false, description: 'label content' })
-  label?: string
+  label?: string;
 }
 
-
 @Entity({
-  name: 'edges'
+  name: 'edges',
 })
 export class EdgeEntity {
   @PrimaryGeneratedColumn()
@@ -29,25 +28,43 @@ export class EdgeEntity {
   flowId: number;
 
   @Column({ default: null })
-  sourceNodeId?: number
+  sourceNodeId?: number;
 
   @Column({ default: null })
-  targetNodeId?: number
+  targetNodeId?: number;
 
-  @ApiProperty({ enum: EdgeHandle, enumName: 'EdgeHandleEnum', required: false, default: EdgeHandle.Right })
+  @ApiProperty({
+    enum: EdgeHandle,
+    enumName: 'EdgeHandleEnum',
+    required: false,
+    default: EdgeHandle.Right,
+  })
   @Column({ type: 'enum', enum: EdgeHandle, default: EdgeHandle.Right })
-  sourceHandle?: EdgeHandle
+  sourceHandle?: EdgeHandle;
 
-  @ApiProperty({ enum: EdgeHandle, enumName: 'EdgeHandleEnum', required: false, default: EdgeHandle.Top })
+  @ApiProperty({
+    enum: EdgeHandle,
+    enumName: 'EdgeHandleEnum',
+    required: false,
+    default: EdgeHandle.Top,
+  })
   @Column({ type: 'enum', enum: EdgeHandle, default: EdgeHandle.Top })
-  targetHandle?: EdgeHandle
+  targetHandle?: EdgeHandle;
 
-  @Column({ type: 'simple-json', default: () => `('${JSON.stringify({ label: '' })}')` })
-  data: EdgeData
+  @Column({
+    type: 'simple-json',
+    default: () => `('${JSON.stringify({ label: '' })}')`,
+  })
+  data: EdgeData;
 
-  @ApiProperty({ enum: EdgeDataType, enumName: 'EdgeDataTypeEnum', required: false, default: EdgeDataType.Label })
+  @ApiProperty({
+    enum: EdgeDataType,
+    enumName: 'EdgeDataTypeEnum',
+    required: false,
+    default: EdgeDataType.Label,
+  })
   @Column({ type: 'enum', enum: EdgeDataType, default: EdgeDataType.Label })
-  dataType: EdgeDataType
+  dataType: EdgeDataType;
 
   @Column()
   updatedAt: Date;

@@ -17,9 +17,9 @@ import FlowUpdatedFunction from '../inngest/functions/flow-updated';
 export class EdgeService {
   constructor(
     @InjectRepository(EdgeEntity)
-    private edgeRepository: Repository<EdgeEntity>,
+    private readonly edgeRepository: Repository<EdgeEntity>,
     @Inject(forwardRef(() => InngestService))
-    private inngestService: InngestService,
+    private readonly inngestService: InngestService,
   ) {}
 
   async addEdge(edgeAddInput: EdgeAddInput): Promise<EdgeEntity['id']> {
@@ -30,7 +30,7 @@ export class EdgeService {
     await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: edgeAddInput.flowId,
     });
-    return res.generatedMaps[0].id;
+    return res.generatedMaps[0].id as number;
   }
 
   async patchEdge(
@@ -64,13 +64,13 @@ export class EdgeService {
     return record;
   }
 
-  getEdgesByIds(ids: EdgeEntity['id'][]): Promise<EdgeEntity[]>{
-    if (!ids.length) return Promise.resolve([] as EdgeEntity[])
+  getEdgesByIds(ids: EdgeEntity['id'][]): Promise<EdgeEntity[]> {
+    if (!ids.length) return Promise.resolve([] as EdgeEntity[]);
     return this.edgeRepository.find({
       where: {
-        id: In(ids)
-      }
-    })
+        id: In(ids),
+      },
+    });
   }
 
   getEdgesByFlowId(flowId: FlowEntity['id']): Promise<EdgeEntity[]> {

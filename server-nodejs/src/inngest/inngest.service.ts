@@ -3,8 +3,9 @@ import { EventSchemas, Inngest } from 'inngest';
 import InngestEvents from './type';
 import { FlowService } from '../flow/flow.service';
 import { createInngestFunctions } from './functions';
-import { NodeService } from '../node/node.service'
-import { GeneratingTaskService } from '../generating-task/generating-task.service'
+import { NodeService } from '../node/node.service';
+import { GeneratingTaskService } from '../generating-task/generating-task.service';
+import { AiService } from '../ai/ai.service';
 
 @Injectable()
 export class InngestService {
@@ -12,12 +13,13 @@ export class InngestService {
   functions: ReturnType<typeof createInngestFunctions>;
 
   constructor(
-    private logger: Logger,
-    private flowService: FlowService,
+    private readonly logger: Logger,
+    private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
-    private nodeService: NodeService,
+    private readonly nodeService: NodeService,
     @Inject(forwardRef(() => GeneratingTaskService))
-    private generatingTaskService: GeneratingTaskService,
+    private readonly generatingTaskService: GeneratingTaskService,
+    private readonly aiService: AiService,
   ) {
     this.inngest = new Inngest({
       id: 'notebook-inngest',
@@ -28,6 +30,7 @@ export class InngestService {
       flowService,
       nodeService,
       generatingTaskService,
+      aiService,
     });
   }
 }

@@ -17,20 +17,14 @@
 /**
  * 
  * @export
- * @interface GeneratingTaskOutput
+ * @interface GeneratingTaskStopResponse
  */
-export interface GeneratingTaskOutput {
+export interface GeneratingTaskStopResponse {
     /**
-     * generated content
-     * @type {string}
-     * @memberof GeneratingTaskOutput
+     * 
+     * @type {boolean}
+     * @memberof GeneratingTaskStopResponse
      */
-    'generatedContent'?: string;
-    /**
-     * error message
-     * @type {string}
-     * @memberof GeneratingTaskOutput
-     */
-    'errorMessage'?: string;
+    'done': boolean;
 }
 

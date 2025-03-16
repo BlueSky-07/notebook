@@ -197,6 +197,24 @@ paths:
                 $ref: "#/components/schemas/GeneratingTaskAddResponse"
       tags:
         - GeneratingTask
+  /generating-task/{id}/stop:
+    post:
+      operationId: stopGeneratingTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskStopResponse"
+      tags:
+        - GeneratingTask
   /generating-task/{id}:
     get:
       operationId: getGeneratingTask
@@ -292,6 +310,19 @@ paths:
                 $ref: "#/components/schemas/EdgeDeleteResponse"
       tags:
         - Edge
+  /ai/info:
+    get:
+      operationId: getInfo
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiInfoResponse"
+      tags:
+        - Ai
   /document/full/{flowId}:
     get:
       operationId: getFullDocument
@@ -447,6 +478,7 @@ components:
         - Generating
         - Done
         - Failed
+        - Stopped
       description: AI genarating task status
     NodeState:
       type: object
@@ -547,6 +579,13 @@ components:
           type: number
       required:
         - id
+    GeneratingTaskStopResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
     EdgeHandleEnum:
       type: string
       enum:
@@ -624,6 +663,9 @@ components:
         generatedContent:
           type: string
           description: generated content
+        errorMessage:
+          type: string
+          description: error message
     GeneratingTaskEntity:
       type: object
       properties:
@@ -715,6 +757,17 @@ components:
           type: boolean
       required:
         - done
+    AiInfoResponse:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        provider:
+          type: string
+        modelName:
+          type: string
+      required:
+        - enabled
     DocumentFull:
       type: object
       properties:

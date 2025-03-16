@@ -27,14 +27,14 @@ import * as Prompt from './prompt';
 export class GeneratingTaskService {
   constructor(
     @InjectRepository(GeneratingTaskEntity)
-    private generatingRepository: Repository<GeneratingTaskEntity>,
-    private flowService: FlowService,
+    private readonly generatingRepository: Repository<GeneratingTaskEntity>,
+    private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
-    private nodeService: NodeService,
+    private readonly nodeService: NodeService,
     @Inject(forwardRef(() => EdgeService))
-    private edgeService: EdgeService,
+    private readonly edgeService: EdgeService,
     @Inject(forwardRef(() => InngestService))
-    private inngestService: InngestService,
+    private readonly inngestService: InngestService,
   ) {}
 
   async addGeneratingTask(
@@ -68,7 +68,7 @@ export class GeneratingTaskService {
       status: GeneratingTaskStatus.Pending,
       updatedAt: new Date(),
     });
-    const generatingTaskId = res.generatedMaps[0].id;
+    const generatingTaskId = res.generatedMaps[0].id as number;
     await GeneratingTaskCreatedFunction.trigger(this.inngestService.inngest, {
       generatingTaskId,
       targetNodeId: generatingTaskAddInput.targetNodeId,
@@ -99,6 +99,38 @@ export class GeneratingTaskService {
         generatingTaskId: id,
         targetNodeId: record.targetNodeId,
         generatingTaskStatus: generatingTaskPatchInput.status,
+      },
+    );
+    if (res.affected) {
+      return true;
+    } else {
+      throw new InternalServerErrorException(
+        `Generating Task does not update successfully`,
+      );
+    }
+  }
+
+  async stopGeneratingTask(id: GeneratingTaskEntity['id']): Promise<boolean> {
+    const record = await this.getGeneratingTask(id);
+    if (
+      ![GeneratingTaskStatus.Pending, GeneratingTaskStatus.Generating].includes(
+        record.status,
+      )
+    ) {
+      throw new InternalServerErrorException(
+        `Generating Task does not in running`,
+      );
+    }
+    const res = await this.generatingRepository.update(id, {
+      status: GeneratingTaskStatus.Stopped,
+      updatedAt: new Date(),
+    });
+    await GeneratingTaskStatusChangedFunction.trigger(
+      this.inngestService.inngest,
+      {
+        generatingTaskId: id,
+        targetNodeId: record.targetNodeId,
+        generatingTaskStatus: GeneratingTaskStatus.Stopped,
       },
     );
     if (res.affected) {

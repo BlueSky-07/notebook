@@ -1,5 +1,5 @@
 import { NodeEntity, NodeDataTypeEnum, GeneratingTaskStatusEnum } from '@api/models'
-import { Button, Input, Space, Spin } from '@arco-design/web-react';
+import { Button, Input, Space, Spin, Tooltip } from '@arco-design/web-react';
 import { NodeProps, Node, useNodeConnections } from '@xyflow/react';
 import styles from './styles.module.less'
 import useFlowStore, { type FlowState } from '@/stores/flow'
@@ -8,6 +8,8 @@ import DefaultHandles from '../../custom-handles'
 import API from '@/services/api'
 import { useState } from 'react'
 import { useRequest } from 'ahooks'
+import CopyNode from '../../copy-node'
+import { IconBulb, IconPen, IconRecordStop } from '@arco-design/web-react/icon'
 
 type CustomNodeTextData = Pick<NodeEntity['data'], 'content'> & {
   $state?: NodeEntity['state']
@@ -34,7 +36,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
   const generatingTaskResp = useRequest(() => API.generatingTask.getGeneratingTask(generatingTaskId), {
     refreshDeps: [generatingTaskId],
     ready: generating,
-    pollingInterval: 5000,
+    pollingInterval: 3000,
     onSuccess: async (resp) => {
       if (resp.data.status !== GeneratingTaskStatusEnum.Done) {
         setGeneratingTaskStatus(resp.data.status)
@@ -49,9 +51,10 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
     }
   })
 
-  const { getFlowId, updateNodeData } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'updateNodeData'>>((state) => ({
+  const { getFlowId, getNode, updateNodeData } = useFlowStore(
+    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'getNode' | 'updateNodeData'>>((state) => ({
       getFlowId: state.getFlowId,
+      getNode: state.getNode,
       updateNodeData: state.updateNodeData,
     }))
   )
@@ -72,10 +75,21 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
     setGeneratingTaskId(createGenerateTaskResp.data.id)
     setGeneratingTaskStatus(GeneratingTaskStatusEnum.Pending)
   }
+
+  const stopGenerate = async () => {
+    const stopGenerateTaskResp = await API.generatingTask.stopGeneratingTask(
+      generatingTaskId
+    )
+    generatingTaskResp.run
+  }
+
   return (
     <>
       <Space className={styles.customTextNode} direction='vertical'>
-        <span>Text Node @{id}</span>
+        <div className={styles.buttons}>
+          <span><IconPen /> Text Node @{id}</span>
+          <CopyNode flowId={getFlowId()} node={getNode(id)} />
+        </div>
 
         <Spin loading={generating} style={{ width: '100%' }} tip="Generating">
           <Input.TextArea
@@ -93,10 +107,11 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
           />
         </Spin>
 
-        <Space className={styles.buttons}>
-          <Button type='text' loading={generating} onClick={generateContent}>{generating ? 'Generating': 'Generate'}</Button>
-          {generatingTaskId && <span>GeneratingTask @{generatingTaskId} / {generatingTaskStatus}</span>}
-        </Space>
+        <div className={styles.buttons}>
+          {!generating && <Button icon={<IconBulb />} type='text' onClick={generateContent}>{generating ? 'Generating': 'Generate'}</Button>}
+          {generating && <Button icon={<IconRecordStop />} type='text' status='danger' onClick={stopGenerate}>Stop</Button>}
+          {generatingTaskId && <span>GeneratingTask @{generatingTaskId} / <Tooltip content={generatingTaskResp.data?.data?.output?.errorMessage}>{generatingTaskStatus}</Tooltip></span>}
+        </div>
       </Space>
       <DefaultHandles />
     </>

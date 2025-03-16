@@ -4,6 +4,8 @@ import { Button, Input, List, Space, Spin, Typography } from '@arco-design/web-r
 import { useState } from 'react'
 import { FlowEntity } from '@api/models'
 import { formatRelativeDate } from '@/utils/dayjs'
+import styles from './styles.module.less'
+import FlowName from './flow-name'
 
 interface FlowBrowserProps {
   flowId?: FlowEntity['id']
@@ -30,13 +32,13 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
   }
   const { items, count } = listResp.data.data
   return (
-    <Space direction="vertical" style={{ width: '100%', height: '100%' }}>
+    <Space direction="vertical" className={styles.flowList}>
       <Typography.Title heading={3}>
         Flows
       </Typography.Title>
       <Input.Group
         compact={true}
-        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+        className={styles.header}
       >
         <Input
           style={{ width: 220 }}
@@ -80,7 +82,7 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
             ]}
           >
             <List.Item.Meta
-              title={item.name}
+              title={<FlowName flowId={flowId} name={item.name} onChange={() => listResp.run()} />}
               description={`updated ${formatRelativeDate(item.updatedAt)}`}
             />
           </List.Item>

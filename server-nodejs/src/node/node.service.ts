@@ -17,9 +17,9 @@ import FlowUpdatedFunction from '../inngest/functions/flow-updated';
 export class NodeService {
   constructor(
     @InjectRepository(NodeEntity)
-    private nodeRepository: Repository<NodeEntity>,
+    private readonly nodeRepository: Repository<NodeEntity>,
     @Inject(forwardRef(() => InngestService))
-    private inngestService: InngestService,
+    private readonly inngestService: InngestService,
   ) {}
 
   async addNode(nodeAddInput: NodeAddInput): Promise<NodeEntity['id']> {
@@ -30,7 +30,7 @@ export class NodeService {
     await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: nodeAddInput.flowId,
     });
-    return res.generatedMaps[0].id;
+    return res.generatedMaps[0].id as number;
   }
 
   async patchNode(
@@ -65,11 +65,11 @@ export class NodeService {
   }
 
   getNodesByIds(ids: NodeEntity['id'][]): Promise<NodeEntity[]> {
-    if (!ids.length) return Promise.resolve([] as NodeEntity[])
+    if (!ids.length) return Promise.resolve([] as NodeEntity[]);
     return this.nodeRepository.find({
       where: {
-        id: In(ids)
-      }
+        id: In(ids),
+      },
     });
   }
 

@@ -1,5 +1,5 @@
 import { Configuration } from  '@api/configuration'
-import { DocumentApi, FlowApi, NodeApi, EdgeApi, GeneratingTaskApi } from '@api/api'
+import { DocumentApi, FlowApi, NodeApi, EdgeApi, GeneratingTaskApi, AiApi } from '@api/api'
 
 export const API_CONFIGURATION: Configuration = {
   basePath: '/api'
@@ -11,6 +11,7 @@ const apiClients = {
   node: new NodeApi(API_CONFIGURATION),
   edge: new EdgeApi(API_CONFIGURATION),
   generatingTask: new GeneratingTaskApi(API_CONFIGURATION),
+  ai: new AiApi(API_CONFIGURATION),
 }
 
 export default apiClients;

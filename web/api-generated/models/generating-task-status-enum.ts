@@ -24,7 +24,8 @@ export const GeneratingTaskStatusEnum = {
     Pending: 'Pending',
     Generating: 'Generating',
     Done: 'Done',
-    Failed: 'Failed'
+    Failed: 'Failed',
+    Stopped: 'Stopped'
 } as const;
 
 export type GeneratingTaskStatusEnum = typeof GeneratingTaskStatusEnum[keyof typeof GeneratingTaskStatusEnum];
