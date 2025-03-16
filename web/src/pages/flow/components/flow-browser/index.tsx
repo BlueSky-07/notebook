@@ -82,7 +82,7 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
             ]}
           >
             <List.Item.Meta
-              title={<FlowName flowId={flowId} name={item.name} onChange={() => listResp.run()} />}
+              title={<FlowName flowId={item.id} name={item.name} onChange={() => listResp.run()} />}
               description={`updated ${formatRelativeDate(item.updatedAt)}`}
             />
           </List.Item>

@@ -1,5 +1,6 @@
 import { MarkerType, type Edge, type Node } from '@xyflow/react'
 import { EdgeEntity, NodeEntity, NodeDataTypeEnum, DocumentFull, EdgeDataTypeEnum, EdgeHandleEnum } from '@api/models'
+import { sample } from 'lodash-es'
 
 export interface FlowModel {
   nodes: Node[]
@@ -26,7 +27,12 @@ export function getFlowNode(
         content: ''
       },
       ...dataType === NodeDataTypeEnum.Image && {
-        src: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp'
+        src: sample([
+          'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp',
+          'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
+          'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp',
+          'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/8361eeb82904210b4f55fab888fe8416.png~tplv-uwbnlip3yd-webp.webp'
+        ])
       },
     },
     type: dataType,

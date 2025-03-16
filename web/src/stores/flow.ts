@@ -4,6 +4,7 @@ import {
   type OnNodesChange,
   type OnEdgesChange,
   type OnConnect,
+  type XYPosition,
 } from '@xyflow/react'
 import { create } from 'zustand'
 import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react'
@@ -30,7 +31,8 @@ export interface FlowState extends FlowModel {
   // User Actions Callbacks
   addNode: (
     type: NodeEntity['dataType'],
-    copyFrom?: Node
+    copyFrom?: Node,
+    center?: XYPosition
   ) => void
   updateNodeData: (id: string, data: Node['data']) => void
   updateEdgeData: (id: string, data: Edge['data']) => void
@@ -107,8 +109,12 @@ const useFlowStore = create<FlowState>((set, get) => {
         edges,
       })
     },
-    addNode: (dataType: NodeEntity['dataType'], copyFrom?: Node) => {
-      get().subject?.addNode(dataType, copyFrom)
+    addNode: (
+      dataType: NodeEntity['dataType'],
+      copyFrom?: Node,
+      center?: XYPosition
+    ) => {
+      get().subject?.addNode(dataType, copyFrom, center)
     },
     updateNodeData: (id: string, data: Node['data']) => {
       get().subject?.updateNodeData(id, data)

@@ -1,10 +1,11 @@
-import { type Edge, type Node } from '@xyflow/react'
+import { type XYPosition, type Edge, type Node } from '@xyflow/react'
 import { convertFlowEdgeToEdgeEntity, convertFlowNodeToNodeEntity, convertFullDocumentToFlowModel, DEFAULT_FLOW_MODEL, FlowModel, getFlowEdge, getFlowNode } from '@/models/flow'
 import { BehaviorSubject, Observable, share } from "rxjs"
 import API from '@/services/api'
 import { EdgeDataTypeEnum, EdgeEntity, NodeEntity } from '@api/models'
 import { produce } from 'immer'
 import { debounceRequest } from '@/utils/debounce-request'
+import { random } from 'lodash-es'
 
 export enum FLOW_SUBJECT_STORAGE {
   API, LOCAL_STORAGE
@@ -107,9 +108,14 @@ export default class FlowSubject {
 
   async addNode(
     dataType: NodeEntity['dataType'],
-    copyFrom?: Node
+    copyFrom?: Node,
+    center?: XYPosition
   ) {
     const newNode = copyFrom ?? getFlowNode(Date.now().toString(), dataType)
+    if (center && !copyFrom) {
+      newNode.position.x = center.x + random(-500, 500)
+      newNode.position.y = center.y + random(-500, 500)
+    }
     const createResp = await this.dispatchStorage(
       async () => {
         const resp = await API.node.addNode(

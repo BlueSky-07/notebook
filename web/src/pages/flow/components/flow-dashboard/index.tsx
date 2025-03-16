@@ -7,12 +7,10 @@ import {
 } from '@xyflow/react'
 import { useShallow } from 'zustand/react/shallow'
 import useFlowStore, { type FlowState } from '@/stores/flow'
-import { Space, Button } from '@arco-design/web-react'
-import { NodeDataTypeEnum } from '@api/models'
 import { useEffect } from 'react'
-import { IconPlusCircle } from '@arco-design/web-react/icon'
 import { useCustomNodes } from '../custom-nodes'
 import { useCustomEdges } from '../custom-edges'
+import { Footer } from '../footer'
 
 interface FlowDashboardProps {
   flowId?: string
@@ -30,7 +28,6 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-    addNode
   } = useFlowStore(
     useShallow<FlowState, Pick<FlowState,
       | 'bootstrap'
@@ -39,7 +36,6 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
       | 'onNodesChange'
       | 'onEdgesChange'
       | 'onConnect'
-      | 'addNode'
     >>((state) => ({
       bootstrap: state.bootstrap,
       nodes: state.nodes,
@@ -47,7 +43,6 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
       onNodesChange: state.onNodesChange,
       onEdgesChange: state.onEdgesChange,
       onConnect: state.onConnect,
-      addNode: state.addNode,
     }))
   )
 
@@ -70,11 +65,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
     >
       <MiniMap pannable={true} zoomable={true} />
       <Panel position="bottom-left" style={{ backgroundColor: 'white', padding: 10,  }}>
-        <Space>
-          <IconPlusCircle /> Add
-          <Button onClick={() => addNode(NodeDataTypeEnum.Text)} type='text' size='mini'>Text</Button>
-          <Button onClick={() => addNode(NodeDataTypeEnum.Image)} type='text' size='mini'>Image</Button>
-        </Space>
+        <Footer />
       </Panel>
       <Background
         id="base"
