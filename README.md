@@ -4,6 +4,14 @@ A platform for recording your thoughts.
 
 *Note: This project is currently in the early stages of development*
 
+## Screenshots
+
+![preview.png](https://github.com/user-attachments/assets/c22bdf61-fc27-4a64-89ad-d52b04988ee8)
+
+https://github.com/user-attachments/assets/7c24bfec-cc3c-4073-99d9-e2ca36268006
+
+https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
+
 ## Features
 
 1. You can add text nodes to record thoughts.
@@ -57,6 +65,12 @@ A platform for recording your thoughts.
 4. Inngest: http://localhost:9108
 
 5. Swagger: http://localhost:9001/api-docs
+
+![phpmyadmin.png](https://github.com/user-attachments/assets/50944063-8174-4854-a56c-72dc8f4ead5f)
+
+![inngest.png](https://github.com/user-attachments/assets/01cf9df6-9dc3-40cd-b324-8aef4bc2e711)
+
+![swagger.png](https://github.com/user-attachments/assets/9f6df245-6dc9-46d1-86ee-396dd71d458b)
 
 ### web
 
