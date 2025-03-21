@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "types": "dist/main.d.js",
   "scripts": {
-    "compose:up": "docker compose up",
+    "compose:watch": "docker compose watch",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"../test/**/*.ts\"",
     "start": "nest start",

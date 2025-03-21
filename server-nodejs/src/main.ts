@@ -30,7 +30,7 @@ async function bootstrap() {
           outputFilePath: './openapi.yaml', // or ./openapi.json
         },
         clientGeneratorOptions: {
-          enabled: true,
+          enabled: false, // use docker compose to generate
           type: 'typescript-axios',
           outputFolderPath: '../web/api-generated',
           additionalProperties:

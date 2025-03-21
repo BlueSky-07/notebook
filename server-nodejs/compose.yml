@@ -48,6 +48,28 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
+  openapi-generator:
+    image: openapitools/openapi-generator-cli
+    volumes:
+#      - ./openapi.yaml:/local/openapi.yaml:ro
+      - ../web/api-generated:/local/generated
+    command:
+      - generate
+      - -i
+      - /local/openapi.yaml
+      - -g
+      - typescript-axios
+      - -o
+      - /local/generated
+      - --skip-validate-spec
+      - --additional-properties
+      - apiPackage=clients,modelPackage=models,withoutPrefixEnums=true,withSeparateModelsAndApi=true
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./openapi.yaml
+          target: /local/openapi.yaml
+
   minio:
     image: minio/minio
     restart: always

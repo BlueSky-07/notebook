@@ -40,17 +40,15 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 #### Dependencies
 
-1. Docker Compose: Run Mysql/Inngest/phpMyAdmin
+1. Docker Compose: Run Mysql/Inngest/OpenAPI Generator/phpMyAdmin
 
 2. nodejs
-
-3. OpenJDK: Generate front-end project API interface files by OpenAPI documents
 
 #### Steps
 
 1. `npm -g install pnpm && pnpm install`
 
-2. `pnpm compose:up`
+2. `pnpm compose:watch`
 
 3. `pnpm start:dev`
 
