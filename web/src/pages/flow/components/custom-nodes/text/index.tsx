@@ -28,15 +28,15 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
   const [generatingTaskStatus, setGeneratingTaskStatus] = useState(data.$state?.generatingTaskStatus)
 
   const generating = ([
-    GeneratingTaskStatusEnum.Pending,
-    GeneratingTaskStatusEnum.Generating,
-  ] as GeneratingTaskStatusEnum[]
+      GeneratingTaskStatusEnum.Pending,
+      GeneratingTaskStatusEnum.Generating,
+    ] as GeneratingTaskStatusEnum[]
   ).includes(generatingTaskStatus)
 
   const generatingTaskResp = useRequest(() => API.generatingTask.getGeneratingTask(generatingTaskId), {
     refreshDeps: [generatingTaskId],
-    ready: generating,
-    pollingInterval: 3000,
+    ready: generating || generatingTaskStatus === GeneratingTaskStatusEnum.Failed,
+    pollingInterval: generating ? 3000 : undefined,
     onSuccess: async (resp) => {
       if (resp.data.status !== GeneratingTaskStatusEnum.Done) {
         setGeneratingTaskStatus(resp.data.status)
