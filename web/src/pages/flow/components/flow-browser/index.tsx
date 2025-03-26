@@ -22,7 +22,6 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
     name: string
   ) => API.flow.addFlow({
     name,
-    author: 'User'
   }), {
     manual: true
   })

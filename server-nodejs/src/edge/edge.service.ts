@@ -23,10 +23,7 @@ export class EdgeService {
   ) {}
 
   async addEdge(edgeAddInput: EdgeAddInput): Promise<EdgeEntity['id']> {
-    const res = await this.edgeRepository.insert({
-      ...edgeAddInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.edgeRepository.insert(edgeAddInput);
     await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: edgeAddInput.flowId,
     });
@@ -38,10 +35,7 @@ export class EdgeService {
     edgePatchInput: EdgePatchInput,
   ): Promise<EdgeEntity> {
     const record = await this.getEdge(id);
-    const res = await this.edgeRepository.update(id, {
-      ...edgePatchInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.edgeRepository.update(id, edgePatchInput);
     if (res.affected) {
       await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,

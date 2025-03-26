@@ -9,6 +9,12 @@ import { EdgeEntity } from '../edge/edge.entity';
 
 export class GeneratingTaskInputInAddInput {
   @ApiProperty({
+    type: String,
+    description: 'model id',
+  })
+  modelId: string;
+
+  @ApiProperty({
     type: Number,
     isArray: true,
     description: 'generating from source nodes',

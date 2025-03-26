@@ -51,11 +51,12 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
     }
   })
 
-  const { getFlowId, getNode, updateNodeData } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'getNode' | 'updateNodeData'>>((state) => ({
+  const { getFlowId, getNode, updateNodeData, modelId } = useFlowStore(
+    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'getNode' | 'updateNodeData' | 'modelId'>>((state) => ({
       getFlowId: state.getFlowId,
       getNode: state.getNode,
       updateNodeData: state.updateNodeData,
+      modelId: state.modelId,
     }))
   )
 
@@ -64,6 +65,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
       targetNodeId: parseInt(id),
       flowId: getFlowId(),
       input: {
+        modelId,
         sourceNodeIds: Array.from(
           new Set(connections.map(conn => parseInt(conn.source)))
         ),
@@ -108,7 +110,13 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
         </Spin>
 
         <div className={styles.buttons}>
-          {!generating && <Button icon={<IconBulb />} type='text' onClick={generateContent}>{generating ? 'Generating': 'Generate'}</Button>}
+          {!generating && (
+            <Tooltip disabled={Boolean(modelId)} content="Please select a model first">
+              <Button icon={<IconBulb />} type='text' onClick={generateContent} disabled={!modelId}>
+                {generating ? 'Generating': 'Generate'}
+              </Button>
+            </Tooltip>
+          )}
           {generating && <Button icon={<IconRecordStop />} type='text' status='danger' onClick={stopGenerate}>Stop</Button>}
           {generatingTaskId && <span>GeneratingTask @{generatingTaskId} / <Tooltip content={generatingTaskResp.data?.data?.output?.errorMessage}>{generatingTaskStatus}</Tooltip></span>}
         </div>

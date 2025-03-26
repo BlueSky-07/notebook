@@ -12,7 +12,8 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
-models/ai-info-response.ts
+models/ai-model-info.ts
+models/ai-models-response.ts
 models/document-full.ts
 models/document-slim.ts
 models/edge-add-input.ts

@@ -17,10 +17,7 @@ export class FlowService {
   ) {}
 
   async addFlow(flowAddInput: FlowAddInput): Promise<FlowEntity['id']> {
-    const res = await this.flowRepository.insert({
-      ...flowAddInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.flowRepository.insert(flowAddInput);
     return res.generatedMaps[0].id as number;
   }
 
@@ -29,10 +26,7 @@ export class FlowService {
     flowPatchInput: FlowPatchInput,
   ): Promise<FlowEntity> {
     await this.getFlow(id);
-    const res = await this.flowRepository.update(id, {
-      ...flowPatchInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.flowRepository.update(id, flowPatchInput);
     if (res.affected) {
       return this.getFlow(id);
     } else {

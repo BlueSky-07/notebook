@@ -37,12 +37,6 @@ export interface FlowEntity {
      * @type {string}
      * @memberof FlowEntity
      */
-    'author': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof FlowEntity
-     */
     'updatedAt': string;
 }
 

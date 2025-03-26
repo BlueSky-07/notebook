@@ -40,7 +40,7 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 #### Dependencies
 
-1. Docker Compose: Run Mysql/Inngest/OpenAPI Generator/phpMyAdmin
+1. Docker Compose: Run Mysql/Inngest/OpenAPI Generator/phpMyAdmin/sqlitebrowser
 
 2. nodejs
 
@@ -48,7 +48,7 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 1. `npm -g install pnpm && pnpm install`
 
-2. `pnpm compose:watch`
+2. `pnpm compose:mysql` or `pnpm compose:sqlite`, depends on `db.type` in [config/app.yaml](./server-nodejs/config/app.yaml)
 
 3. `pnpm start:dev`
 
@@ -56,13 +56,15 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 1. Backend server: http://localhost:9001
 
-2. Mysql: http://localhost:9106, root/password
+2. sqlite-web: http://localhost:9105
 
-3. phpMyAdmin: http://localhost:9107, root/password
+3. Mysql: http://localhost:9106, root/password
 
-4. Inngest: http://localhost:9108
+4. phpMyAdmin: http://localhost:9107, root/password
 
-5. Swagger: http://localhost:9001/api-docs
+5. Inngest: http://localhost:9108
+
+6. Swagger: http://localhost:9001/api-docs
 
 ![phpmyadmin.png](https://github.com/user-attachments/assets/50944063-8174-4854-a56c-72dc8f4ead5f)
 

@@ -1,18 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'flows',
 })
 export class FlowEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
   name: string;
 
-  @Column()
-  author: string;
-
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 }

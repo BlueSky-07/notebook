@@ -61,12 +61,12 @@ export class GeneratingTaskService {
       flowId: flowRecord.id,
       targetNodeId: generatingTaskAddInput.targetNodeId,
       input: {
+        modelId: generatingTaskAddInput.input.modelId,
         prompt,
         sourceNodeSnapshots: nodeRecords,
         edgeSnapshots: edgeRecords,
       },
       status: GeneratingTaskStatus.Pending,
-      updatedAt: new Date(),
     });
     const generatingTaskId = res.generatedMaps[0].id as number;
     await GeneratingTaskCreatedFunction.trigger(this.inngestService.inngest, {
@@ -89,10 +89,10 @@ export class GeneratingTaskService {
     generatingTaskPatchInput: GeneratingTaskPatchInput,
   ): Promise<boolean> {
     const record = await this.getGeneratingTask(id);
-    const res = await this.generatingRepository.update(id, {
-      ...generatingTaskPatchInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.generatingRepository.update(
+      id,
+      generatingTaskPatchInput,
+    );
     await GeneratingTaskStatusChangedFunction.trigger(
       this.inngestService.inngest,
       {
@@ -123,7 +123,6 @@ export class GeneratingTaskService {
     }
     const res = await this.generatingRepository.update(id, {
       status: GeneratingTaskStatus.Stopped,
-      updatedAt: new Date(),
     });
     await GeneratingTaskStatusChangedFunction.trigger(
       this.inngestService.inngest,

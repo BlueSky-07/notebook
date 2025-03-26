@@ -37,12 +37,6 @@ export interface DocumentSlim {
      * @type {string}
      * @memberof DocumentSlim
      */
-    'author': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DocumentSlim
-     */
     'updatedAt': string;
     /**
      * 

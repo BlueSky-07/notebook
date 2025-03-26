@@ -5,8 +5,6 @@ import { ListInput, ListResponse } from '../utils/pagination';
 export class FlowAddInput {
   @ApiProperty({ type: String })
   name: FlowEntity['name'];
-  @ApiProperty({ type: String })
-  author: FlowEntity['author'];
 }
 
 export class FlowAddResponse {
@@ -16,8 +14,6 @@ export class FlowAddResponse {
 export class FlowPatchInput {
   @ApiProperty({ type: String, required: false })
   name?: FlowEntity['name'];
-  @ApiProperty({ type: String, required: false })
-  author?: FlowEntity['author'];
 }
 export class FlowDeleteResponse {
   @ApiProperty({ type: Boolean })

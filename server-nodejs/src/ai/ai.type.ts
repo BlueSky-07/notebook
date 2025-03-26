@@ -1,10 +1,29 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 
-export class AiInfoResponse {
+export class AiModelInfo {
+  @ApiProperty({ type: String })
+  id: string;
+  @ApiProperty({ type: String })
+  provider: string;
+  @ApiProperty({ type: String })
+  modelName: string;
+}
+
+@ApiExtraModels(AiModelInfo)
+export class AiModelsResponse {
   @ApiProperty({ type: Boolean })
   enabled: boolean;
-  @ApiProperty({ type: String, required: false })
+  @ApiProperty({ type: AiModelInfo, isArray: true })
+  models: AiModelInfo[];
+}
+
+export interface AiModelConfig {
+  id: string;
   provider: string;
-  @ApiProperty({ type: String, required: false })
+  apiName?: string;
   modelName: string;
+  apiKey: string;
+  baseUrl: string;
+  proxy?: string;
+  disabled?: boolean;
 }

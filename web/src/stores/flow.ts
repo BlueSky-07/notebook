@@ -7,7 +7,7 @@ import {
   type XYPosition,
 } from '@xyflow/react'
 import { create } from 'zustand'
-import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react'
+import { applyNodeChanges, applyEdgeChanges } from '@xyflow/react'
 import FlowSubject from '@/rxjs/subjects/flow'
 import { FlowModel } from '@/models/flow'
 import { FlowEntity, NodeEntity } from '@api/models'
@@ -28,7 +28,7 @@ export interface FlowState extends FlowModel {
   setNodes: (nodes: Node[]) => void
   setEdges: (edges: Edge[]) => void
 
-  // User Actions Callbacks
+  // Flow User Actions Callbacks
   addNode: (
     type: NodeEntity['dataType'],
     copyFrom?: Node,
@@ -36,6 +36,12 @@ export interface FlowState extends FlowModel {
   ) => void
   updateNodeData: (id: string, data: Node['data']) => void
   updateEdgeData: (id: string, data: Edge['data']) => void
+
+  // Other States
+  modelId?: string
+
+  // Other User Actions Callbacks
+  updateModelId: (modelId: string) => void
 }
 
 const useFlowStore = create<FlowState>((set, get) => {
@@ -121,7 +127,11 @@ const useFlowStore = create<FlowState>((set, get) => {
     },
     updateEdgeData: (id: string, data: Edge['data']) => {
       get().subject?.updateEdgeData(id, data)
-    }
+    },
+    modelId: undefined,
+    updateModelId: (modelId: string) => {
+      set({ modelId })
+    },
   }
 })
 

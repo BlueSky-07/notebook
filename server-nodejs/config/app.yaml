@@ -1,0 +1,29 @@
+app:
+  port: 9001
+  nodeEnv: development
+
+db:
+  type: better-sqlite3  # mysql or better-sqlite3
+  mysql:
+    host: localhost
+    port: 9106
+    user: root
+    password: password
+    database: notebook
+  better-sqlite3:
+    database: database/notebook.db
+
+inngest:
+  isDev: true
+  baseUrl: http://localhost:9108
+
+ai:
+  models: # create a aksk.yaml in config folder to override !!
+    - id: gpt-4-turbo@openai                    # required
+      provider: openai                          # required
+      modelName: gpt-4-turbo                    # required
+      apiKey: my-api-key                        # required
+      baseUrl: https://api.openai.com/v1/models # required
+      proxy: http://localhost:7890              # optional
+      disabled: true                            # optional
+

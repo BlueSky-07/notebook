@@ -26,11 +26,5 @@ export interface FlowAddInput {
      * @memberof FlowAddInput
      */
     'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof FlowAddInput
-     */
-    'author': string;
 }
 

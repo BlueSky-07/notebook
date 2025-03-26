@@ -27,6 +27,12 @@ import type { NodeEntity } from './node-entity';
  */
 export interface GeneratingTaskInput {
     /**
+     * model id
+     * @type {string}
+     * @memberof GeneratingTaskInput
+     */
+    'modelId'?: string;
+    /**
      * prompt to trigger generating task
      * @type {string}
      * @memberof GeneratingTaskInput

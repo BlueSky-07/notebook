@@ -17,14 +17,26 @@
 /**
  * 
  * @export
- * @interface FlowPatchInput
+ * @interface AiModelInfo
  */
-export interface FlowPatchInput {
+export interface AiModelInfo {
     /**
      * 
      * @type {string}
-     * @memberof FlowPatchInput
+     * @memberof AiModelInfo
      */
-    'name'?: string;
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AiModelInfo
+     */
+    'provider': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AiModelInfo
+     */
+    'modelName': string;
 }
 

@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneratingTaskStatus } from '../generating-task/generating-task.entity';
 
@@ -37,16 +42,16 @@ export class NodeState {
   name: 'nodes',
 })
 export class NodeEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column()
+  @Column({ type: 'int' })
   flowId: number;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   positionX: number;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   positionY: number;
 
   @Column({
@@ -61,12 +66,17 @@ export class NodeEntity {
     required: false,
     default: NodeDataType.Text,
   })
-  @Column({ type: 'enum', enum: NodeDataType, default: NodeDataType.Text })
+  @Column({
+    type: 'varchar',
+    length: 20,
+    // enum: NodeDataType,
+    default: NodeDataType.Text,
+  })
   dataType: NodeDataType;
 
   @Column({ type: 'simple-json', default: () => `('${JSON.stringify({})}')` })
   state: NodeState;
 
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 }

@@ -21,7 +21,6 @@ export class DocumentService {
     return {
       flowId,
       name: flowRecord.name,
-      author: flowRecord.author,
       updatedAt: flowRecord.updatedAt,
       nodes: nodeRecords,
       edges: edgeRecords,
@@ -34,7 +33,6 @@ export class DocumentService {
     return {
       flowId,
       name: documentFull.name,
-      author: documentFull.author,
       updatedAt: documentFull.updatedAt,
       nodeIds: documentFull.nodes.map((node) => node.id),
       edgeIds: documentFull.edges.map((edge) => edge.id),

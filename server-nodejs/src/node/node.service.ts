@@ -23,10 +23,7 @@ export class NodeService {
   ) {}
 
   async addNode(nodeAddInput: NodeAddInput): Promise<NodeEntity['id']> {
-    const res = await this.nodeRepository.insert({
-      ...nodeAddInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.nodeRepository.insert(nodeAddInput);
     await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
       flowId: nodeAddInput.flowId,
     });
@@ -38,10 +35,7 @@ export class NodeService {
     nodePatchInput: NodePatchInput,
   ): Promise<NodeEntity> {
     const record = await this.getNode(id);
-    const res = await this.nodeRepository.update(id, {
-      ...nodePatchInput,
-      updatedAt: new Date(),
-    });
+    const res = await this.nodeRepository.update(id, nodePatchInput);
     if (res.affected) {
       await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
         flowId: record.flowId,

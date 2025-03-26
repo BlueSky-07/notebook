@@ -13,8 +13,8 @@ async function bootstrap() {
     bodyParser: true,
   });
   const configService = app.get(ConfigService);
-  const port = configService.get<string>('PORT') || '9001';
-  const isDev = configService.get<string>('NODE_ENV') !== 'production';
+  const port = configService.get<string>('app.port') || '9001';
+  const isDev = configService.get<string>('app.nodeEnv') !== 'production';
 
   if (isDev) {
     await OpenApiNestFactory.configure(

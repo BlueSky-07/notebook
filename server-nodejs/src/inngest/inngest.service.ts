@@ -6,6 +6,7 @@ import { createInngestFunctions } from './functions';
 import { NodeService } from '../node/node.service';
 import { GeneratingTaskService } from '../generating-task/generating-task.service';
 import { AiService } from '../ai/ai.service';
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class InngestService {
@@ -20,10 +21,13 @@ export class InngestService {
     @Inject(forwardRef(() => GeneratingTaskService))
     private readonly generatingTaskService: GeneratingTaskService,
     private readonly aiService: AiService,
+    private readonly configService: ConfigService,
   ) {
     this.inngest = new Inngest({
       id: 'notebook-inngest',
       schemas: new EventSchemas().fromRecord<InngestEvents>(),
+      baseUrl: this.configService.get<string>('inngest.baseUrl'),
+      isDev: this.configService.get<boolean>('inngest.dev'),
     });
     this.functions = createInngestFunctions(this.inngest, {
       logger,

@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum EdgeDataType {
@@ -21,16 +26,16 @@ export class EdgeData {
   name: 'edges',
 })
 export class EdgeEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column()
+  @Column({ type: 'int' })
   flowId: number;
 
-  @Column({ default: null })
+  @Column({ type: 'int', default: null })
   sourceNodeId?: number;
 
-  @Column({ default: null })
+  @Column({ type: 'int', default: null })
   targetNodeId?: number;
 
   @ApiProperty({
@@ -39,7 +44,12 @@ export class EdgeEntity {
     required: false,
     default: EdgeHandle.Right,
   })
-  @Column({ type: 'enum', enum: EdgeHandle, default: EdgeHandle.Right })
+  @Column({
+    type: 'varchar',
+    length: 10,
+    // enum: EdgeHandle,
+    default: EdgeHandle.Right,
+  })
   sourceHandle?: EdgeHandle;
 
   @ApiProperty({
@@ -48,7 +58,12 @@ export class EdgeEntity {
     required: false,
     default: EdgeHandle.Top,
   })
-  @Column({ type: 'enum', enum: EdgeHandle, default: EdgeHandle.Top })
+  @Column({
+    type: 'varchar',
+    length: 10,
+    // enum: EdgeHandle,
+    default: EdgeHandle.Top,
+  })
   targetHandle?: EdgeHandle;
 
   @Column({
@@ -63,9 +78,14 @@ export class EdgeEntity {
     required: false,
     default: EdgeDataType.Label,
   })
-  @Column({ type: 'enum', enum: EdgeDataType, default: EdgeDataType.Label })
+  @Column({
+    type: 'varchar',
+    length: 20,
+    // enum: EdgeDataType,
+    default: EdgeDataType.Label,
+  })
   dataType: EdgeDataType;
 
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 }

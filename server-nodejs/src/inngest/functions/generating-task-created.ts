@@ -29,6 +29,7 @@ export const GeneratingTaskCreatedErrors = {
     'Generating Task status is not generating',
   ),
   EmptyGenerated: new NonRetriableError('Empty Generated'),
+  ModelNotFound: new NonRetriableError('Model not found'),
 };
 
 const createGeneratingTaskCreatedFunction = (
@@ -95,8 +96,10 @@ const createGeneratingTaskCreatedFunction = (
         );
         if (record.status !== GeneratingTaskStatus.Generating)
           throw GeneratingTaskCreatedErrors.NotGenerating;
+        const model = aiService.getModel(record.input.modelId);
+        if (!model) throw GeneratingTaskCreatedErrors.ModelNotFound;
         const generatedText = await step.ai.wrap('generating', generateText, {
-          model: aiService.getModel(),
+          model,
           prompt: record.input.prompt,
         });
         const stepResult = pick(generatedText, [

@@ -1,4 +1,5 @@
-export * from './ai-info-response';
+export * from './ai-model-info';
+export * from './ai-models-response';
 export * from './document-full';
 export * from './document-slim';
 export * from './edge-add-input';

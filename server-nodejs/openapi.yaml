@@ -310,9 +310,9 @@ paths:
                 $ref: "#/components/schemas/EdgeDeleteResponse"
       tags:
         - Edge
-  /ai/info:
+  /ai/models:
     get:
-      operationId: getInfo
+      operationId: getModels
       parameters: []
       responses:
         "200":
@@ -320,7 +320,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AiInfoResponse"
+                $ref: "#/components/schemas/AiModelsResponse"
       tags:
         - Ai
   /document/full/{flowId}:
@@ -373,11 +373,8 @@ components:
       properties:
         name:
           type: string
-        author:
-          type: string
       required:
         - name
-        - author
     FlowAddResponse:
       type: object
       properties:
@@ -390,8 +387,6 @@ components:
       properties:
         name:
           type: string
-        author:
-          type: string
     FlowEntity:
       type: object
       properties:
@@ -399,15 +394,12 @@ components:
           type: number
         name:
           type: string
-        author:
-          type: string
         updatedAt:
           format: date-time
           type: string
       required:
         - id
         - name
-        - author
         - updatedAt
     FlowListResponse:
       type: object
@@ -546,6 +538,9 @@ components:
     GeneratingTaskInputInAddInput:
       type: object
       properties:
+        modelId:
+          type: string
+          description: model id
         sourceNodeIds:
           description: generating from source nodes
           type: array
@@ -557,6 +552,7 @@ components:
           items:
             type: number
       required:
+        - modelId
         - sourceNodeIds
         - edgeIds
     GeneratingTaskAddInput:
@@ -639,6 +635,9 @@ components:
     GeneratingTaskInput:
       type: object
       properties:
+        modelId:
+          type: string
+          description: model id
         prompt:
           type: string
           description: prompt to trigger generating task
@@ -757,25 +756,37 @@ components:
           type: boolean
       required:
         - done
-    AiInfoResponse:
+    AiModelInfo:
       type: object
       properties:
-        enabled:
-          type: boolean
+        id:
+          type: string
         provider:
           type: string
         modelName:
           type: string
       required:
+        - id
+        - provider
+        - modelName
+    AiModelsResponse:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        models:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiModelInfo"
+      required:
         - enabled
+        - models
     DocumentFull:
       type: object
       properties:
         flowId:
           type: number
         name:
-          type: string
-        author:
           type: string
         updatedAt:
           format: date-time
@@ -791,7 +802,6 @@ components:
       required:
         - flowId
         - name
-        - author
         - updatedAt
         - nodes
         - edges
@@ -801,8 +811,6 @@ components:
         flowId:
           type: number
         name:
-          type: string
-        author:
           type: string
         updatedAt:
           format: date-time
@@ -818,7 +826,6 @@ components:
       required:
         - flowId
         - name
-        - author
         - updatedAt
         - nodeIds
         - edgeIds

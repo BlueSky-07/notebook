@@ -21,6 +21,12 @@
  */
 export interface GeneratingTaskInputInAddInput {
     /**
+     * model id
+     * @type {string}
+     * @memberof GeneratingTaskInputInAddInput
+     */
+    'modelId': string;
+    /**
      * generating from source nodes
      * @type {Array<number>}
      * @memberof GeneratingTaskInputInAddInput

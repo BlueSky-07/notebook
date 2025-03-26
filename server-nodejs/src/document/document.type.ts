@@ -8,8 +8,6 @@ export class DocumentFull {
   flowId: FlowEntity['id'];
   @ApiProperty({ type: String })
   name: FlowEntity['name'];
-  @ApiProperty({ type: String })
-  author: FlowEntity['author'];
   @ApiProperty({ type: Date })
   updatedAt: FlowEntity['updatedAt'];
   @ApiProperty({ type: NodeEntity, isArray: true })
@@ -23,8 +21,6 @@ export class DocumentSlim {
   flowId: FlowEntity['id'];
   @ApiProperty({ type: String })
   name: FlowEntity['name'];
-  @ApiProperty({ type: String })
-  author: FlowEntity['author'];
   @ApiProperty({ type: Date })
   updatedAt: FlowEntity['updatedAt'];
   @ApiProperty({ type: String, isArray: true })

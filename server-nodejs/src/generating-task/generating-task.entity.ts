@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { NodeEntity } from '../node/node.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { EdgeEntity } from '../edge/edge.entity';
 
 export enum GeneratingTaskStatus {
@@ -12,6 +12,12 @@ export enum GeneratingTaskStatus {
 }
 
 export class GeneratingTaskInput {
+  @ApiProperty({
+    type: String,
+    description: 'model id',
+  })
+  modelId?: string;
+
   @ApiProperty({
     type: String,
     description: 'prompt to trigger generating task',
@@ -46,13 +52,13 @@ export class GeneratingTaskOutput {
   name: 'generating_tasks',
 })
 export class GeneratingTaskEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column()
+  @Column({ type: 'int' })
   flowId: number;
 
-  @Column()
+  @Column({ type: 'int' })
   targetNodeId: number;
 
   @Column({ type: 'simple-json', default: () => `('${JSON.stringify({})}')` })
@@ -67,12 +73,13 @@ export class GeneratingTaskEntity {
     default: GeneratingTaskStatus.Pending,
   })
   @Column({
-    type: 'enum',
-    enum: GeneratingTaskStatus,
+    type: 'varchar',
+    length: 20,
+    // enum: GeneratingTaskStatus,
     default: GeneratingTaskStatus.Pending,
   })
   status: GeneratingTaskStatus;
 
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 }

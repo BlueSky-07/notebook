@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { AiInfoResponse } from '../models';
+import type { AiModelsResponse } from '../models';
 /**
  * AiApi - axios parameter creator
  * @export
@@ -34,8 +34,8 @@ export const AiApiAxiosParamCreator = function (configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/ai/info`;
+        getModels: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/ai/models`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -73,10 +73,10 @@ export const AiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getInfo(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AiInfoResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getInfo(options);
+        async getModels(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AiModelsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getModels(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AiApi.getInfo']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AiApi.getModels']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -94,8 +94,8 @@ export const AiApiFactory = function (configuration?: Configuration, basePath?: 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getInfo(options?: RawAxiosRequestConfig): AxiosPromise<AiInfoResponse> {
-            return localVarFp.getInfo(options).then((request) => request(axios, basePath));
+        getModels(options?: RawAxiosRequestConfig): AxiosPromise<AiModelsResponse> {
+            return localVarFp.getModels(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -113,8 +113,8 @@ export class AiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AiApi
      */
-    public getInfo(options?: RawAxiosRequestConfig) {
-        return AiApiFp(this.configuration).getInfo(options).then((request) => request(this.axios, this.basePath));
+    public getModels(options?: RawAxiosRequestConfig) {
+        return AiApiFp(this.configuration).getModels(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

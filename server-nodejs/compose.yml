@@ -1,6 +1,18 @@
 version: '3.1'
 
 services:
+  sqlite-browser:
+    image: coleifer/sqlite-web
+    restart: always
+    environment:
+      SQLITE_DATABASE: /data/notebook.db
+    volumes:
+      - ./database/notebook.db:/data/notebook.db
+    ports:
+      - "9105:8080"
+    profiles:
+      - sqlite
+
   mysql:
     image: mysql
     restart: always
@@ -23,6 +35,8 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - notebook-server
+    profiles:
+      - mysql
 
   phpmyadmin:
     image: phpmyadmin
@@ -39,6 +53,10 @@ services:
       retries: 5
     networks:
       - notebook-server
+    depends_on:
+      - mysql
+    profiles:
+      - mysql
 
   inngest:
     image: inngest/inngest

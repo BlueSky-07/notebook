@@ -43,12 +43,6 @@ export interface DocumentFull {
      * @type {string}
      * @memberof DocumentFull
      */
-    'author': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DocumentFull
-     */
     'updatedAt': string;
     /**
      * 

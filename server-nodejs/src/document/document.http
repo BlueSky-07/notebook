@@ -1,8 +1,0 @@
-GET {{endpoint}}/document/full/1
-Accept: application/json
-
-###
-GET {{endpoint}}/document/slim/2
-Accept: application/json
-
-###

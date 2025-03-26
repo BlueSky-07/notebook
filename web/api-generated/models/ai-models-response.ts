@@ -13,18 +13,27 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AiModelInfo } from './ai-model-info';
 
 /**
  * 
  * @export
- * @interface FlowPatchInput
+ * @interface AiModelsResponse
  */
-export interface FlowPatchInput {
+export interface AiModelsResponse {
     /**
      * 
-     * @type {string}
-     * @memberof FlowPatchInput
+     * @type {boolean}
+     * @memberof AiModelsResponse
      */
-    'name'?: string;
+    'enabled': boolean;
+    /**
+     * 
+     * @type {Array<AiModelInfo>}
+     * @memberof AiModelsResponse
+     */
+    'models': Array<AiModelInfo>;
 }
 
