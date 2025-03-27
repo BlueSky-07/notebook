@@ -6,7 +6,7 @@ import { createInngestFunctions } from './functions';
 import { NodeService } from '../node/node.service';
 import { GeneratingTaskService } from '../generating-task/generating-task.service';
 import { AiService } from '../ai/ai.service';
-import { ConfigService } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class InngestService {

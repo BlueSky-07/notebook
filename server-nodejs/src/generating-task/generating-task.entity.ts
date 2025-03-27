@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { NodeEntity } from '../node/node.entity';
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { EdgeEntity } from '../edge/edge.entity';
 
 export enum GeneratingTaskStatus {

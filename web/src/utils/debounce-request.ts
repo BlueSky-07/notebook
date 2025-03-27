@@ -1,22 +1,25 @@
-import { debounce, DebouncedFunc, DebounceSettings } from "lodash-es"
-const debouncedQueue = new Map<string, DebouncedFunc<any>>()
+import { debounce, DebouncedFunc, DebounceSettings } from 'lodash-es';
+const debouncedQueue = new Map<string, DebouncedFunc<any>>();
 
 export function debounceRequest(
   debounceKey: string,
-  request: () => Promise<any> | any,
+  request: () => Promise<unknown>,
   wait = 300,
-  options?: DebounceSettings
+  options?: DebounceSettings,
 ): ReturnType<typeof debounce> {
-  const lastRequest = debouncedQueue.get(debounceKey)
+  const lastRequest = debouncedQueue.get(debounceKey);
   if (lastRequest) {
-    lastRequest.cancel()
+    lastRequest.cancel();
   }
-  const debounced = debounce(() => {
-    request()
-      .finally(() => {
-        debouncedQueue.delete(debounceKey)
-      })
-  }, wait, options)
-  debouncedQueue.set(debounceKey, debounced)
-  return debounced
+  const debounced = debounce(
+    () => {
+      request().finally(() => {
+        debouncedQueue.delete(debounceKey);
+      });
+    },
+    wait,
+    options,
+  );
+  debouncedQueue.set(debounceKey, debounced);
+  return debounced;
 }
