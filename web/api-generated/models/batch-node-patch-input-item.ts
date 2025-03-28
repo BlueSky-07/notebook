@@ -26,33 +26,39 @@ import type { NodeState } from './node-state';
 /**
  * 
  * @export
- * @interface NodePatchInput
+ * @interface BatchNodePatchInputItem
  */
-export interface NodePatchInput {
+export interface BatchNodePatchInputItem {
     /**
      * 
      * @type {number}
-     * @memberof NodePatchInput
+     * @memberof BatchNodePatchInputItem
      */
     'layout'?: number;
     /**
      * 
      * @type {NodeData}
-     * @memberof NodePatchInput
+     * @memberof BatchNodePatchInputItem
      */
     'data'?: NodeData;
     /**
      * 
      * @type {NodeDataTypeEnum}
-     * @memberof NodePatchInput
+     * @memberof BatchNodePatchInputItem
      */
     'dataType'?: NodeDataTypeEnum;
     /**
      * 
      * @type {NodeState}
-     * @memberof NodePatchInput
+     * @memberof BatchNodePatchInputItem
      */
     'state'?: NodeState;
+    /**
+     * 
+     * @type {number}
+     * @memberof BatchNodePatchInputItem
+     */
+    'id': number;
 }
 
 

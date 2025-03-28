@@ -101,6 +101,84 @@ paths:
                 $ref: "#/components/schemas/FlowDeleteResponse"
       tags:
         - Flow
+  /node/batch:
+    post:
+      operationId: addNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodeAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchNodeAddResponse"
+      tags:
+        - Node
+    patch:
+      operationId: patchNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodePatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    get:
+      operationId: getNodes
+      parameters:
+        - name: id
+          required: true
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    delete:
+      operationId: deleteNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodeDeleteInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeDeleteResponse"
+      tags:
+        - Node
   /node:
     post:
       operationId: addNode
@@ -429,6 +507,22 @@ components:
         src:
           type: string
           description: image src
+    NodeLayout:
+      type: object
+      properties:
+        positionX:
+          type: number
+        positionY:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+      required:
+        - positionX
+        - positionY
+        - width
+        - height
     NodeDataTypeEnum:
       type: string
       enum:
@@ -439,12 +533,13 @@ components:
       properties:
         flowId:
           type: number
-        positionX:
+        layout:
           type: number
-          default: 0
-        positionY:
-          type: number
-          default: 0
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
         data:
           default:
             content: ""
@@ -456,13 +551,24 @@ components:
             - $ref: "#/components/schemas/NodeDataTypeEnum"
       required:
         - flowId
-    NodeAddResponse:
+    BatchNodeAddInput:
       type: object
       properties:
-        id:
-          type: number
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeAddInput"
       required:
-        - id
+        - nodes
+    BatchNodeAddResponse:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
     GeneratingTaskStatusEnum:
       type: string
       enum:
@@ -483,13 +589,16 @@ components:
           description: AI genarating task status
           allOf:
             - $ref: "#/components/schemas/GeneratingTaskStatusEnum"
-    NodePatchInput:
+    BatchNodePatchInputItem:
       type: object
       properties:
-        positionX:
+        layout:
           type: number
-        positionY:
-          type: number
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
         data:
           $ref: "#/components/schemas/NodeData"
         dataType:
@@ -498,6 +607,19 @@ components:
             - $ref: "#/components/schemas/NodeDataTypeEnum"
         state:
           $ref: "#/components/schemas/NodeState"
+        id:
+          type: number
+      required:
+        - id
+    BatchNodePatchInput:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchNodePatchInputItem"
+      required:
+        - nodes
     NodeEntity:
       type: object
       properties:
@@ -509,10 +631,8 @@ components:
           type: number
         flowId:
           type: number
-        positionX:
-          type: number
-        positionY:
-          type: number
+        layout:
+          $ref: "#/components/schemas/NodeLayout"
         data:
           $ref: "#/components/schemas/NodeData"
         state:
@@ -523,11 +643,19 @@ components:
       required:
         - id
         - flowId
-        - positionX
-        - positionY
+        - layout
         - data
         - state
         - updatedAt
+    BatchNodeDeleteInput:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
     NodeDeleteResponse:
       type: object
       properties:
@@ -535,6 +663,31 @@ components:
           type: boolean
       required:
         - done
+    NodeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    NodePatchInput:
+      type: object
+      properties:
+        layout:
+          type: number
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
+        data:
+          $ref: "#/components/schemas/NodeData"
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
+        state:
+          $ref: "#/components/schemas/NodeState"
     GeneratingTaskInputInAddInput:
       type: object
       properties:

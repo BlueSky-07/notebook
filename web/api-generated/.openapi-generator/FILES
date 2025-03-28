@@ -14,6 +14,11 @@ git_push.sh
 index.ts
 models/ai-model-info.ts
 models/ai-models-response.ts
+models/batch-node-add-input.ts
+models/batch-node-add-response.ts
+models/batch-node-delete-input.ts
+models/batch-node-patch-input-item.ts
+models/batch-node-patch-input.ts
 models/document-full.ts
 models/document-slim.ts
 models/edge-add-input.ts
@@ -45,5 +50,6 @@ models/node-data-type-enum.ts
 models/node-data.ts
 models/node-delete-response.ts
 models/node-entity.ts
+models/node-layout.ts
 models/node-patch-input.ts
 models/node-state.ts

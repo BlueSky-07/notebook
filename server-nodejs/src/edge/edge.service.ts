@@ -11,7 +11,7 @@ import { EdgeEntity } from './edge.entity';
 import { EdgeAddInput, EdgePatchInput } from './edge.type';
 import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
-import FlowUpdatedFunction from '../inngest/functions/flow-updated';
+import FlowUpdatedFunction from '../inngest/functions/update-flow-updated-at';
 
 @Injectable()
 export class EdgeService {

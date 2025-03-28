@@ -1,7 +1,8 @@
 import { Inngest } from 'inngest';
-import FlowUpdatedFunction, {
+import {
+  createUpdateFlowUpdatedAtFunction,
   FlowUpdatedFunctionDependencies,
-} from './flow-updated';
+} from './update-flow-updated-at';
 import GeneratingTaskCreatedFunction, {
   GeneratingTaskCreatedFunctionDependencies,
 } from './generating-task-created';
@@ -19,7 +20,7 @@ export const createInngestFunctions = (
   dependencies: AllFunctionDependencies,
 ) => {
   return [
-    FlowUpdatedFunction.create(inngest, dependencies),
+    createUpdateFlowUpdatedAtFunction(inngest, dependencies),
     GeneratingTaskCreatedFunction.create(inngest, dependencies),
     GeneratingTaskStatusChangedFunction.create(inngest, dependencies),
   ];

@@ -13,44 +13,36 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { NodeData } from './node-data';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { NodeDataTypeEnum } from './node-data-type-enum';
 
 /**
  * 
  * @export
- * @interface NodeAddInput
+ * @interface NodeLayout
  */
-export interface NodeAddInput {
+export interface NodeLayout {
     /**
      * 
      * @type {number}
-     * @memberof NodeAddInput
+     * @memberof NodeLayout
      */
-    'flowId': number;
+    'positionX': number;
     /**
      * 
      * @type {number}
-     * @memberof NodeAddInput
+     * @memberof NodeLayout
      */
-    'layout'?: number;
+    'positionY': number;
     /**
      * 
-     * @type {NodeData}
-     * @memberof NodeAddInput
+     * @type {number}
+     * @memberof NodeLayout
      */
-    'data'?: NodeData;
+    'width': number;
     /**
      * 
-     * @type {NodeDataTypeEnum}
-     * @memberof NodeAddInput
+     * @type {number}
+     * @memberof NodeLayout
      */
-    'dataType'?: NodeDataTypeEnum;
+    'height': number;
 }
-
-
 

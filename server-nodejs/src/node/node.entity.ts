@@ -38,6 +38,20 @@ export class NodeState {
   generatingTaskStatus?: GeneratingTaskStatus;
 }
 
+export class NodeLayout {
+  @ApiProperty({ type: Number })
+  positionX: number;
+
+  @ApiProperty({ type: Number })
+  positionY: number;
+
+  @ApiProperty({ type: Number })
+  width: number;
+
+  @ApiProperty({ type: Number })
+  height: number;
+}
+
 @Entity({
   name: 'nodes',
 })
@@ -48,11 +62,17 @@ export class NodeEntity {
   @Column({ type: 'int' })
   flowId: number;
 
-  @Column({ type: 'int', default: 0 })
-  positionX: number;
-
-  @Column({ type: 'int', default: 0 })
-  positionY: number;
+  @Column({
+    type: 'simple-json',
+    default: () =>
+      `('${JSON.stringify({
+        positionX: 0,
+        positionY: 0,
+        width: 100,
+        height: 100,
+      })}')`,
+  })
+  layout: NodeLayout;
 
   @Column({
     type: 'simple-json',

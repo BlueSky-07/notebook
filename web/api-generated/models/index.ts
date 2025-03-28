@@ -1,5 +1,10 @@
 export * from './ai-model-info';
 export * from './ai-models-response';
+export * from './batch-node-add-input';
+export * from './batch-node-add-response';
+export * from './batch-node-delete-input';
+export * from './batch-node-patch-input';
+export * from './batch-node-patch-input-item';
 export * from './document-full';
 export * from './document-slim';
 export * from './edge-add-input';
@@ -30,5 +35,6 @@ export * from './node-data';
 export * from './node-data-type-enum';
 export * from './node-delete-response';
 export * from './node-entity';
+export * from './node-layout';
 export * from './node-patch-input';
 export * from './node-state';
