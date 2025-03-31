@@ -3,9 +3,9 @@ import {
   EdgeEntity,
   NodeEntity,
   NodeDataTypeEnum,
-  DocumentFull,
   EdgeDataTypeEnum,
   EdgeHandleEnum,
+  FlowFull,
 } from '@api/models';
 import { sample } from 'lodash-es';
 
@@ -19,7 +19,7 @@ export const DEFAULT_FLOW_MODEL: FlowModel = {
   edges: [],
 };
 
-export function getFlowNode(
+export function getInitialFlowNode(
   id: string,
   dataType: NodeEntity['dataType'] = NodeDataTypeEnum.Text,
 ): Node {
@@ -29,6 +29,8 @@ export function getFlowNode(
       x: 0,
       y: 0,
     },
+    width: 500,
+    height: 300,
     data: {
       ...(dataType === NodeDataTypeEnum.Text && {
         content: '',
@@ -46,7 +48,7 @@ export function getFlowNode(
   };
 }
 
-export function getFlowEdge(
+export function getInitialFlowEdge(
   id: string,
   source: string,
   target: string,
@@ -73,9 +75,11 @@ export function convertNodeEntityToFlowNode(nodeEntity: NodeEntity): Node {
   return {
     id: nodeEntity.id.toString(),
     position: {
-      x: nodeEntity.positionX,
-      y: nodeEntity.positionY,
+      x: nodeEntity.layout.positionX,
+      y: nodeEntity.layout.positionY,
     },
+    width: nodeEntity.layout.width,
+    height: nodeEntity.layout.height,
     data: {
       ...nodeEntity.data,
       $state: nodeEntity.state,
@@ -91,8 +95,12 @@ export function convertFlowNodeToNodeEntity(
   return {
     id: parseInt(flowNode.id, 10),
     flowId,
-    positionX: flowNode.position.x,
-    positionY: flowNode.position.y,
+    layout: {
+      positionX: flowNode.position.x,
+      positionY: flowNode.position.y,
+      width: flowNode.width,
+      height: flowNode.height,
+    },
     data: flowNode.data,
     dataType: flowNode.type as NodeEntity['dataType'],
   };
@@ -103,8 +111,8 @@ export function convertEdgeEntityToFlowEdge(edgeEntity: EdgeEntity): Edge {
     id: edgeEntity.id.toString(),
     source: edgeEntity.sourceNodeId.toString(),
     target: edgeEntity.targetNodeId.toString(),
-    sourceHandle: edgeEntity.sourceHandle,
-    targetHandle: edgeEntity.targetHandle,
+    sourceHandle: edgeEntity.layout.sourceHandle,
+    targetHandle: edgeEntity.layout.targetHandle,
     data: edgeEntity.data as Edge['data'],
     type: edgeEntity.dataType,
     markerEnd: {
@@ -114,7 +122,7 @@ export function convertEdgeEntityToFlowEdge(edgeEntity: EdgeEntity): Edge {
       orient: {
         [EdgeHandleEnum.Left]: 'horizontal',
         // [EdgeHandleEnum.Top]: 'vertical'
-      }[edgeEntity.targetHandle] as string,
+      }[edgeEntity.layout.targetHandle] as string,
     },
   };
 }
@@ -128,18 +136,20 @@ export function convertFlowEdgeToEdgeEntity(
     flowId,
     sourceNodeId: parseInt(flowEdge.source, 10),
     targetNodeId: parseInt(flowEdge.target, 10),
-    sourceHandle: flowEdge.sourceHandle as EdgeEntity['sourceHandle'],
-    targetHandle: flowEdge.targetHandle as EdgeEntity['targetHandle'],
+    layout: {
+      sourceHandle:
+        flowEdge.sourceHandle as EdgeEntity['layout']['sourceHandle'],
+      targetHandle:
+        flowEdge.targetHandle as EdgeEntity['layout']['targetHandle'],
+    },
     data: flowEdge.data,
     dataType: flowEdge.type as EdgeEntity['dataType'],
   };
 }
 
-export function convertFullDocumentToFlowModel(
-  fullDocument: DocumentFull,
-): FlowModel {
+export function convertFlowFullToFlowModel(flowFull: FlowFull): FlowModel {
   return {
-    nodes: fullDocument.nodes.map(convertNodeEntityToFlowNode),
-    edges: fullDocument.edges.map(convertEdgeEntityToFlowEdge),
+    nodes: flowFull.nodes.map(convertNodeEntityToFlowNode),
+    edges: flowFull.edges.map(convertEdgeEntityToFlowEdge),
   };
 }

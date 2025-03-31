@@ -15,7 +15,7 @@
 
 
 /**
- * AI genarating task status
+ * AI generating task status
  * @export
  * @enum {string}
  */

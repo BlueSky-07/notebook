@@ -15,7 +15,6 @@
 
 
 export * from './clients/ai-api';
-export * from './clients/document-api';
 export * from './clients/edge-api';
 export * from './clients/flow-api';
 export * from './clients/generating-task-api';

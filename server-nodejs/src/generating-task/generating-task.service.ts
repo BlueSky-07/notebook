@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -19,15 +20,15 @@ import {
 } from './generating-task.type';
 import { Repository } from 'typeorm';
 import { InngestService } from '../inngest/inngest.service';
-import GeneratingTaskCreatedFunction from '../inngest/functions/generating-task-created';
-import GeneratingTaskStatusChangedFunction from '../inngest/functions/generating-task-status-changed';
 import * as Prompt from './prompt';
+import GeneratingTaskEvent from './generating-task.event';
 
 @Injectable()
 export class GeneratingTaskService {
   constructor(
     @InjectRepository(GeneratingTaskEntity)
     private readonly generatingRepository: Repository<GeneratingTaskEntity>,
+    @Inject(forwardRef(() => FlowService))
     private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
     private readonly nodeService: NodeService,
@@ -69,12 +70,18 @@ export class GeneratingTaskService {
       status: GeneratingTaskStatus.Pending,
     });
     const generatingTaskId = res.generatedMaps[0].id as number;
-    await GeneratingTaskCreatedFunction.trigger(this.inngestService.inngest, {
-      generatingTaskId,
-      targetNodeId: generatingTaskAddInput.targetNodeId,
-    });
-    await GeneratingTaskStatusChangedFunction.trigger(
+    await GeneratingTaskEvent.trigger(
       this.inngestService.inngest,
+      GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_CREATED,
+      {
+        generatingTaskId,
+        targetNodeId: generatingTaskAddInput.targetNodeId,
+        targetNodeDataType: targetNodeRecord.dataType,
+      },
+    );
+    await GeneratingTaskEvent.trigger(
+      this.inngestService.inngest,
+      GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_STATUS_UPDATED,
       {
         generatingTaskId,
         targetNodeId: generatingTaskAddInput.targetNodeId,
@@ -93,8 +100,9 @@ export class GeneratingTaskService {
       id,
       generatingTaskPatchInput,
     );
-    await GeneratingTaskStatusChangedFunction.trigger(
+    await GeneratingTaskEvent.trigger(
       this.inngestService.inngest,
+      GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_STATUS_UPDATED,
       {
         generatingTaskId: id,
         targetNodeId: record.targetNodeId,
@@ -124,8 +132,9 @@ export class GeneratingTaskService {
     const res = await this.generatingRepository.update(id, {
       status: GeneratingTaskStatus.Stopped,
     });
-    await GeneratingTaskStatusChangedFunction.trigger(
+    await GeneratingTaskEvent.trigger(
       this.inngestService.inngest,
+      GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_STATUS_UPDATED,
       {
         generatingTaskId: id,
         targetNodeId: record.targetNodeId,
@@ -144,6 +153,7 @@ export class GeneratingTaskService {
   async getGeneratingTask(
     id: GeneratingTaskEntity['id'],
   ): Promise<GeneratingTaskEntity> {
+    if (!id) throw new BadRequestException(`Generating Task id is missing`);
     const record = await this.generatingRepository.findOneBy({ id });
     if (!record) {
       throw new NotFoundException(`Generating Task does not exist: ${id}`);

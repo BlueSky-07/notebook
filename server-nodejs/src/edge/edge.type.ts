@@ -1,7 +1,13 @@
-import { EdgeEntity, EdgeData, EdgeDataType, EdgeHandle } from './edge.entity';
+import {
+  EdgeEntity,
+  EdgeData,
+  EdgeDataType,
+  EdgeHandle,
+  EdgeLayout,
+} from './edge.entity';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 
-@ApiExtraModels(EdgeData)
+@ApiExtraModels(EdgeData, EdgeLayout)
 export class EdgeAddInput {
   @ApiProperty({ type: Number })
   flowId: EdgeEntity['flowId'];
@@ -10,19 +16,13 @@ export class EdgeAddInput {
   @ApiProperty({ type: Number, required: false })
   targetNodeId?: EdgeEntity['targetNodeId'];
   @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
-    required: false,
-    default: EdgeHandle.Right,
+    type: EdgeLayout,
+    default: {
+      sourceHandle: EdgeHandle.Right,
+      targetHandle: EdgeHandle.Top,
+    },
   })
-  sourceHandle?: EdgeHandle;
-  @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
-    required: false,
-    default: EdgeHandle.Top,
-  })
-  targetHandle?: EdgeHandle;
+  layout: EdgeEntity['layout'];
   @ApiProperty({ type: EdgeData, required: false, default: { label: '' } })
   data?: EdgeEntity['data'];
   @ApiProperty({
@@ -39,25 +39,21 @@ export class EdgeAddResponse {
   id: EdgeEntity['id'];
 }
 
+@ApiExtraModels(EdgeLayout)
 export class EdgePatchInput {
   @ApiProperty({ type: Number, required: false })
   sourceNodeId?: EdgeEntity['sourceNodeId'];
   @ApiProperty({ type: Number, required: false })
   targetNodeId?: EdgeEntity['targetNodeId'];
   @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
+    type: EdgeLayout,
     required: false,
-    default: EdgeHandle.Right,
+    default: {
+      sourceHandle: EdgeHandle.Right,
+      targetHandle: EdgeHandle.Top,
+    },
   })
-  sourceHandle?: EdgeHandle;
-  @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
-    required: false,
-    default: EdgeHandle.Top,
-  })
-  targetHandle?: EdgeHandle;
+  layout?: EdgeEntity['layout'];
   @ApiProperty({ type: EdgeData, required: false })
   data?: EdgeEntity['data'];
   @ApiProperty({
@@ -72,4 +68,31 @@ export class EdgePatchInput {
 export class EdgeDeleteResponse {
   @ApiProperty({ type: Boolean })
   done: boolean;
+}
+
+@ApiExtraModels(EdgeAddInput)
+export class BatchEdgeAddInput {
+  @ApiProperty({ type: [EdgeAddInput] })
+  edges: EdgeAddInput[];
+}
+
+export class BatchEdgeAddResponse {
+  @ApiProperty({ type: Number, isArray: true })
+  ids: EdgeEntity['id'][];
+}
+
+export class BatchEdgePatchInputItem extends EdgePatchInput {
+  @ApiProperty({ type: Number })
+  id: EdgeEntity['id'];
+}
+
+@ApiExtraModels(BatchEdgePatchInputItem)
+export class BatchEdgePatchInput {
+  @ApiProperty({ type: BatchEdgePatchInputItem, isArray: true })
+  edges: BatchEdgePatchInputItem[];
+}
+
+export class BatchEdgeDeleteInput {
+  @ApiProperty({ type: Number, isArray: true })
+  ids: EdgeEntity['id'][];
 }

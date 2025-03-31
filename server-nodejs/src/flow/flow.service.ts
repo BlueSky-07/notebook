@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -6,15 +7,39 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FlowEntity } from './flow.entity';
-import { FlowAddInput, FlowListResponse, FlowPatchInput } from './flow.type';
+import {
+  FlowAddInput,
+  FlowFull,
+  FlowListResponse,
+  FlowPatchInput,
+} from './flow.type';
 import { PaginationFindOptions } from '../utils/pagination';
+import { NodeService } from '../node/node.service';
+import { EdgeService } from '../edge/edge.service';
 
 @Injectable()
 export class FlowService {
   constructor(
     @InjectRepository(FlowEntity)
     private readonly flowRepository: Repository<FlowEntity>,
+    private readonly nodeService: NodeService,
+    private readonly edgeService: EdgeService,
   ) {}
+
+  async getFlowFull(id: FlowEntity['id']): Promise<FlowFull> {
+    if (!id) throw new BadRequestException(`Flow id is missing`);
+    const flowRecord = await this.getFlow(id);
+    const nodeRecords = await this.nodeService.getNodesByFlowId(id);
+    const edgeRecords = await this.edgeService.getEdgesByFlowId(id);
+
+    return {
+      flowId: id,
+      name: flowRecord.name,
+      updatedAt: flowRecord.updatedAt,
+      nodes: nodeRecords,
+      edges: edgeRecords,
+    };
+  }
 
   async addFlow(flowAddInput: FlowAddInput): Promise<FlowEntity['id']> {
     const res = await this.flowRepository.insert(flowAddInput);
@@ -37,6 +62,7 @@ export class FlowService {
   }
 
   async getFlow(id: FlowEntity['id']): Promise<FlowEntity> {
+    if (!id) throw new BadRequestException(`Flow id is missing`);
     const record = await this.flowRepository.findOneBy({
       id,
     });

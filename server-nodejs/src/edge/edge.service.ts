@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -8,10 +9,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { EdgeEntity } from './edge.entity';
-import { EdgeAddInput, EdgePatchInput } from './edge.type';
+import {
+  BatchEdgePatchInputItem,
+  EdgeAddInput,
+  EdgePatchInput,
+} from './edge.type';
 import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
-import FlowUpdatedFunction from '../inngest/functions/flow-updated';
+import { omit } from 'lodash';
+import EdgeEvent from './edge.event';
 
 @Injectable()
 export class EdgeService {
@@ -24,10 +30,16 @@ export class EdgeService {
 
   async addEdge(edgeAddInput: EdgeAddInput): Promise<EdgeEntity['id']> {
     const res = await this.edgeRepository.insert(edgeAddInput);
-    await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-      flowId: edgeAddInput.flowId,
-    });
-    return res.generatedMaps[0].id as number;
+    const edgeId = res.generatedMaps[0].id as number;
+    await EdgeEvent.trigger(
+      this.inngestService.inngest,
+      EdgeEvent.EVENT_NAMES.EDGE_CREATED,
+      {
+        edgeId,
+        flowId: edgeAddInput.flowId,
+      },
+    );
+    return edgeId;
   }
 
   async patchEdge(
@@ -37,9 +49,14 @@ export class EdgeService {
     const record = await this.getEdge(id);
     const res = await this.edgeRepository.update(id, edgePatchInput);
     if (res.affected) {
-      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-        flowId: record.flowId,
-      });
+      await EdgeEvent.trigger(
+        this.inngestService.inngest,
+        EdgeEvent.EVENT_NAMES.EDGE_UPDATED,
+        {
+          edgeId: id,
+          flowId: record.flowId,
+        },
+      );
       return this.getEdge(id);
     } else {
       throw new InternalServerErrorException(
@@ -49,6 +66,7 @@ export class EdgeService {
   }
 
   async getEdge(id: EdgeEntity['id']): Promise<EdgeEntity> {
+    if (!id) throw new BadRequestException(`Edge id is missing`);
     const record = await this.edgeRepository.findOneBy({
       id,
     });
@@ -79,13 +97,112 @@ export class EdgeService {
       id,
     });
     if (res.affected) {
-      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-        flowId: record.flowId,
-      });
+      await EdgeEvent.trigger(
+        this.inngestService.inngest,
+        EdgeEvent.EVENT_NAMES.EDGE_DELETED,
+        {
+          edgeId: id,
+          flowId: record.flowId,
+        },
+      );
       return true;
     } else {
       throw new InternalServerErrorException(
         `Edge does not delete successfully`,
+      );
+    }
+  }
+
+  async addEdges(edges: EdgeAddInput[]): Promise<EdgeEntity['id'][]> {
+    const res = await this.edgeRepository.insert(edges);
+    const ids = res.generatedMaps.map((item) => item.id as number);
+    await Promise.all(
+      ids.map((id, index) =>
+        EdgeEvent.trigger(
+          this.inngestService.inngest,
+          EdgeEvent.EVENT_NAMES.EDGE_CREATED,
+          {
+            edgeId: id,
+            flowId: edges[index].flowId,
+          },
+        ),
+      ),
+    );
+
+    return ids;
+  }
+
+  async patchEdges(
+    batchEdgePatchInputItems: BatchEdgePatchInputItem[],
+  ): Promise<EdgeEntity[]> {
+    const edgeIdPatchInputMapping = new Map<
+      EdgeEntity['id'],
+      BatchEdgePatchInputItem
+    >();
+    for (const batchEdgePatchInputItem of batchEdgePatchInputItems) {
+      edgeIdPatchInputMapping.set(
+        batchEdgePatchInputItem.id,
+        batchEdgePatchInputItem,
+      );
+    }
+    return Promise.all(
+      Array.from(edgeIdPatchInputMapping.values()).map((item) =>
+        this.patchEdge(item.id, omit(item, 'id')),
+      ),
+    );
+  }
+
+  async deleteEdgesByIds(ids: EdgeEntity['id'][]): Promise<boolean> {
+    const filteredIds = Array.from(new Set(ids));
+    const records = await this.getEdgesByIds(filteredIds);
+    if (!records.length) throw new BadRequestException(`Edges do not exist`);
+    const res = await this.edgeRepository.delete({
+      id: In(filteredIds),
+    });
+    if (res.affected) {
+      await Promise.all(
+        records.map((record) =>
+          EdgeEvent.trigger(
+            this.inngestService.inngest,
+            EdgeEvent.EVENT_NAMES.EDGE_DELETED,
+            {
+              edgeId: record.id,
+              flowId: record.flowId,
+            },
+          ),
+        ),
+      );
+      return true;
+    } else {
+      throw new InternalServerErrorException(
+        `Edges does not delete successfully`,
+      );
+    }
+  }
+
+  async deleteEdgesByFlowId(flowId: FlowEntity['id']): Promise<boolean> {
+    const records = await this.getEdgesByFlowId(flowId);
+    if (!records.length) throw new BadRequestException(`Edges do not exist`);
+    const res = await this.edgeRepository.delete({
+      flowId,
+    });
+    if (res.affected) {
+      await Promise.all(
+        records.map((record) =>
+          EdgeEvent.trigger(
+            this.inngestService.inngest,
+            EdgeEvent.EVENT_NAMES.EDGE_DELETED,
+            {
+              edgeId: record.id,
+              flowId: record.flowId,
+            },
+          ),
+        ),
+      );
+      return true;
+    } else {
+      throw new InternalServerErrorException(
+        `Edges does not delete successfully`,
       );
     }
   }

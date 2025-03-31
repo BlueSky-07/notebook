@@ -1,5 +1,23 @@
 openapi: 3.0.0
 paths:
+  /flow/full/{id}:
+    get:
+      operationId: getFlowFull
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowFull"
+      tags:
+        - Flow
   /flow:
     post:
       operationId: addFlow
@@ -101,6 +119,84 @@ paths:
                 $ref: "#/components/schemas/FlowDeleteResponse"
       tags:
         - Flow
+  /node/batch:
+    post:
+      operationId: addNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodeAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchNodeAddResponse"
+      tags:
+        - Node
+    patch:
+      operationId: patchNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodePatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    get:
+      operationId: getNodes
+      parameters:
+        - name: id
+          required: true
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NodeEntity"
+      tags:
+        - Node
+    delete:
+      operationId: deleteNodes
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchNodeDeleteInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeDeleteResponse"
+      tags:
+        - Node
   /node:
     post:
       operationId: addNode
@@ -233,6 +329,84 @@ paths:
                 $ref: "#/components/schemas/GeneratingTaskEntity"
       tags:
         - GeneratingTask
+  /edge/batch:
+    post:
+      operationId: addEdges
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchEdgeAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchEdgeAddResponse"
+      tags:
+        - Edge
+    patch:
+      operationId: patchEdges
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchEdgePatchInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EdgeEntity"
+      tags:
+        - Edge
+    get:
+      operationId: getEdges
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EdgeEntity"
+      tags:
+        - Edge
+    delete:
+      operationId: deleteEdges
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchEdgeDeleteInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EdgeDeleteResponse"
+      tags:
+        - Edge
   /edge:
     post:
       operationId: addEdge
@@ -323,42 +497,6 @@ paths:
                 $ref: "#/components/schemas/AiModelsResponse"
       tags:
         - Ai
-  /document/full/{flowId}:
-    get:
-      operationId: getFullDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentFull"
-      tags:
-        - Document
-  /document/slim/{flowId}:
-    get:
-      operationId: getSlimDocument
-      parameters:
-        - name: flowId
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DocumentSlim"
-      tags:
-        - Document
 info:
   title: Notebook Server
   description: ""
@@ -368,6 +506,169 @@ tags: []
 servers: []
 components:
   schemas:
+    NodeDataTypeEnum:
+      type: string
+      enum:
+        - Text
+        - Image
+    NodeLayout:
+      type: object
+      properties:
+        positionX:
+          type: number
+        positionY:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+      required:
+        - positionX
+        - positionY
+        - width
+        - height
+    NodeData:
+      type: object
+      properties:
+        content:
+          type: string
+          description: text content
+        src:
+          type: string
+          description: image src
+        background:
+          type: string
+          description: background (css)
+    GeneratingTaskStatusEnum:
+      type: string
+      enum:
+        - Pending
+        - Generating
+        - Done
+        - Failed
+        - Stopped
+      description: AI generating task status
+    NodeState:
+      type: object
+      properties:
+        generatingTaskId:
+          type: number
+          description: AI generating task id
+        generatingTaskStatus:
+          default: Pending
+          description: AI generating task status
+          allOf:
+            - $ref: "#/components/schemas/GeneratingTaskStatusEnum"
+    NodeEntity:
+      type: object
+      properties:
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
+        id:
+          type: number
+        flowId:
+          type: number
+        layout:
+          $ref: "#/components/schemas/NodeLayout"
+        data:
+          $ref: "#/components/schemas/NodeData"
+        state:
+          $ref: "#/components/schemas/NodeState"
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - flowId
+        - layout
+        - data
+        - state
+        - updatedAt
+    EdgeDataTypeEnum:
+      type: string
+      enum:
+        - Label
+    EdgeHandleEnum:
+      type: string
+      enum:
+        - Top
+        - Right
+        - Bottom
+        - Left
+      description: Source handle position
+    EdgeLayout:
+      type: object
+      properties:
+        sourceHandle:
+          default: Right
+          description: Source handle position
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+        targetHandle:
+          default: Top
+          description: Target handle position
+          allOf:
+            - $ref: "#/components/schemas/EdgeHandleEnum"
+    EdgeData:
+      type: object
+      properties:
+        label:
+          type: string
+          description: label content
+    EdgeEntity:
+      type: object
+      properties:
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
+        id:
+          type: number
+        flowId:
+          type: number
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        layout:
+          $ref: "#/components/schemas/EdgeLayout"
+        data:
+          $ref: "#/components/schemas/EdgeData"
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - flowId
+        - layout
+        - data
+        - updatedAt
+    FlowFull:
+      type: object
+      properties:
+        flowId:
+          type: number
+        name:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeEntity"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/EdgeEntity"
+      required:
+        - flowId
+        - name
+        - updatedAt
+        - nodes
+        - edges
     FlowAddInput:
       type: object
       properties:
@@ -420,31 +721,19 @@ components:
           type: boolean
       required:
         - done
-    NodeData:
-      type: object
-      properties:
-        content:
-          type: string
-          description: text content
-        src:
-          type: string
-          description: image src
-    NodeDataTypeEnum:
-      type: string
-      enum:
-        - Text
-        - Image
     NodeAddInput:
       type: object
       properties:
         flowId:
           type: number
-        positionX:
-          type: number
-          default: 0
-        positionY:
-          type: number
-          default: 0
+        layout:
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
+          allOf:
+            - $ref: "#/components/schemas/NodeLayout"
         data:
           default:
             content: ""
@@ -456,40 +745,36 @@ components:
             - $ref: "#/components/schemas/NodeDataTypeEnum"
       required:
         - flowId
-    NodeAddResponse:
+        - layout
+    BatchNodeAddInput:
       type: object
       properties:
-        id:
-          type: number
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NodeAddInput"
       required:
-        - id
-    GeneratingTaskStatusEnum:
-      type: string
-      enum:
-        - Pending
-        - Generating
-        - Done
-        - Failed
-        - Stopped
-      description: AI genarating task status
-    NodeState:
+        - nodes
+    BatchNodeAddResponse:
       type: object
       properties:
-        generatingTaskId:
-          type: number
-          description: AI generating task id
-        generatingTaskStatus:
-          default: Pending
-          description: AI genarating task status
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
+    BatchNodePatchInputItem:
+      type: object
+      properties:
+        layout:
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
           allOf:
-            - $ref: "#/components/schemas/GeneratingTaskStatusEnum"
-    NodePatchInput:
-      type: object
-      properties:
-        positionX:
-          type: number
-        positionY:
-          type: number
+            - $ref: "#/components/schemas/NodeLayout"
         data:
           $ref: "#/components/schemas/NodeData"
         dataType:
@@ -498,36 +783,28 @@ components:
             - $ref: "#/components/schemas/NodeDataTypeEnum"
         state:
           $ref: "#/components/schemas/NodeState"
-    NodeEntity:
-      type: object
-      properties:
-        dataType:
-          default: Text
-          allOf:
-            - $ref: "#/components/schemas/NodeDataTypeEnum"
         id:
           type: number
-        flowId:
-          type: number
-        positionX:
-          type: number
-        positionY:
-          type: number
-        data:
-          $ref: "#/components/schemas/NodeData"
-        state:
-          $ref: "#/components/schemas/NodeState"
-        updatedAt:
-          format: date-time
-          type: string
       required:
         - id
-        - flowId
-        - positionX
-        - positionY
-        - data
-        - state
-        - updatedAt
+    BatchNodePatchInput:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchNodePatchInputItem"
+      required:
+        - nodes
+    BatchNodeDeleteInput:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
     NodeDeleteResponse:
       type: object
       properties:
@@ -535,6 +812,32 @@ components:
           type: boolean
       required:
         - done
+    NodeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    NodePatchInput:
+      type: object
+      properties:
+        layout:
+          default:
+            positionX: 0
+            positionY: 0
+            width: 100
+            height: 100
+          allOf:
+            - $ref: "#/components/schemas/NodeLayout"
+        data:
+          $ref: "#/components/schemas/NodeData"
+        dataType:
+          default: Text
+          allOf:
+            - $ref: "#/components/schemas/NodeDataTypeEnum"
+        state:
+          $ref: "#/components/schemas/NodeState"
     GeneratingTaskInputInAddInput:
       type: object
       properties:
@@ -582,56 +885,6 @@ components:
           type: boolean
       required:
         - done
-    EdgeHandleEnum:
-      type: string
-      enum:
-        - Top
-        - Right
-        - Bottom
-        - Left
-    EdgeDataTypeEnum:
-      type: string
-      enum:
-        - Label
-    EdgeData:
-      type: object
-      properties:
-        label:
-          type: string
-          description: label content
-    EdgeEntity:
-      type: object
-      properties:
-        sourceHandle:
-          default: Right
-          allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
-        targetHandle:
-          default: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
-        dataType:
-          default: Label
-          allOf:
-            - $ref: "#/components/schemas/EdgeDataTypeEnum"
-        id:
-          type: number
-        flowId:
-          type: number
-        sourceNodeId:
-          type: number
-        targetNodeId:
-          type: number
-        data:
-          $ref: "#/components/schemas/EdgeData"
-        updatedAt:
-          format: date-time
-          type: string
-      required:
-        - id
-        - flowId
-        - data
-        - updatedAt
     GeneratingTaskInput:
       type: object
       properties:
@@ -662,6 +915,9 @@ components:
         generatedContent:
           type: string
           description: generated content
+        generatedReasoning:
+          type: string
+          description: generated reasoning
         errorMessage:
           type: string
           description: error message
@@ -702,14 +958,12 @@ components:
           type: number
         targetNodeId:
           type: number
-        sourceHandle:
-          default: Right
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
           allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
-        targetHandle:
-          default: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
+            - $ref: "#/components/schemas/EdgeLayout"
         data:
           default:
             label: ""
@@ -721,6 +975,73 @@ components:
             - $ref: "#/components/schemas/EdgeDataTypeEnum"
       required:
         - flowId
+        - layout
+    BatchEdgeAddInput:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/EdgeAddInput"
+      required:
+        - edges
+    BatchEdgeAddResponse:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
+    BatchEdgePatchInputItem:
+      type: object
+      properties:
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeLayout"
+        data:
+          $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
+        id:
+          type: number
+      required:
+        - id
+    BatchEdgePatchInput:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchEdgePatchInputItem"
+      required:
+        - edges
+    BatchEdgeDeleteInput:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
+    EdgeDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
     EdgeAddResponse:
       type: object
       properties:
@@ -735,27 +1056,18 @@ components:
           type: number
         targetNodeId:
           type: number
-        sourceHandle:
-          default: Right
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
           allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
-        targetHandle:
-          default: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeHandleEnum"
+            - $ref: "#/components/schemas/EdgeLayout"
         data:
           $ref: "#/components/schemas/EdgeData"
         dataType:
           default: Label
           allOf:
             - $ref: "#/components/schemas/EdgeDataTypeEnum"
-    EdgeDeleteResponse:
-      type: object
-      properties:
-        done:
-          type: boolean
-      required:
-        - done
     AiModelInfo:
       type: object
       properties:
@@ -781,51 +1093,3 @@ components:
       required:
         - enabled
         - models
-    DocumentFull:
-      type: object
-      properties:
-        flowId:
-          type: number
-        name:
-          type: string
-        updatedAt:
-          format: date-time
-          type: string
-        nodes:
-          type: array
-          items:
-            $ref: "#/components/schemas/NodeEntity"
-        edges:
-          type: array
-          items:
-            $ref: "#/components/schemas/EdgeEntity"
-      required:
-        - flowId
-        - name
-        - updatedAt
-        - nodes
-        - edges
-    DocumentSlim:
-      type: object
-      properties:
-        flowId:
-          type: number
-        name:
-          type: string
-        updatedAt:
-          format: date-time
-          type: string
-        nodeIds:
-          type: array
-          items:
-            type: string
-        edgeIds:
-          type: array
-          items:
-            type: string
-      required:
-        - flowId
-        - name
-        - updatedAt
-        - nodeIds
-        - edgeIds

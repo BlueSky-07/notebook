@@ -15,6 +15,7 @@ export class InngestService {
 
   constructor(
     private readonly logger: Logger,
+    @Inject(forwardRef(() => FlowService))
     private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
     private readonly nodeService: NodeService,

@@ -11,6 +11,8 @@ import { applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import FlowSubject from '@/rxjs/subjects/flow';
 import { FlowModel } from '@/models/flow';
 import { FlowEntity, NodeEntity } from '@api/models';
+import { NodeApi } from '@api/clients/node-api';
+import { EdgeApi } from '@api/clients/edge-api';
 
 export interface FlowState extends FlowModel {
   // Rxjs Subject
@@ -34,8 +36,14 @@ export interface FlowState extends FlowModel {
     copyFrom?: Node,
     center?: XYPosition,
   ) => void;
-  updateNodeData: (id: string, data: Node['data']) => void;
-  updateEdgeData: (id: string, data: Edge['data']) => void;
+  updateNodeData: (
+    id: string,
+    data: Node['data'],
+  ) => ReturnType<NodeApi['patchNode']>;
+  updateEdgeData: (
+    id: string,
+    data: Edge['data'],
+  ) => ReturnType<EdgeApi['patchEdge']>;
 
   // Other States
   modelId?: string;
@@ -47,13 +55,17 @@ export interface FlowState extends FlowModel {
 const useFlowStore = create<FlowState>((set, get) => {
   return {
     subject: undefined,
+    nodes: [],
+    edges: [],
     bootstrap: (flowId: FlowEntity['id']) => {
       const lastSubject = get().subject;
       if (lastSubject) {
         lastSubject.complete();
       }
       const subject = new FlowSubject(flowId);
-      subject.subscribe((data) => set({ ...data }));
+      subject.subscribe((data) => {
+        return set({ ...data });
+      });
       set({ subject });
       subject.loadFromAPI();
       // subject.loadFromLocalStorage()
@@ -64,13 +76,15 @@ const useFlowStore = create<FlowState>((set, get) => {
     getNode: (nodeId: string) => {
       return get().nodes.find((node) => node.id === nodeId);
     },
-    nodes: [],
-    edges: [],
     onNodesChange: (changes) => {
       for (const change of changes) {
         switch (change.type) {
           case 'position': {
-            get().subject?.updateNodePosition(change.id, change.position);
+            get().subject?.updateNodePosition(change.id, change);
+            break;
+          }
+          case 'dimensions': {
+            get().subject?.updateNodeDimension(change.id, change);
             break;
           }
           case 'remove': {
@@ -127,11 +141,11 @@ const useFlowStore = create<FlowState>((set, get) => {
     ) => {
       get().subject?.addNode(dataType, copyFrom, center);
     },
-    updateNodeData: (id: string, data: Node['data']) => {
-      get().subject?.updateNodeData(id, data);
+    updateNodeData: async (id: string, data: Node['data']) => {
+      return get().subject?.updateNodeData(id, data);
     },
-    updateEdgeData: (id: string, data: Edge['data']) => {
-      get().subject?.updateEdgeData(id, data);
+    updateEdgeData: async (id: string, data: Edge['data']) => {
+      return get().subject?.updateEdgeData(id, data);
     },
     modelId: undefined,
     updateModelId: (modelId: string) => {

@@ -11,7 +11,7 @@ import { EdgeModule } from '../edge/edge.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([GeneratingTaskEntity]),
-    FlowModule,
+    forwardRef(() => FlowModule),
     forwardRef(() => NodeModule),
     forwardRef(() => EdgeModule),
     forwardRef(() => InngestModule),

@@ -22,6 +22,14 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { BatchEdgeAddInput } from '../models';
+// @ts-ignore
+import type { BatchEdgeAddResponse } from '../models';
+// @ts-ignore
+import type { BatchEdgeDeleteInput } from '../models';
+// @ts-ignore
+import type { BatchEdgePatchInput } from '../models';
+// @ts-ignore
 import type { EdgeAddInput } from '../models';
 // @ts-ignore
 import type { EdgeAddResponse } from '../models';
@@ -74,6 +82,41 @@ export const EdgeApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {BatchEdgeAddInput} batchEdgeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addEdges: async (batchEdgeAddInput: BatchEdgeAddInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchEdgeAddInput' is not null or undefined
+            assertParamExists('addEdges', 'batchEdgeAddInput', batchEdgeAddInput)
+            const localVarPath = `/edge/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchEdgeAddInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -107,6 +150,41 @@ export const EdgeApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {BatchEdgeDeleteInput} batchEdgeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteEdges: async (batchEdgeDeleteInput: BatchEdgeDeleteInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchEdgeDeleteInput' is not null or undefined
+            assertParamExists('deleteEdges', 'batchEdgeDeleteInput', batchEdgeDeleteInput)
+            const localVarPath = `/edge/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchEdgeDeleteInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -115,6 +193,39 @@ export const EdgeApiAxiosParamCreator = function (configuration?: Configuration)
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getEdge', 'id', id)
             const localVarPath = `/edge/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEdges: async (id: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getEdges', 'id', id)
+            const localVarPath = `/edge/batch`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -177,6 +288,41 @@ export const EdgeApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {BatchEdgePatchInput} batchEdgePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        patchEdges: async (batchEdgePatchInput: BatchEdgePatchInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchEdgePatchInput' is not null or undefined
+            assertParamExists('patchEdges', 'batchEdgePatchInput', batchEdgePatchInput)
+            const localVarPath = `/edge/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchEdgePatchInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -201,6 +347,18 @@ export const EdgeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {BatchEdgeAddInput} batchEdgeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addEdges(batchEdgeAddInput: BatchEdgeAddInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BatchEdgeAddResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addEdges(batchEdgeAddInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EdgeApi.addEdges']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -209,6 +367,18 @@ export const EdgeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteEdge(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EdgeApi.deleteEdge']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {BatchEdgeDeleteInput} batchEdgeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteEdges(batchEdgeDeleteInput: BatchEdgeDeleteInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EdgeDeleteResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteEdges(batchEdgeDeleteInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EdgeApi.deleteEdges']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -225,6 +395,18 @@ export const EdgeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getEdges(id: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EdgeEntity>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEdges(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EdgeApi.getEdges']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {EdgePatchInput} edgePatchInput 
          * @param {*} [options] Override http request option.
@@ -234,6 +416,18 @@ export const EdgeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.patchEdge(id, edgePatchInput, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EdgeApi.patchEdge']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {BatchEdgePatchInput} batchEdgePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async patchEdges(batchEdgePatchInput: BatchEdgePatchInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EdgeEntity>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchEdges(batchEdgePatchInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EdgeApi.patchEdges']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -257,12 +451,30 @@ export const EdgeApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {BatchEdgeAddInput} batchEdgeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addEdges(batchEdgeAddInput: BatchEdgeAddInput, options?: RawAxiosRequestConfig): AxiosPromise<BatchEdgeAddResponse> {
+            return localVarFp.addEdges(batchEdgeAddInput, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         deleteEdge(id: number, options?: RawAxiosRequestConfig): AxiosPromise<EdgeDeleteResponse> {
             return localVarFp.deleteEdge(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {BatchEdgeDeleteInput} batchEdgeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteEdges(batchEdgeDeleteInput: BatchEdgeDeleteInput, options?: RawAxiosRequestConfig): AxiosPromise<EdgeDeleteResponse> {
+            return localVarFp.deleteEdges(batchEdgeDeleteInput, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -275,6 +487,15 @@ export const EdgeApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEdges(id: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<Array<EdgeEntity>> {
+            return localVarFp.getEdges(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {EdgePatchInput} edgePatchInput 
          * @param {*} [options] Override http request option.
@@ -282,6 +503,15 @@ export const EdgeApiFactory = function (configuration?: Configuration, basePath?
          */
         patchEdge(id: number, edgePatchInput: EdgePatchInput, options?: RawAxiosRequestConfig): AxiosPromise<EdgeEntity> {
             return localVarFp.patchEdge(id, edgePatchInput, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {BatchEdgePatchInput} batchEdgePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        patchEdges(batchEdgePatchInput: BatchEdgePatchInput, options?: RawAxiosRequestConfig): AxiosPromise<Array<EdgeEntity>> {
+            return localVarFp.patchEdges(batchEdgePatchInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -306,6 +536,17 @@ export class EdgeApi extends BaseAPI {
 
     /**
      * 
+     * @param {BatchEdgeAddInput} batchEdgeAddInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EdgeApi
+     */
+    public addEdges(batchEdgeAddInput: BatchEdgeAddInput, options?: RawAxiosRequestConfig) {
+        return EdgeApiFp(this.configuration).addEdges(batchEdgeAddInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -313,6 +554,17 @@ export class EdgeApi extends BaseAPI {
      */
     public deleteEdge(id: number, options?: RawAxiosRequestConfig) {
         return EdgeApiFp(this.configuration).deleteEdge(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {BatchEdgeDeleteInput} batchEdgeDeleteInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EdgeApi
+     */
+    public deleteEdges(batchEdgeDeleteInput: BatchEdgeDeleteInput, options?: RawAxiosRequestConfig) {
+        return EdgeApiFp(this.configuration).deleteEdges(batchEdgeDeleteInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -328,6 +580,17 @@ export class EdgeApi extends BaseAPI {
 
     /**
      * 
+     * @param {Array<string>} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EdgeApi
+     */
+    public getEdges(id: Array<string>, options?: RawAxiosRequestConfig) {
+        return EdgeApiFp(this.configuration).getEdges(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} id 
      * @param {EdgePatchInput} edgePatchInput 
      * @param {*} [options] Override http request option.
@@ -336,6 +599,17 @@ export class EdgeApi extends BaseAPI {
      */
     public patchEdge(id: number, edgePatchInput: EdgePatchInput, options?: RawAxiosRequestConfig) {
         return EdgeApiFp(this.configuration).patchEdge(id, edgePatchInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {BatchEdgePatchInput} batchEdgePatchInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EdgeApi
+     */
+    public patchEdges(batchEdgePatchInput: BatchEdgePatchInput, options?: RawAxiosRequestConfig) {
+        return EdgeApiFp(this.configuration).patchEdges(batchEdgePatchInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -10,6 +10,11 @@ export enum EdgeDataType {
   Label = 'Label',
 }
 
+export class EdgeData {
+  @ApiProperty({ type: String, required: false, description: 'label content' })
+  label?: string;
+}
+
 export enum EdgeHandle {
   Top = 'Top',
   Right = 'Right',
@@ -17,9 +22,24 @@ export enum EdgeHandle {
   Left = 'Left',
 }
 
-export class EdgeData {
-  @ApiProperty({ type: String, required: false, description: 'label content' })
-  label?: string;
+export class EdgeLayout {
+  @ApiProperty({
+    enum: EdgeHandle,
+    enumName: 'EdgeHandleEnum',
+    required: false,
+    default: EdgeHandle.Right,
+    description: 'Source handle position',
+  })
+  sourceHandle?: EdgeHandle;
+
+  @ApiProperty({
+    enum: EdgeHandle,
+    enumName: 'EdgeHandleEnum',
+    required: false,
+    default: EdgeHandle.Top,
+    description: 'Target handle position',
+  })
+  targetHandle?: EdgeHandle;
 }
 
 @Entity({
@@ -38,33 +58,15 @@ export class EdgeEntity {
   @Column({ type: 'int', default: null })
   targetNodeId?: number;
 
-  @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
-    required: false,
-    default: EdgeHandle.Right,
-  })
   @Column({
-    type: 'varchar',
-    length: 10,
-    // enum: EdgeHandle,
-    default: EdgeHandle.Right,
+    type: 'simple-json',
+    default: () =>
+      `('${JSON.stringify({
+        sourceHandle: EdgeHandle.Right,
+        targetHandle: EdgeHandle.Top,
+      })}')`,
   })
-  sourceHandle?: EdgeHandle;
-
-  @ApiProperty({
-    enum: EdgeHandle,
-    enumName: 'EdgeHandleEnum',
-    required: false,
-    default: EdgeHandle.Top,
-  })
-  @Column({
-    type: 'varchar',
-    length: 10,
-    // enum: EdgeHandle,
-    default: EdgeHandle.Top,
-  })
-  targetHandle?: EdgeHandle;
+  layout: EdgeLayout;
 
   @Column({
     type: 'simple-json',

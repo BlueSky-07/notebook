@@ -30,6 +30,8 @@ import type { FlowDeleteResponse } from '../models';
 // @ts-ignore
 import type { FlowEntity } from '../models';
 // @ts-ignore
+import type { FlowFull } from '../models';
+// @ts-ignore
 import type { FlowListResponse } from '../models';
 // @ts-ignore
 import type { FlowPatchInput } from '../models';
@@ -182,6 +184,39 @@ export const FlowApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFlowFull: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getFlowFull', 'id', id)
+            const localVarPath = `/flow/full/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
          * @param {FlowPatchInput} flowPatchInput 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -280,6 +315,18 @@ export const FlowApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFlowFull(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowFull>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFlowFull(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowApi.getFlowFull']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
          * @param {FlowPatchInput} flowPatchInput 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -336,6 +383,15 @@ export const FlowApiFactory = function (configuration?: Configuration, basePath?
          */
         getFlow(id: number, options?: RawAxiosRequestConfig): AxiosPromise<FlowEntity> {
             return localVarFp.getFlow(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFlowFull(id: number, options?: RawAxiosRequestConfig): AxiosPromise<FlowFull> {
+            return localVarFp.getFlowFull(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -400,6 +456,17 @@ export class FlowApi extends BaseAPI {
      */
     public getFlow(id: number, options?: RawAxiosRequestConfig) {
         return FlowApiFp(this.configuration).getFlow(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FlowApi
+     */
+    public getFlowFull(id: number, options?: RawAxiosRequestConfig) {
+        return FlowApiFp(this.configuration).getFlowFull(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

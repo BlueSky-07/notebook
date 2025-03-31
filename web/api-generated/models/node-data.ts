@@ -32,5 +32,11 @@ export interface NodeData {
      * @memberof NodeData
      */
     'src'?: string;
+    /**
+     * background (css)
+     * @type {string}
+     * @memberof NodeData
+     */
+    'background'?: string;
 }
 

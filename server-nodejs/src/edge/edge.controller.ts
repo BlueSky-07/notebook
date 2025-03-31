@@ -10,6 +10,10 @@ import {
 import { EdgeService } from './edge.service';
 import { EdgeEntity } from './edge.entity';
 import {
+  BatchEdgeAddInput,
+  BatchEdgeAddResponse,
+  BatchEdgeDeleteInput,
+  BatchEdgePatchInput,
   EdgeAddInput,
   EdgeAddResponse,
   EdgeDeleteResponse,
@@ -20,6 +24,36 @@ import { omit } from 'lodash';
 @Controller('edge')
 export class EdgeController {
   constructor(private readonly edgeService: EdgeService) {}
+
+  @Post('batch')
+  async addEdges(
+    @Body() batchEdgeAddInput: BatchEdgeAddInput,
+  ): Promise<BatchEdgeAddResponse> {
+    const ids = await this.edgeService.addEdges(batchEdgeAddInput.edges);
+    return { ids };
+  }
+
+  @Patch('batch')
+  patchEdges(
+    @Body() batchEdgePatchInput: BatchEdgePatchInput,
+  ): Promise<EdgeEntity[]> {
+    return this.edgeService.patchEdges(batchEdgePatchInput.edges);
+  }
+
+  @Get('batch')
+  async getEdges(@Param('id') ids: number[]): Promise<EdgeEntity[]> {
+    return this.edgeService.getEdgesByIds(ids);
+  }
+
+  @Delete('batch')
+  async deleteEdges(
+    @Body() batchEdgeDeleteInput: BatchEdgeDeleteInput,
+  ): Promise<EdgeDeleteResponse> {
+    const done = await this.edgeService.deleteEdgesByIds(
+      batchEdgeDeleteInput.ids,
+    );
+    return { done };
+  }
 
   @Post('')
   async addEdge(@Body() edgeAddInput: EdgeAddInput): Promise<EdgeAddResponse> {

@@ -27,6 +27,12 @@ export interface GeneratingTaskOutput {
      */
     'generatedContent'?: string;
     /**
+     * generated reasoning
+     * @type {string}
+     * @memberof GeneratingTaskOutput
+     */
+    'generatedReasoning'?: string;
+    /**
      * error message
      * @type {string}
      * @memberof GeneratingTaskOutput

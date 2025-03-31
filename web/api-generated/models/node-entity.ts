@@ -21,6 +21,9 @@ import type { NodeData } from './node-data';
 import type { NodeDataTypeEnum } from './node-data-type-enum';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { NodeLayout } from './node-layout';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { NodeState } from './node-state';
 
 /**
@@ -49,16 +52,10 @@ export interface NodeEntity {
     'flowId': number;
     /**
      * 
-     * @type {number}
+     * @type {NodeLayout}
      * @memberof NodeEntity
      */
-    'positionX': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof NodeEntity
-     */
-    'positionY': number;
+    'layout': NodeLayout;
     /**
      * 
      * @type {NodeData}

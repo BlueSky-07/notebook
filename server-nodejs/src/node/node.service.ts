@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -6,12 +7,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { NodeEntity } from './node.entity';
-import { NodeAddInput, NodePatchInput } from './node.type';
+import {
+  BatchNodePatchInputItem,
+  NodeAddInput,
+  NodePatchInput,
+} from './node.type';
 import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
-import FlowUpdatedFunction from '../inngest/functions/flow-updated';
+import { omit } from 'lodash';
+import NodeEvent from './node.event';
 
 @Injectable()
 export class NodeService {
@@ -24,10 +30,16 @@ export class NodeService {
 
   async addNode(nodeAddInput: NodeAddInput): Promise<NodeEntity['id']> {
     const res = await this.nodeRepository.insert(nodeAddInput);
-    await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-      flowId: nodeAddInput.flowId,
-    });
-    return res.generatedMaps[0].id as number;
+    const nodeId = res.generatedMaps[0].id as number;
+    await NodeEvent.trigger(
+      this.inngestService.inngest,
+      NodeEvent.EVENT_NAMES.NODE_CREATED,
+      {
+        nodeId,
+        flowId: nodeAddInput.flowId,
+      },
+    );
+    return nodeId;
   }
 
   async patchNode(
@@ -37,9 +49,14 @@ export class NodeService {
     const record = await this.getNode(id);
     const res = await this.nodeRepository.update(id, nodePatchInput);
     if (res.affected) {
-      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-        flowId: record.flowId,
-      });
+      await NodeEvent.trigger(
+        this.inngestService.inngest,
+        NodeEvent.EVENT_NAMES.NODE_UPDATED,
+        {
+          nodeId: id,
+          flowId: record.flowId,
+        },
+      );
       return this.getNode(id);
     } else {
       throw new InternalServerErrorException(
@@ -49,6 +66,7 @@ export class NodeService {
   }
 
   async getNode(id: NodeEntity['id']): Promise<NodeEntity> {
+    if (!id) throw new BadRequestException(`Node id is missing`);
     const record = await this.nodeRepository.findOneBy({
       id,
     });
@@ -79,13 +97,109 @@ export class NodeService {
       id,
     });
     if (res.affected) {
-      await FlowUpdatedFunction.trigger(this.inngestService.inngest, {
-        flowId: record.flowId,
-      });
+      await NodeEvent.trigger(
+        this.inngestService.inngest,
+        NodeEvent.EVENT_NAMES.NODE_DELETED,
+        {
+          nodeId: id,
+          flowId: record.flowId,
+        },
+      );
       return true;
     } else {
       throw new InternalServerErrorException(
         `Node does not delete successfully`,
+      );
+    }
+  }
+
+  async addNodes(nodes: NodeAddInput[]): Promise<NodeEntity['id'][]> {
+    const res = await this.nodeRepository.insert(nodes);
+    const ids = res.generatedMaps.map((generated) => generated.id as number);
+    await Promise.all(
+      ids.map((id, index) =>
+        NodeEvent.trigger(
+          this.inngestService.inngest,
+          NodeEvent.EVENT_NAMES.NODE_CREATED,
+          {
+            nodeId: id,
+            flowId: nodes[index].flowId,
+          },
+        ),
+      ),
+    );
+
+    return ids;
+  }
+
+  async patchNodes(
+    batchNodePatchInputItems: BatchNodePatchInputItem[],
+  ): Promise<NodeEntity[]> {
+    const nodeIdPatchInputMapping = new Map<
+      NodeEntity['id'],
+      BatchNodePatchInputItem
+    >();
+    for (const nodePatchInputItem of batchNodePatchInputItems) {
+      nodeIdPatchInputMapping.set(nodePatchInputItem.id, nodePatchInputItem);
+    }
+    return Promise.all(
+      Array.from(nodeIdPatchInputMapping.values()).map((item) =>
+        this.patchNode(item.id, omit(item, 'id')),
+      ),
+    );
+  }
+
+  async deleteNodesByIds(ids: NodeEntity['id'][]): Promise<boolean> {
+    const filteredIds = Array.from(new Set(ids));
+    const records = await this.getNodesByIds(filteredIds);
+    if (!records.length) throw new BadRequestException(`Nodes do not exist`);
+    const res = await this.nodeRepository.delete({
+      id: In(filteredIds),
+    });
+    if (res.affected) {
+      await Promise.all(
+        records.map((record) =>
+          NodeEvent.trigger(
+            this.inngestService.inngest,
+            NodeEvent.EVENT_NAMES.NODE_DELETED,
+            {
+              nodeId: record.id,
+              flowId: record.flowId,
+            },
+          ),
+        ),
+      );
+      return true;
+    } else {
+      throw new InternalServerErrorException(
+        `Nodes does not delete successfully`,
+      );
+    }
+  }
+
+  async deleteNodesByFlowId(flowId: FlowEntity['id']): Promise<boolean> {
+    const records = await this.getNodesByFlowId(flowId);
+    if (!records.length) throw new BadRequestException(`Nodes do not exist`);
+    const res = await this.nodeRepository.delete({
+      flowId,
+    });
+    if (res.affected) {
+      await Promise.all(
+        records.map((record) =>
+          NodeEvent.trigger(
+            this.inngestService.inngest,
+            NodeEvent.EVENT_NAMES.NODE_DELETED,
+            {
+              nodeId: record.id,
+              flowId: record.flowId,
+            },
+          ),
+        ),
+      );
+      return true;
+    } else {
+      throw new InternalServerErrorException(
+        `Nodes does not delete successfully`,
       );
     }
   }

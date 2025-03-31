@@ -1,20 +1,16 @@
-import { EdgeHandleEnum } from "@api/models"
+import { EdgeHandleEnum } from '@api/models';
 import { Handle, Position } from '@xyflow/react';
 
 interface DefaultHandlesProps {
-  hidden?: EdgeHandleEnum[]
+  hidden?: EdgeHandleEnum[];
 }
 
 export const DefaultHandles = (props: DefaultHandlesProps) => {
-  const { hidden = [] } = props
+  const { hidden = [] } = props;
   return (
     <>
       {!hidden.includes(EdgeHandleEnum.Top) && (
-        <Handle
-          type="target"
-          position={Position.Top}
-          id={EdgeHandleEnum.Top}
-        />
+        <Handle type="target" position={Position.Top} id={EdgeHandleEnum.Top} />
       )}
       {!hidden.includes(EdgeHandleEnum.Right) && (
         <Handle
@@ -38,7 +34,7 @@ export const DefaultHandles = (props: DefaultHandlesProps) => {
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default DefaultHandles
+export default DefaultHandles;

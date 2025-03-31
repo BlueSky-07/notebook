@@ -3,7 +3,6 @@
 api.ts
 base.ts
 clients/ai-api.ts
-clients/document-api.ts
 clients/edge-api.ts
 clients/flow-api.ts
 clients/generating-task-api.ts
@@ -14,8 +13,16 @@ git_push.sh
 index.ts
 models/ai-model-info.ts
 models/ai-models-response.ts
-models/document-full.ts
-models/document-slim.ts
+models/batch-edge-add-input.ts
+models/batch-edge-add-response.ts
+models/batch-edge-delete-input.ts
+models/batch-edge-patch-input-item.ts
+models/batch-edge-patch-input.ts
+models/batch-node-add-input.ts
+models/batch-node-add-response.ts
+models/batch-node-delete-input.ts
+models/batch-node-patch-input-item.ts
+models/batch-node-patch-input.ts
 models/edge-add-input.ts
 models/edge-add-response.ts
 models/edge-data-type-enum.ts
@@ -23,11 +30,13 @@ models/edge-data.ts
 models/edge-delete-response.ts
 models/edge-entity.ts
 models/edge-handle-enum.ts
+models/edge-layout.ts
 models/edge-patch-input.ts
 models/flow-add-input.ts
 models/flow-add-response.ts
 models/flow-delete-response.ts
 models/flow-entity.ts
+models/flow-full.ts
 models/flow-list-response.ts
 models/flow-patch-input.ts
 models/generating-task-add-input.ts
@@ -45,5 +54,6 @@ models/node-data-type-enum.ts
 models/node-data.ts
 models/node-delete-response.ts
 models/node-entity.ts
+models/node-layout.ts
 models/node-patch-input.ts
 models/node-state.ts

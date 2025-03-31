@@ -30,7 +30,7 @@ export interface NodeState {
      */
     'generatingTaskId'?: number;
     /**
-     * AI genarating task status
+     * AI generating task status
      * @type {GeneratingTaskStatusEnum}
      * @memberof NodeState
      */

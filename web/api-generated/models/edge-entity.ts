@@ -21,7 +21,7 @@ import type { EdgeData } from './edge-data';
 import type { EdgeDataTypeEnum } from './edge-data-type-enum';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EdgeHandleEnum } from './edge-handle-enum';
+import type { EdgeLayout } from './edge-layout';
 
 /**
  * 
@@ -29,18 +29,6 @@ import type { EdgeHandleEnum } from './edge-handle-enum';
  * @interface EdgeEntity
  */
 export interface EdgeEntity {
-    /**
-     * 
-     * @type {EdgeHandleEnum}
-     * @memberof EdgeEntity
-     */
-    'sourceHandle'?: EdgeHandleEnum;
-    /**
-     * 
-     * @type {EdgeHandleEnum}
-     * @memberof EdgeEntity
-     */
-    'targetHandle'?: EdgeHandleEnum;
     /**
      * 
      * @type {EdgeDataTypeEnum}
@@ -71,6 +59,12 @@ export interface EdgeEntity {
      * @memberof EdgeEntity
      */
     'targetNodeId'?: number;
+    /**
+     * 
+     * @type {EdgeLayout}
+     * @memberof EdgeEntity
+     */
+    'layout': EdgeLayout;
     /**
      * 
      * @type {EdgeData}

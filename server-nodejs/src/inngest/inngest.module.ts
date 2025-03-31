@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    FlowModule,
+    forwardRef(() => FlowModule),
     forwardRef(() => NodeModule),
     forwardRef(() => GeneratingTaskModule),
     AiModule,

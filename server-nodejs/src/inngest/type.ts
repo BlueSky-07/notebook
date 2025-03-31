@@ -1,15 +1,5 @@
-import {
-  StandardEventSchemas,
-  StandardEventSchema,
-} from 'inngest/components/EventSchemas';
-import {
-  FlowUpdatedEvent,
-  FLOW_UPDATED_EVENT_NAME,
-} from './functions/flow-updated';
+import { NodeEventSchemas } from '../node/node.event';
 
-export interface InngestEvents extends StandardEventSchemas {
-  [FLOW_UPDATED_EVENT_NAME]: FlowUpdatedEvent;
-  [key: string]: StandardEventSchema;
-}
+export type InngestEvents = NodeEventSchemas;
 
 export default InngestEvents;

@@ -19,6 +19,9 @@ import type { NodeData } from './node-data';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { NodeDataTypeEnum } from './node-data-type-enum';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NodeLayout } from './node-layout';
 
 /**
  * 
@@ -34,16 +37,10 @@ export interface NodeAddInput {
     'flowId': number;
     /**
      * 
-     * @type {number}
+     * @type {NodeLayout}
      * @memberof NodeAddInput
      */
-    'positionX'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof NodeAddInput
-     */
-    'positionY'?: number;
+    'layout': NodeLayout;
     /**
      * 
      * @type {NodeData}

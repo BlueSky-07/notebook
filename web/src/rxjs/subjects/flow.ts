@@ -1,12 +1,18 @@
-import { type XYPosition, type Edge, type Node } from '@xyflow/react';
+import {
+  type Edge,
+  type Node,
+  type NodeDimensionChange,
+  type NodePositionChange,
+  type XYPosition,
+} from '@xyflow/react';
 import {
   convertFlowEdgeToEdgeEntity,
+  convertFlowFullToFlowModel,
   convertFlowNodeToNodeEntity,
-  convertFullDocumentToFlowModel,
   DEFAULT_FLOW_MODEL,
   FlowModel,
-  getFlowEdge,
-  getFlowNode,
+  getInitialFlowEdge,
+  getInitialFlowNode,
 } from '@/models/flow';
 import { BehaviorSubject, Observable, share } from 'rxjs';
 import API from '@/services/api';
@@ -21,14 +27,10 @@ export enum FLOW_SUBJECT_STORAGE {
 }
 
 export default class FlowSubject {
-  private flowId: number;
-  private localStorageKey: string;
+  private readonly flowId: number;
+  private readonly localStorageKey: string;
   private subject: BehaviorSubject<FlowModel>;
   private observable: Observable<FlowModel>;
-  private unsubscribeMap = new WeakMap<
-    (...args: unknown[]) => unknown,
-    (...args: unknown[]) => unknown
-  >();
   private storage: FLOW_SUBJECT_STORAGE = FLOW_SUBJECT_STORAGE.API;
 
   constructor(flowId: number) {
@@ -44,10 +46,10 @@ export default class FlowSubject {
 
   loadFromAPI() {
     this.storage = FLOW_SUBJECT_STORAGE.API;
-    API.document
-      .getFullDocument(this.flowId)
+    API.flow
+      .getFlowFull(this.flowId)
       .then((r) => {
-        this.subject.next(convertFullDocumentToFlowModel(r.data));
+        this.subject.next(convertFlowFullToFlowModel(r.data));
       })
       .catch((e) => {
         console.error(e);
@@ -72,17 +74,7 @@ export default class FlowSubject {
   }
 
   subscribe(nextFn: (data: FlowModel) => void) {
-    const subscription = this.observable.subscribe(nextFn);
-    this.unsubscribeMap.set(
-      nextFn,
-      subscription.unsubscribe.bind(subscription),
-    );
-    return subscription;
-  }
-
-  unsubscribe(nextFn: (data: FlowModel) => void) {
-    const unsubscribe = this.unsubscribeMap.get(nextFn);
-    if (unsubscribe) unsubscribe();
+    return this.observable.subscribe(nextFn);
   }
 
   getValue<Path extends keyof FlowModel>(
@@ -123,10 +115,11 @@ export default class FlowSubject {
     copyFrom?: Node,
     center?: XYPosition,
   ) {
-    const newNode = copyFrom ?? getFlowNode(Date.now().toString(), dataType);
+    const newNode =
+      copyFrom ?? getInitialFlowNode(Date.now().toString(), dataType);
     if (center && !copyFrom) {
-      newNode.position.x = center.x + random(-500, 500);
-      newNode.position.y = center.y + random(-500, 500);
+      newNode.position.x = center.x + random(-100, 100);
+      newNode.position.y = center.y + random(-100, 100);
     }
     const createResp = await this.dispatchStorage(
       async () => {
@@ -154,7 +147,7 @@ export default class FlowSubject {
           draft[nodeIndex].data = data;
         }),
       });
-      this.dispatchStorage(
+      return this.dispatchStorage(
         debounceRequest(`update-node-data-${id}`, () =>
           API.node.patchNode(parseInt(id), { data }),
         ),
@@ -162,20 +155,64 @@ export default class FlowSubject {
     }
   }
 
-  updateNodePosition(id: string, position: Node['position']) {
+  updateNodePosition(id: string, change: NodePositionChange) {
     const nodes = this.getValue('nodes');
     const nodeIndex = nodes.findIndex((node) => node.id === id);
     if (nodeIndex !== -1) {
       this.next({
         nodes: produce(nodes, (draft) => {
-          draft[nodeIndex].position = position;
+          draft[nodeIndex].position = change.position;
         }),
       });
-      this.dispatchStorage(
-        debounceRequest(`update-node-position-${id}`, () =>
+      const node = nodes[nodeIndex];
+      if (change.dragging) {
+        // don't save layout of dragging node, just update ui
+        return;
+      }
+
+      return this.dispatchStorage(
+        debounceRequest(`update-node-layout-${id}`, () =>
           API.node.patchNode(parseInt(id), {
-            positionX: position.x,
-            positionY: position.y,
+            layout: {
+              positionX: change.position.x,
+              positionY: change.position.y,
+              width: node.width,
+              height: node.height,
+            },
+          }),
+        ),
+      )();
+    }
+  }
+
+  updateNodeDimension(id: string, change: NodeDimensionChange) {
+    const nodes = this.getValue('nodes');
+    const nodeIndex = nodes.findIndex((node) => node.id === id);
+    if (nodeIndex !== -1) {
+      this.next({
+        nodes: produce(nodes, (draft) => {
+          if (!change.dimensions) {
+            return;
+          }
+          draft[nodeIndex].width = change.dimensions.width;
+          draft[nodeIndex].height = change.dimensions.height;
+        }),
+      });
+      const node = nodes[nodeIndex];
+      if (change.resizing) {
+        // don't save layout of resizing node, just update ui
+        return;
+      }
+
+      return this.dispatchStorage(
+        debounceRequest(`update-node-layout-${id}`, () =>
+          API.node.patchNode(parseInt(id), {
+            layout: {
+              positionX: node.position.x,
+              positionY: node.position.y,
+              width: change.dimensions?.width ?? node.width,
+              height: change.dimensions?.height ?? node.height,
+            },
           }),
         ),
       )();
@@ -191,7 +228,7 @@ export default class FlowSubject {
           draft.splice(nodeIndex, 1);
         }),
       });
-      this.dispatchStorage(
+      return this.dispatchStorage(
         debounceRequest(`delete-node-${id}`, () =>
           API.node.deleteNode(parseInt(id)),
         ),
@@ -206,7 +243,7 @@ export default class FlowSubject {
     targetHandle: string,
     dataType: EdgeEntity['dataType'] = EdgeDataTypeEnum.Label,
   ) {
-    const newEdge = getFlowEdge(
+    const newEdge = getInitialFlowEdge(
       Date.now().toString(),
       source,
       target,
@@ -240,7 +277,7 @@ export default class FlowSubject {
           draft[edgeIndex].data = data;
         }),
       });
-      this.dispatchStorage(
+      return this.dispatchStorage(
         debounceRequest(`update-edge-data-${id}`, () =>
           API.edge.patchEdge(parseInt(id), { data }),
         ),
@@ -257,7 +294,7 @@ export default class FlowSubject {
           draft.splice(edgeIndex, 1);
         }),
       });
-      this.dispatchStorage(
+      return this.dispatchStorage(
         debounceRequest(`delete-edge-${id}`, () =>
           API.edge.deleteEdge(parseInt(id)),
         ),

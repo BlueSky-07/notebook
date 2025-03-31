@@ -15,7 +15,7 @@
 
 
 /**
- * 
+ * Source handle position
  * @export
  * @enum {string}
  */

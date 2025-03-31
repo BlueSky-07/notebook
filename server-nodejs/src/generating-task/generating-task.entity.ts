@@ -49,6 +49,8 @@ export class GeneratingTaskInput {
 export class GeneratingTaskOutput {
   @ApiProperty({ type: String, description: 'generated content' })
   generatedContent?: string;
+  @ApiProperty({ type: String, description: 'generated reasoning' })
+  generatedReasoning?: string;
   @ApiProperty({ type: String, description: 'error message' })
   errorMessage?: string;
 }

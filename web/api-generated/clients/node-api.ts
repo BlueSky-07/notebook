@@ -22,6 +22,14 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { BatchNodeAddInput } from '../models';
+// @ts-ignore
+import type { BatchNodeAddResponse } from '../models';
+// @ts-ignore
+import type { BatchNodeDeleteInput } from '../models';
+// @ts-ignore
+import type { BatchNodePatchInput } from '../models';
+// @ts-ignore
 import type { NodeAddInput } from '../models';
 // @ts-ignore
 import type { NodeAddResponse } from '../models';
@@ -74,6 +82,41 @@ export const NodeApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {BatchNodeAddInput} batchNodeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addNodes: async (batchNodeAddInput: BatchNodeAddInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchNodeAddInput' is not null or undefined
+            assertParamExists('addNodes', 'batchNodeAddInput', batchNodeAddInput)
+            const localVarPath = `/node/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchNodeAddInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -107,6 +150,41 @@ export const NodeApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {BatchNodeDeleteInput} batchNodeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNodes: async (batchNodeDeleteInput: BatchNodeDeleteInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchNodeDeleteInput' is not null or undefined
+            assertParamExists('deleteNodes', 'batchNodeDeleteInput', batchNodeDeleteInput)
+            const localVarPath = `/node/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchNodeDeleteInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -126,6 +204,42 @@ export const NodeApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNodes: async (id: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getNodes', 'id', id)
+            const localVarPath = `/node/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (id) {
+                localVarQueryParameter['id'] = id;
+            }
 
 
     
@@ -177,6 +291,41 @@ export const NodeApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {BatchNodePatchInput} batchNodePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        patchNodes: async (batchNodePatchInput: BatchNodePatchInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'batchNodePatchInput' is not null or undefined
+            assertParamExists('patchNodes', 'batchNodePatchInput', batchNodePatchInput)
+            const localVarPath = `/node/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(batchNodePatchInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -201,6 +350,18 @@ export const NodeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {BatchNodeAddInput} batchNodeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addNodes(batchNodeAddInput: BatchNodeAddInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BatchNodeAddResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addNodes(batchNodeAddInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodeApi.addNodes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -209,6 +370,18 @@ export const NodeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteNode(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['NodeApi.deleteNode']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {BatchNodeDeleteInput} batchNodeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteNodes(batchNodeDeleteInput: BatchNodeDeleteInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NodeDeleteResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteNodes(batchNodeDeleteInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodeApi.deleteNodes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -225,6 +398,18 @@ export const NodeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNodes(id: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NodeEntity>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNodes(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodeApi.getNodes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {NodePatchInput} nodePatchInput 
          * @param {*} [options] Override http request option.
@@ -234,6 +419,18 @@ export const NodeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.patchNode(id, nodePatchInput, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['NodeApi.patchNode']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {BatchNodePatchInput} batchNodePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async patchNodes(batchNodePatchInput: BatchNodePatchInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NodeEntity>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchNodes(batchNodePatchInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodeApi.patchNodes']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -257,12 +454,30 @@ export const NodeApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {BatchNodeAddInput} batchNodeAddInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addNodes(batchNodeAddInput: BatchNodeAddInput, options?: RawAxiosRequestConfig): AxiosPromise<BatchNodeAddResponse> {
+            return localVarFp.addNodes(batchNodeAddInput, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         deleteNode(id: number, options?: RawAxiosRequestConfig): AxiosPromise<NodeDeleteResponse> {
             return localVarFp.deleteNode(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {BatchNodeDeleteInput} batchNodeDeleteInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteNodes(batchNodeDeleteInput: BatchNodeDeleteInput, options?: RawAxiosRequestConfig): AxiosPromise<NodeDeleteResponse> {
+            return localVarFp.deleteNodes(batchNodeDeleteInput, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -275,6 +490,15 @@ export const NodeApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {Array<string>} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNodes(id: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<Array<NodeEntity>> {
+            return localVarFp.getNodes(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {NodePatchInput} nodePatchInput 
          * @param {*} [options] Override http request option.
@@ -282,6 +506,15 @@ export const NodeApiFactory = function (configuration?: Configuration, basePath?
          */
         patchNode(id: number, nodePatchInput: NodePatchInput, options?: RawAxiosRequestConfig): AxiosPromise<NodeEntity> {
             return localVarFp.patchNode(id, nodePatchInput, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {BatchNodePatchInput} batchNodePatchInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        patchNodes(batchNodePatchInput: BatchNodePatchInput, options?: RawAxiosRequestConfig): AxiosPromise<Array<NodeEntity>> {
+            return localVarFp.patchNodes(batchNodePatchInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -306,6 +539,17 @@ export class NodeApi extends BaseAPI {
 
     /**
      * 
+     * @param {BatchNodeAddInput} batchNodeAddInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodeApi
+     */
+    public addNodes(batchNodeAddInput: BatchNodeAddInput, options?: RawAxiosRequestConfig) {
+        return NodeApiFp(this.configuration).addNodes(batchNodeAddInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -313,6 +557,17 @@ export class NodeApi extends BaseAPI {
      */
     public deleteNode(id: number, options?: RawAxiosRequestConfig) {
         return NodeApiFp(this.configuration).deleteNode(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {BatchNodeDeleteInput} batchNodeDeleteInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodeApi
+     */
+    public deleteNodes(batchNodeDeleteInput: BatchNodeDeleteInput, options?: RawAxiosRequestConfig) {
+        return NodeApiFp(this.configuration).deleteNodes(batchNodeDeleteInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -328,6 +583,17 @@ export class NodeApi extends BaseAPI {
 
     /**
      * 
+     * @param {Array<string>} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodeApi
+     */
+    public getNodes(id: Array<string>, options?: RawAxiosRequestConfig) {
+        return NodeApiFp(this.configuration).getNodes(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} id 
      * @param {NodePatchInput} nodePatchInput 
      * @param {*} [options] Override http request option.
@@ -336,6 +602,17 @@ export class NodeApi extends BaseAPI {
      */
     public patchNode(id: number, nodePatchInput: NodePatchInput, options?: RawAxiosRequestConfig) {
         return NodeApiFp(this.configuration).patchNode(id, nodePatchInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {BatchNodePatchInput} batchNodePatchInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodeApi
+     */
+    public patchNodes(batchNodePatchInput: BatchNodePatchInput, options?: RawAxiosRequestConfig) {
+        return NodeApiFp(this.configuration).patchNodes(batchNodePatchInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

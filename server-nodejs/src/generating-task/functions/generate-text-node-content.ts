@@ -1,29 +1,24 @@
 import { Logger } from '@nestjs/common';
 import { Inngest, NonRetriableError } from 'inngest';
-import { GeneratingTaskStatus } from '../../generating-task/generating-task.entity';
-import { GeneratingTaskService } from '../../generating-task/generating-task.service';
+import { GeneratingTaskStatus } from '../generating-task.entity';
+import { GeneratingTaskService } from '../generating-task.service';
 import { AiService } from '../../ai/ai.service';
 import { generateText } from 'ai';
 import { pick } from 'lodash';
-import { GENERATING_TASK_STATUS_CHANGED_EVENT_NAME } from './generating-task-status-changed';
+import GeneratingTaskEvent, {
+  GeneratingTaskEventSchemas,
+} from '../generating-task.event';
+import { StandardEventSchema } from 'inngest/components/EventSchemas';
+import { matchEventNames } from '../../inngest/helper';
+import { NodeDataType } from '../../node/node.entity';
 
-export type GeneratingTaskCreatedEvent = {
-  data: {
-    generatingTaskId: number;
-    targetNodeId: number;
-  };
-};
-
-export const GENERATING_TASK_CREATED_ID = 'generating-task.created';
-export const GENERATING_TASK_CREATED_EVENT_NAME = `job/${GENERATING_TASK_CREATED_ID}`;
-
-export interface GeneratingTaskCreatedFunctionDependencies {
+export interface GenerateTextNodeContentFunctionDependencies {
   logger: Logger;
   generatingTaskService: GeneratingTaskService;
   aiService: AiService;
 }
 
-export const GeneratingTaskCreatedErrors = {
+const GenerateTextNodeContentErrors = {
   EmptyPrompt: new NonRetriableError('Empty Prompt'),
   NotGenerating: new NonRetriableError(
     'Generating Task status is not generating',
@@ -32,51 +27,65 @@ export const GeneratingTaskCreatedErrors = {
   ModelNotFound: new NonRetriableError('Model not found'),
 };
 
-const createGeneratingTaskCreatedFunction = (
+const GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID = 'job/generate-text-node-content';
+
+export const createGenerateTextNodeContentFunction = (
   inngest: Inngest,
-  dependencies: GeneratingTaskCreatedFunctionDependencies,
+  dependencies: GenerateTextNodeContentFunctionDependencies,
 ) => {
   const { logger, generatingTaskService, aiService } = dependencies;
   return inngest.createFunction(
     {
-      id: GENERATING_TASK_CREATED_ID as string,
+      id: GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID,
       retries: 0,
       cancelOn: [
         {
-          event: GENERATING_TASK_STATUS_CHANGED_EVENT_NAME as string,
+          event: GeneratingTaskEvent.EVENT_NAMES
+            .GENERATING_TASK_STATUS_UPDATED as string,
           if: `async.data.generatingTaskId == event.data.generatingTaskId && async.data.generatingTaskStatus == "${GeneratingTaskStatus.Stopped}"`,
         },
       ],
     },
-    { event: GENERATING_TASK_CREATED_EVENT_NAME as string },
+    {
+      event: GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_CREATED,
+      if: `event.data.targetNodeDataType == "${NodeDataType.Text}"`,
+    },
     async (props) => {
       const { step } = props;
-      const event = props.event as GeneratingTaskCreatedEvent;
+      const event = props.event as StandardEventSchema;
 
-      await step.run(`empty prompt to failed`, async () => {
+      if (
+        !matchEventNames<
+          GeneratingTaskEventSchemas[typeof GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_CREATED]
+        >(event, [GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_CREATED])
+      ) {
+        return;
+      }
+
+      await step.run(`check input.prompt`, async () => {
         logger.log(
-          `[GeneratingTaskCreatedFunction] taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Pending`,
+          `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Pending`,
         );
         const record = await generatingTaskService.getGeneratingTask(
           event.data.generatingTaskId,
         );
-        if (record.input.prompt) return 'continue';
+        if (record.input.prompt) return 'prompt is not empty, continue';
         await generatingTaskService.patchGeneratingTask(
           event.data.generatingTaskId,
           {
             status: GeneratingTaskStatus.Failed,
             output: {
               generatedContent: '',
-              errorMessage: GeneratingTaskCreatedErrors.EmptyPrompt.message,
+              errorMessage: GenerateTextNodeContentErrors.EmptyPrompt.message,
             },
           },
         );
-        throw GeneratingTaskCreatedErrors.EmptyPrompt;
+        throw GenerateTextNodeContentErrors.EmptyPrompt;
       });
 
       await step.run(`set status to generating`, async () => {
         logger.log(
-          `[GeneratingTaskCreatedFunction] taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Generating`,
+          `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Generating`,
         );
         await generatingTaskService.patchGeneratingTask(
           event.data.generatingTaskId,
@@ -95,9 +104,9 @@ const createGeneratingTaskCreatedFunction = (
           event.data.generatingTaskId,
         );
         if (record.status !== GeneratingTaskStatus.Generating)
-          throw GeneratingTaskCreatedErrors.NotGenerating;
+          throw GenerateTextNodeContentErrors.NotGenerating;
         const model = aiService.getModel(record.input.modelId);
-        if (!model) throw GeneratingTaskCreatedErrors.ModelNotFound;
+        if (!model) throw GenerateTextNodeContentErrors.ModelNotFound;
         const generatedText = await step.ai.wrap('generating', generateText, {
           model,
           prompt: record.input.prompt,
@@ -114,12 +123,12 @@ const createGeneratingTaskCreatedFunction = (
           event.data.generatingTaskId,
         );
         if (record.status !== GeneratingTaskStatus.Generating)
-          throw GeneratingTaskCreatedErrors.NotGenerating;
+          throw GenerateTextNodeContentErrors.NotGenerating;
 
         if (generatedText.text) {
           await step.run(`generated done`, async () => {
             logger.log(
-              `[GeneratingTaskCreatedFunction] taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Done`,
+              `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Done`,
             );
             await generatingTaskService.patchGeneratingTask(
               event.data.generatingTaskId,
@@ -127,6 +136,7 @@ const createGeneratingTaskCreatedFunction = (
                 status: GeneratingTaskStatus.Done,
                 output: {
                   generatedContent: generatedText.text,
+                  generatedReasoning: generatedText.reasoning,
                 },
               },
             );
@@ -135,7 +145,7 @@ const createGeneratingTaskCreatedFunction = (
         } else {
           await step.run(`generated empty`, async () => {
             logger.log(
-              `[GeneratingTaskCreatedFunction] taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
+              `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
             );
 
             await generatingTaskService.patchGeneratingTask(
@@ -145,7 +155,7 @@ const createGeneratingTaskCreatedFunction = (
                 output: {
                   generatedContent: generatedText.finishReason,
                   errorMessage:
-                    GeneratingTaskCreatedErrors.EmptyGenerated.message,
+                    GenerateTextNodeContentErrors.EmptyGenerated.message,
                 },
               },
             );
@@ -153,10 +163,10 @@ const createGeneratingTaskCreatedFunction = (
           });
         }
       } catch (error) {
-        if (error === GeneratingTaskCreatedErrors.NotGenerating) return;
+        if (error === GenerateTextNodeContentErrors.NotGenerating) return;
         await step.run(`generated failed`, async () => {
           logger.log(
-            `[GeneratingTaskCreatedFunction] taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
+            `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
           );
 
           await generatingTaskService.patchGeneratingTask(
@@ -172,19 +182,4 @@ const createGeneratingTaskCreatedFunction = (
       }
     },
   );
-};
-
-const triggerGeneratingTaskCreatedFunction = (
-  inngest: Inngest,
-  eventData: GeneratingTaskCreatedEvent['data'],
-) => {
-  return inngest.send({
-    name: GENERATING_TASK_CREATED_EVENT_NAME,
-    data: eventData,
-  });
-};
-
-export default {
-  create: createGeneratingTaskCreatedFunction,
-  trigger: triggerGeneratingTaskCreatedFunction,
 };

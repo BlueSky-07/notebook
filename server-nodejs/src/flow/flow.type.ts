@@ -1,6 +1,21 @@
 import { FlowEntity } from './flow.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { ListInput, ListResponse } from '../utils/pagination';
+import { NodeEntity } from '../node/node.entity';
+import { EdgeEntity } from '../edge/edge.entity';
+
+export class FlowFull {
+  @ApiProperty({ type: Number })
+  flowId: FlowEntity['id'];
+  @ApiProperty({ type: String })
+  name: FlowEntity['name'];
+  @ApiProperty({ type: Date })
+  updatedAt: FlowEntity['updatedAt'];
+  @ApiProperty({ type: NodeEntity, isArray: true })
+  nodes: NodeEntity[];
+  @ApiProperty({ type: EdgeEntity, isArray: true })
+  edges: EdgeEntity[];
+}
 
 export class FlowAddInput {
   @ApiProperty({ type: String })

@@ -7,7 +7,6 @@ import { NodeModule } from './node/node.module';
 import { NodeEntity } from './node/node.entity';
 import { EdgeModule } from './edge/edge.module';
 import { EdgeEntity } from './edge/edge.entity';
-import { DocumentModule } from './document/document.module';
 import { InngestModule } from './inngest/inngest.module';
 import { GeneratingTaskModule } from './generating-task/generating-task.module';
 import { GeneratingTaskEntity } from './generating-task/generating-task.entity';
@@ -57,7 +56,6 @@ import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlit
       inject: [ConfigService],
     }),
     InngestModule,
-    DocumentModule,
     FlowModule,
     NodeModule,
     EdgeModule,

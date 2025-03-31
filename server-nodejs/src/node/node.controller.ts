@@ -6,10 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { NodeService } from './node.service';
 import { NodeEntity } from './node.entity';
 import {
+  BatchNodeAddInput,
+  BatchNodeAddResponse,
+  BatchNodeDeleteInput,
+  BatchNodePatchInput,
   NodeAddInput,
   NodeAddResponse,
   NodeDeleteResponse,
@@ -20,6 +25,36 @@ import { omit } from 'lodash';
 @Controller('node')
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
+
+  @Post('batch')
+  async addNodes(
+    @Body() batchNodeAddInput: BatchNodeAddInput,
+  ): Promise<BatchNodeAddResponse> {
+    const ids = await this.nodeService.addNodes(batchNodeAddInput.nodes);
+    return { ids };
+  }
+
+  @Patch('batch')
+  patchNodes(
+    @Body() batchNodePatchInput: BatchNodePatchInput,
+  ): Promise<NodeEntity[]> {
+    return this.nodeService.patchNodes(batchNodePatchInput.nodes);
+  }
+
+  @Get('batch')
+  async getNodes(@Query('id') ids: number[]): Promise<NodeEntity[]> {
+    return this.nodeService.getNodesByIds(ids);
+  }
+
+  @Delete('batch')
+  async deleteNodes(
+    @Body() batchNodeDeleteInput: BatchNodeDeleteInput,
+  ): Promise<NodeDeleteResponse> {
+    const done = await this.nodeService.deleteNodesByIds(
+      batchNodeDeleteInput.ids,
+    );
+    return { done };
+  }
 
   @Post('')
   async addNode(@Body() nodeAddInput: NodeAddInput): Promise<NodeAddResponse> {

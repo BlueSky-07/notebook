@@ -14,6 +14,7 @@ import {
   FlowAddInput,
   FlowAddResponse,
   FlowDeleteResponse,
+  FlowFull,
   FlowListInput,
   FlowListResponse,
   FlowPatchInput,
@@ -24,6 +25,11 @@ import { omit } from 'lodash';
 @Controller('flow')
 export class FlowController {
   constructor(private readonly flowService: FlowService) {}
+
+  @Get('full/:id')
+  async getFlowFull(@Param('id') id: number): Promise<FlowFull> {
+    return this.flowService.getFlowFull(id);
+  }
 
   @Post('')
   async addFlow(@Body() flowAddInput: FlowAddInput): Promise<FlowAddResponse> {
