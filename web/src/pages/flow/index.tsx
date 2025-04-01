@@ -1,34 +1,41 @@
 import '@xyflow/react/dist/style.css';
-import { useParams, useNavigate } from 'react-router';
-import FlowBrowser from './components/flow-browser';
+import { useParams, useSearchParams } from 'react-router';
 import { Layout, Typography } from '@arco-design/web-react';
 import FlowDashboard from './components/dashboard';
-import { ModelInfo } from './components/model-info';
+import styles from './styles.module.less';
+import { FlowSider } from '@/pages/flow/components/sider';
+import { useState } from 'react';
 
 export default function FlowPage() {
-  const { flowId } = useParams<{ flowId?: string }>();
-  const navigate = useNavigate();
+  const { flowId: flowIdParams } = useParams<{ flowId?: string }>();
+  const [query, setQuery] = useSearchParams();
+  const flowId = flowIdParams ? parseInt(flowIdParams, 10) : undefined;
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Layout style={{ width: '100vw', height: '100vh' }}>
-      <Layout.Sider style={{ width: 300, padding: 10 }}>
-        <FlowBrowser
-          flowId={flowId ? parseInt(flowId, 10) : undefined}
-          onViewFlow={(flow) => navigate(`/flow/${flow.id}`)}
+    <Layout className={styles.flowPage}>
+      <Layout.Sider
+        className={styles.sider}
+        width={300}
+        collapsible={true}
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        resizeDirections={!collapsed ? ['right'] : undefined}
+      >
+        <FlowSider
+          activeTab={query.get('tab')}
+          setActiveTab={(tab) => {
+            setQuery({ tab });
+            setCollapsed(false);
+          }}
+          flowId={flowId}
+          collapsed={collapsed}
         />
-        <ModelInfo />
       </Layout.Sider>
       <Layout.Content>
         {flowId && <FlowDashboard flowId={flowId} />}
         {!flowId && (
-          <div
-            style={{
-              height: 400,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+          <div className={styles.welcome}>
             <Typography.Title style={{ color: 'gray' }}>
               Welcome!
               <br />

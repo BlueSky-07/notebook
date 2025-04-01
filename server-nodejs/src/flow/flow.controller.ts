@@ -19,7 +19,6 @@ import {
   FlowListResponse,
   FlowPatchInput,
 } from './flow.type';
-import { convertListInputPaginationToFindOptions } from '../utils/pagination';
 import { omit } from 'lodash';
 
 @Controller('flow')
@@ -54,9 +53,7 @@ export class FlowController {
   async getAllFlows(
     @Query() flowListInput: FlowListInput,
   ): Promise<FlowListResponse> {
-    return this.flowService.getAllFlows(
-      convertListInputPaginationToFindOptions(flowListInput),
-    );
+    return this.flowService.getAllFlows(flowListInput);
   }
 
   @Delete(':id')

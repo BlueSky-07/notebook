@@ -50,8 +50,13 @@ paths:
           required: false
           in: query
           schema:
-            default: 1
+            default: 0
             type: number
+        - name: keyword
+          required: false
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""

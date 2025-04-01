@@ -1,15 +1,31 @@
 .flow-list {
   width: 100%;
-  height: calc(100% - 32px);
 
   .header {
-    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
   }
 
-  .title:global(.arco-typography-edit-content) {
-    margin-left: 16px;
+  :global {
+    .arco-list-item-action > li:not(:last-child) {
+      margin-right: 4px;
+    }
+  }
+
+  .flow-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    .name {
+      color: var(--color-text-1);
+      font-weight: 500;
+    }
+
+    .description {
+      color: var(--color-text-3);
+    }
   }
 }

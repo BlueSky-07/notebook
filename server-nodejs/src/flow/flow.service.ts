@@ -5,15 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { FlowEntity } from './flow.entity';
 import {
   FlowAddInput,
   FlowFull,
+  FlowListInput,
   FlowListResponse,
   FlowPatchInput,
 } from './flow.type';
-import { PaginationFindOptions } from '../utils/pagination';
+import { convertListInputPaginationToFindOptions } from '../utils/pagination';
 import { NodeService } from '../node/node.service';
 import { EdgeService } from '../edge/edge.service';
 
@@ -72,10 +73,17 @@ export class FlowService {
     return record;
   }
 
-  async getAllFlows(
-    paginationOptions: PaginationFindOptions,
-  ): Promise<FlowListResponse> {
+  async getAllFlows(flowListInput: FlowListInput): Promise<FlowListResponse> {
+    const paginationOptions =
+      convertListInputPaginationToFindOptions(flowListInput);
     const [items, count] = await this.flowRepository.findAndCount({
+      where: {
+        ...(flowListInput.keyword
+          ? {
+              name: Like(`%${flowListInput.keyword.trim()}%`),
+            }
+          : undefined),
+      },
       ...paginationOptions,
     });
     return {

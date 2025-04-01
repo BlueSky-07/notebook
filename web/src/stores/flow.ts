@@ -147,9 +147,10 @@ const useFlowStore = create<FlowState>((set, get) => {
     updateEdgeData: async (id: string, data: Edge['data']) => {
       return get().subject?.updateEdgeData(id, data);
     },
-    modelId: undefined,
+    modelId: localStorage.getItem('model-id'),
     updateModelId: (modelId: string) => {
       set({ modelId });
+      localStorage.setItem('model-id', modelId);
     },
   };
 });

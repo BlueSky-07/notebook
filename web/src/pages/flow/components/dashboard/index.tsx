@@ -12,9 +12,10 @@ import { useCustomNodes } from '../../custom-nodes';
 import { useCustomEdges } from '../../custom-edges';
 import { Footer } from '../footer';
 import { ConfigProvider } from '@arco-design/web-react';
+import { FlowEntity } from '@api/models';
 
 interface FlowDashboardProps {
-  flowId?: string;
+  flowId?: FlowEntity['id'];
 }
 
 export const FlowDashboard = (props: FlowDashboardProps) => {
@@ -48,7 +49,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
 
   useEffect(() => {
     if (flowId) {
-      bootstrap(parseInt(flowId, 10));
+      bootstrap(flowId);
     }
   }, [bootstrap, flowId]);
 

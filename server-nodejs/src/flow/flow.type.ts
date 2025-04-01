@@ -36,7 +36,8 @@ export class FlowDeleteResponse {
 }
 
 export class FlowListInput extends ListInput {
-  filter?: Record<string, unknown>;
+  @ApiProperty({ type: String, required: false })
+  keyword?: string;
 }
 
 export class FlowListResponse extends ListResponse<FlowEntity> {

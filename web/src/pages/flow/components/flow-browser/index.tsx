@@ -1,119 +1,118 @@
 import { useRequest } from 'ahooks';
 import API from '@/services/api';
-import {
-  Button,
-  Input,
-  List,
-  Space,
-  Spin,
-  Typography,
-} from '@arco-design/web-react';
-import { useState } from 'react';
+import { Input, List, Skeleton, Space } from '@arco-design/web-react';
 import { FlowEntity } from '@api/models';
 import { formatRelativeDate } from '@/utils/dayjs';
 import styles from './styles.module.less';
-import FlowName from './flow-name';
+import { useNavigate } from 'react-router';
+import CreateFlow from './actions/create-flow';
+import DeleteFlow from './actions/delete-flow';
+import RenameFlow from './actions/rename-flow';
+import { useState } from 'react';
+import debounce from 'lodash-es/debounce';
 
 interface FlowBrowserProps {
   flowId?: FlowEntity['id'];
-  onViewFlow?: (flow: FlowEntity) => void;
 }
 
 export const FlowBrowser = (props: FlowBrowserProps) => {
-  const { flowId, onViewFlow } = props;
-  const [newName, setNewName] = useState<string>('');
+  const { flowId } = props;
+  const [keyword, setKeyword] = useState<string>('');
+  const navigate = useNavigate();
   const listResp = useRequest(
-    (pageNumber?: number) => API.flow.getAllFlows(10, pageNumber),
+    (pageNumber?: number) => API.flow.getAllFlows(10, pageNumber, keyword),
     {
       pollingInterval: 5000,
     },
   );
-  const createReq = useRequest(
-    (name: string) =>
-      API.flow.addFlow({
-        name,
-      }),
-    {
-      manual: true,
-    },
-  );
+  const debounceSearch = debounce(() => {
+    listResp.run(0);
+  }, 1000);
 
-  if (!listResp.data?.data) {
-    return <Spin loading={listResp.loading} />;
-  }
-  const { items, count } = listResp.data.data;
   return (
-    <Space direction="vertical" className={styles.flowList}>
-      <Typography.Title heading={3}>Flows</Typography.Title>
-      <Input.Group compact={true} className={styles.header}>
-        <Input
-          style={{ width: 220 }}
-          placeholder="Pleace enter a name"
-          prefix="New"
-          value={newName}
-          onChange={setNewName}
-        />
-        <Button
-          type="primary"
-          disabled={!newName}
-          onClick={async () => {
-            if (!newName) return;
-            try {
-              await createReq.runAsync(newName);
-              setNewName('');
-              listResp.run();
-            } catch (error) {}
+    <div className={styles.flowList}>
+      <div className={styles.header}>
+        <Input.Search
+          placeholder="Search"
+          style={{ marginRight: 8 }}
+          value={keyword}
+          onChange={(nextKeyword) => {
+            setKeyword(nextKeyword);
+            debounceSearch();
           }}
-          loading={createReq.loading}
-        >
-          Create
-        </Button>
-      </Input.Group>
-      <List<FlowEntity>
-        dataSource={items}
-        render={(item) => (
-          <List.Item
-            style={{
-              backgroundColor: flowId === item.id ? 'aliceblue' : undefined,
-            }}
-            key={item.id}
-            actions={[
-              <Button
-                key="view"
-                onClick={() => {
-                  onViewFlow?.(item);
-                }}
-                type="text"
-                size="mini"
-              >
-                View
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta
-              title={
-                <FlowName
-                  flowId={item.id}
-                  name={item.name}
-                  onChange={() => listResp.run()}
-                />
-              }
-              description={`updated ${formatRelativeDate(item.updatedAt)}`}
+          allowClear={true}
+        />
+        <CreateFlow
+          onCreate={(newFlowId) => {
+            navigate(`/flow/${newFlowId}`);
+            listResp.run();
+          }}
+        />
+      </div>
+
+      <Skeleton
+        loading={!listResp.data?.data}
+        text={{ rows: 2, width: '90%' }}
+        animation={true}
+      >
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <div className={styles.header}></div>
+          {listResp.data?.data && (
+            <List<FlowEntity>
+              dataSource={listResp.data.data.items}
+              render={(item) => (
+                <List.Item
+                  style={{
+                    backgroundColor:
+                      flowId === item.id ? 'aliceblue' : undefined,
+                  }}
+                  key={item.id}
+                  actions={[
+                    <RenameFlow
+                      flow={item}
+                      onRename={() => {
+                        listResp.run();
+                      }}
+                    />,
+                    <DeleteFlow
+                      flow={item}
+                      onDelete={() => {
+                        listResp.run();
+                        if (flowId === item.id) {
+                          navigate('/flow');
+                        }
+                      }}
+                    />,
+                  ]}
+                >
+                  <div
+                    className={styles.flowItem}
+                    onClick={() => {
+                      navigate(`/flow/${item.id}`);
+                    }}
+                  >
+                    <div className={styles.name}>{item.name}</div>
+                    <div className={styles.description}>
+                      updated {formatRelativeDate(item.updatedAt)}
+                    </div>
+                  </div>
+                </List.Item>
+              )}
+              pagination={{
+                current: (listResp.params[0] ?? 0) + 1,
+                // hideOnSinglePage: true,
+                pageSize: 10,
+                total: listResp.data.data.count,
+                showTotal: true,
+                onChange: (pageNumber, pageSize) => {
+                  listResp.run(pageNumber - 1);
+                },
+              }}
             />
-          </List.Item>
-        )}
-        pagination={{
-          current: (listResp.params[0] ?? 0) + 1,
-          // hideOnSinglePage: true,
-          pageSize: 10,
-          total: count,
-          showTotal: true,
-          onChange: (pageNumber, pageSize) => {
-            listResp.run(pageNumber - 1);
-          },
-        }}
-      />
-    </Space>
+          )}
+        </Space>
+      </Skeleton>
+    </div>
   );
 };
 
