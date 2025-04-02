@@ -35,7 +35,7 @@ export interface FlowState extends FlowModel {
     type: NodeEntity['dataType'],
     copyFrom?: Node,
     center?: XYPosition,
-  ) => void;
+  ) => Promise<Node>;
   updateNodeData: (
     id: string,
     data: Node['data'],
@@ -139,7 +139,7 @@ const useFlowStore = create<FlowState>((set, get) => {
       copyFrom?: Node,
       center?: XYPosition,
     ) => {
-      get().subject?.addNode(dataType, copyFrom, center);
+      return get().subject?.addNode(dataType, copyFrom, center);
     },
     updateNodeData: async (id: string, data: Node['data']) => {
       return get().subject?.updateNodeData(id, data);

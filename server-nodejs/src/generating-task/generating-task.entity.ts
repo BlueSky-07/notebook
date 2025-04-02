@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { NodeEntity } from '../node/node.entity';
 import {
   Column,
@@ -46,11 +46,23 @@ export class GeneratingTaskInput {
   edgeSnapshots?: EdgeEntity[];
 }
 
+export class GeneratedUsage {
+  @ApiProperty({ type: Number, description: 'prompt tokens' })
+  promptTokens: number;
+  @ApiProperty({ type: Number, description: 'completion tokens' })
+  completionTokens: number;
+  @ApiProperty({ type: Number, description: 'total tokens' })
+  totalTokens: number;
+}
+
+@ApiExtraModels(GeneratedUsage)
 export class GeneratingTaskOutput {
   @ApiProperty({ type: String, description: 'generated content' })
-  generatedContent?: string;
+  generatedText?: string;
   @ApiProperty({ type: String, description: 'generated reasoning' })
   generatedReasoning?: string;
+  @ApiProperty({ type: GeneratedUsage, description: 'generated usage' })
+  generatedUsage?: GeneratedUsage;
   @ApiProperty({ type: String, description: 'error message' })
   errorMessage?: string;
 }

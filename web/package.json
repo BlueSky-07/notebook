@@ -18,6 +18,7 @@
   "dependencies": {
     "@arco-design/web-react": "^2.65.0",
     "@lobehub/icons": "^1.95.0",
+    "@mdxeditor/editor": "^3.29.1",
     "@xyflow/react": "^12.5.2",
     "ahooks": "^3.8.4",
     "axios": "^1.8.4",

@@ -1,5 +1,5 @@
 import { FlowModule } from '../flow/flow.module';
-import { forwardRef, Logger, Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { InngestService } from './inngest.service';
 import { NodeModule } from '../node/node.module';
 import { GeneratingTaskModule } from '../generating-task/generating-task.module';
@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     AiModule,
     ConfigModule,
   ],
-  providers: [InngestService, Logger],
+  providers: [InngestService],
   exports: [InngestService],
 })
 export class InngestModule {}

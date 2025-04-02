@@ -10,11 +10,11 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class InngestService {
+  private readonly logger = new Logger(InngestService.name);
   inngest: Inngest;
   functions: ReturnType<typeof createInngestFunctions>;
 
   constructor(
-    private readonly logger: Logger,
     @Inject(forwardRef(() => FlowService))
     private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
@@ -31,7 +31,7 @@ export class InngestService {
       isDev: this.configService.get<boolean>('inngest.dev'),
     });
     this.functions = createInngestFunctions(this.inngest, {
-      logger,
+      logger: this.logger,
       flowService,
       nodeService,
       generatingTaskService,

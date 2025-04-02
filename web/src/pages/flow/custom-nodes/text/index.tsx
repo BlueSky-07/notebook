@@ -6,7 +6,6 @@ import {
 import {
   Button,
   ColorPicker,
-  Input,
   Space,
   Spin,
   Tooltip,
@@ -28,6 +27,18 @@ import CopyNode from '../../components/copy-node';
 import { IconBulb, IconPen, IconRecordStop } from '@arco-design/web-react/icon';
 import cs from 'classnames';
 import { omit } from 'lodash-es';
+import {
+  BoldItalicUnderlineToggles,
+  headingsPlugin,
+  listsPlugin,
+  markdownShortcutPlugin,
+  MDXEditor,
+  quotePlugin,
+  thematicBreakPlugin,
+  toolbarPlugin,
+  UndoRedo,
+} from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
 
 type CustomNodeTextData = Pick<NodeEntity['data'], 'content' | 'background'> & {
   $state?: NodeEntity['state'];
@@ -166,15 +177,30 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
           </Space>
         </div>
 
-        <div className={styles.body}>
+        <div className={cs('nodrag nopan nowheel', styles.body)}>
           <Spin loading={generating} className={styles.spin} tip="Generating">
-            <Input.TextArea
+            <MDXEditor
+              plugins={[
+                headingsPlugin(),
+                listsPlugin(),
+                quotePlugin(),
+                thematicBreakPlugin(),
+                markdownShortcutPlugin(),
+                toolbarPlugin({
+                  toolbarContents: () => (
+                    <>
+                      <UndoRedo />
+                      <BoldItalicUnderlineToggles />
+                    </>
+                  ),
+                }),
+              ]}
               placeholder="Enter text content here, or prompt here then Generate"
-              value={
+              markdown={
                 // generating
                 //   ? [
                 //       content,
-                //       generatingTaskResp.data?.data?.output?.generatedContent, // todo stream output here
+                //       generatingTaskResp.data?.data?.output?.generatedText, // todo stream output here
                 //     ]
                 //       .filter(Boolean)
                 //       .join('')
@@ -185,7 +211,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
                 setContent(content);
                 patchNodeResp.run({ content });
               }}
-              className={cs('nodrag nopan nowheel', styles.textarea)}
+              className={styles.markdown}
             />
           </Spin>
         </div>

@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule, type TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlowModule } from './flow/flow.module';
@@ -62,6 +62,5 @@ import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlit
     GeneratingTaskModule,
     AiModule,
   ],
-  providers: [Logger],
 })
 export class AppModule {}

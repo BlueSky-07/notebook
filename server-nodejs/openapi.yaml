@@ -914,15 +914,35 @@ components:
             $ref: "#/components/schemas/EdgeEntity"
       required:
         - sourceNodeSnapshots
+    GeneratedUsage:
+      type: object
+      properties:
+        promptTokens:
+          type: number
+          description: prompt tokens
+        completionTokens:
+          type: number
+          description: completion tokens
+        totalTokens:
+          type: number
+          description: total tokens
+      required:
+        - promptTokens
+        - completionTokens
+        - totalTokens
     GeneratingTaskOutput:
       type: object
       properties:
-        generatedContent:
+        generatedText:
           type: string
           description: generated content
         generatedReasoning:
           type: string
           description: generated reasoning
+        generatedUsage:
+          description: generated usage
+          allOf:
+            - $ref: "#/components/schemas/GeneratedUsage"
         errorMessage:
           type: string
           description: error message
