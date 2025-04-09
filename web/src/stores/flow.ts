@@ -10,7 +10,7 @@ import { create } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import FlowSubject from '@/rxjs/subjects/flow';
 import { FlowModel } from '@/models/flow';
-import { FlowEntity, NodeEntity } from '@api/models';
+import { AiModelInfo, FlowEntity, NodeEntity } from '@api/models';
 import { NodeApi } from '@api/clients/node-api';
 import { EdgeApi } from '@api/clients/edge-api';
 
@@ -35,21 +35,22 @@ export interface FlowState extends FlowModel {
     type: NodeEntity['dataType'],
     copyFrom?: Node,
     center?: XYPosition,
-  ) => void;
+  ) => Promise<Node>;
+  deleteNode: (id: Node['id']) => ReturnType<NodeApi['deleteNode']>;
   updateNodeData: (
-    id: string,
+    id: Node['id'],
     data: Node['data'],
   ) => ReturnType<NodeApi['patchNode']>;
   updateEdgeData: (
-    id: string,
+    id: Node['id'],
     data: Edge['data'],
   ) => ReturnType<EdgeApi['patchEdge']>;
 
   // Other States
-  modelId?: string;
+  modelId?: AiModelInfo['id'];
 
   // Other User Actions Callbacks
-  updateModelId: (modelId: string) => void;
+  updateModelId: (modelId: AiModelInfo['id']) => void;
 }
 
 const useFlowStore = create<FlowState>((set, get) => {
@@ -139,16 +140,19 @@ const useFlowStore = create<FlowState>((set, get) => {
       copyFrom?: Node,
       center?: XYPosition,
     ) => {
-      get().subject?.addNode(dataType, copyFrom, center);
+      return get().subject?.addNode(dataType, copyFrom, center);
     },
-    updateNodeData: async (id: string, data: Node['data']) => {
+    deleteNode: async (id: Node['id']) => {
+      return get().subject?.deleteNode(id);
+    },
+    updateNodeData: async (id: Node['id'], data: Node['data']) => {
       return get().subject?.updateNodeData(id, data);
     },
-    updateEdgeData: async (id: string, data: Edge['data']) => {
+    updateEdgeData: async (id: Node['id'], data: Edge['data']) => {
       return get().subject?.updateEdgeData(id, data);
     },
     modelId: localStorage.getItem('model-id'),
-    updateModelId: (modelId: string) => {
+    updateModelId: (modelId: AiModelInfo['id']) => {
       set({ modelId });
       localStorage.setItem('model-id', modelId);
     },

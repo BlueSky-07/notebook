@@ -136,6 +136,7 @@ export default class FlowSubject {
         draft.push(createResp);
       }),
     });
+    return createResp;
   }
 
   updateNodeData(id: string, data: Node['data']) {

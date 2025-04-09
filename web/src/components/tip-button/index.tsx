@@ -25,6 +25,7 @@ export const TipButton = (props: TipButtonProps) => {
   const button = (
     <Tooltip
       content={tip}
+      disabled={!tip}
       {...tooltipProps}
       popupVisible={tooltipVisible}
       onVisibleChange={(visible) => {

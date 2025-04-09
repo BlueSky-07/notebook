@@ -101,6 +101,14 @@ export default defineConfig((env, argv) => {
       }),
       isDev && new ReactRefreshPlugin(),
       isDev && new rspack.HotModuleReplacementPlugin(),
+      new rspack.CopyRspackPlugin({
+        patterns: [
+          {
+            from: 'node_modules/monaco-editor/min/vs',
+            to: 'public/monaco-editor/min/vs'
+          }
+        ],
+      }),
     ],
     experiments: {
       css: true,

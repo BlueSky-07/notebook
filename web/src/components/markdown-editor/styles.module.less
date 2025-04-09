@@ -1,0 +1,83 @@
+.markdown-editor {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  :global {
+    .mdxeditor-popup-container {
+      z-index: 1001;
+    }
+
+    .mdxeditor {
+      div[role="toolbar"] {
+        overflow-y: hidden;
+        border-radius: 0;
+
+        // Mode Switcher
+        > div:last-of-type {
+          background: var(--baseBg) !important;
+        }
+      }
+    }
+
+    // Rich text
+    .mdxeditor-root-contenteditable {
+      line-height: 22px;
+      & > div {
+        // editor & placeholder
+        padding: 0;
+
+        &:nth-child(2) > p {
+          // placeholder
+          margin: 0 5px;
+        }
+      }
+
+      div[role="textbox"] {
+        // editor
+        padding: 0;
+
+        // image delete button
+        button[title="Delete image"] {
+          width: 12px;
+          height: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        p, h6, h5, ul, ol, li, blockquote, pre, table, th, tr, td, a { margin: 5px; }
+        h6, h5, h4 { font-size: unset; }
+        h4 { margin: 6px 5px; }
+        h3 { margin: 8px 5px; }
+        h2 { margin: 10px 5px; }
+        h1 { margin: 12px 5px; }
+        blockquote {
+          font-weight: 500;
+          border-left: solid 0.25rem var(--color-neutral-3);
+          color: var(--color-neutral-6);
+          padding-left: 8px;
+        }
+        table { width: calc(100% - 10px) }
+        // normal list
+        ul, ol { padding-inline-start: 10px; }
+        // nested checkbox list in any list
+        ul, ol, li {
+          &:has(> li[role="checkbox"]) {
+            padding-inline-start: 0;
+          }
+        }
+        img {
+          max-width: 300px;
+          max-height: 300px;
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+}

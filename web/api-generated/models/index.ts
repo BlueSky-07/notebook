@@ -26,6 +26,7 @@ export * from './flow-entity';
 export * from './flow-full';
 export * from './flow-list-response';
 export * from './flow-patch-input';
+export * from './generated-usage';
 export * from './generating-task-add-input';
 export * from './generating-task-add-response';
 export * from './generating-task-entity';

@@ -1,10 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { Inngest, NonRetriableError } from 'inngest';
-import { GeneratingTaskStatus } from '../generating-task.entity';
+import {
+  GeneratedUsage,
+  GeneratingTaskStatus,
+} from '../generating-task.entity';
 import { GeneratingTaskService } from '../generating-task.service';
 import { AiService } from '../../ai/ai.service';
 import { generateText } from 'ai';
-import { pick } from 'lodash';
+import { get, pick } from 'lodash';
 import GeneratingTaskEvent, {
   GeneratingTaskEventSchemas,
 } from '../generating-task.event';
@@ -75,7 +78,7 @@ export const createGenerateTextNodeContentFunction = (
           {
             status: GeneratingTaskStatus.Failed,
             output: {
-              generatedContent: '',
+              generatedText: '',
               errorMessage: GenerateTextNodeContentErrors.EmptyPrompt.message,
             },
           },
@@ -92,7 +95,7 @@ export const createGenerateTextNodeContentFunction = (
           {
             status: GeneratingTaskStatus.Generating,
             output: {
-              generatedContent: '',
+              generatedText: '',
             },
           },
         );
@@ -107,17 +110,33 @@ export const createGenerateTextNodeContentFunction = (
           throw GenerateTextNodeContentErrors.NotGenerating;
         const model = aiService.getModel(record.input.modelId);
         if (!model) throw GenerateTextNodeContentErrors.ModelNotFound;
-        const generatedText = await step.ai.wrap('generating', generateText, {
-          model,
-          prompt: record.input.prompt,
-        });
-        const stepResult = pick(generatedText, [
-          'text',
-          'reasoning',
-          'sources',
-          'finishReason',
-          'usage',
-        ]);
+        const generatedTextResult = await step.ai.wrap(
+          'generating',
+          generateText,
+          {
+            model,
+            prompt: record.input.prompt,
+          },
+        );
+        const stepResult = {
+          ...pick(generatedTextResult, [
+            'text',
+            'sources',
+            'finishReason',
+            'usage',
+          ]),
+          reasoning:
+            generatedTextResult.reasoning ||
+            (get(generatedTextResult, [
+              'response',
+              'body',
+              'choices',
+              '0',
+              'message',
+              'reasoning',
+            ]) as string) ||
+            '',
+        };
 
         record = await generatingTaskService.getGeneratingTask(
           event.data.generatingTaskId,
@@ -125,7 +144,7 @@ export const createGenerateTextNodeContentFunction = (
         if (record.status !== GeneratingTaskStatus.Generating)
           throw GenerateTextNodeContentErrors.NotGenerating;
 
-        if (generatedText.text) {
+        if (stepResult.text) {
           await step.run(`generated done`, async () => {
             logger.log(
               `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Done`,
@@ -135,8 +154,9 @@ export const createGenerateTextNodeContentFunction = (
               {
                 status: GeneratingTaskStatus.Done,
                 output: {
-                  generatedContent: generatedText.text,
-                  generatedReasoning: generatedText.reasoning,
+                  generatedText: stepResult.text,
+                  generatedReasoning: stepResult.reasoning,
+                  generatedUsage: stepResult.usage as GeneratedUsage,
                 },
               },
             );
@@ -153,7 +173,7 @@ export const createGenerateTextNodeContentFunction = (
               {
                 status: GeneratingTaskStatus.Failed,
                 output: {
-                  generatedContent: generatedText.finishReason,
+                  generatedText: stepResult.text,
                   errorMessage:
                     GenerateTextNodeContentErrors.EmptyGenerated.message,
                 },

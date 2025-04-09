@@ -8,6 +8,7 @@ import { pick } from 'lodash';
 
 @Injectable()
 export class AiService {
+  private readonly logger = new Logger(AiService.name);
   private readonly enabled: boolean;
   private readonly models: Map<
     string,
@@ -17,10 +18,7 @@ export class AiService {
     }
   > = new Map();
 
-  constructor(
-    private readonly logger: Logger,
-    private readonly configService: ConfigService,
-  ) {
+  constructor(private readonly configService: ConfigService) {
     const modelConfigs =
       this.configService.get<AiModelConfig[]>('ai.models') ?? [];
     const enabledModelConfigs = modelConfigs.filter((mc) => !mc.disabled);

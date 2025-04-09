@@ -64,10 +64,7 @@ export const createUpdateNodeByGeneratingTaskFunction = (
         return await nodeService.patchNode(event.data.targetNodeId, {
           data: {
             ...nodeRecord.data,
-            content: [
-              nodeRecord.data.content,
-              taskRecord.output.generatedContent,
-            ]
+            content: [nodeRecord.data.content, taskRecord.output.generatedText]
               .filter(Boolean)
               .join(''),
           },

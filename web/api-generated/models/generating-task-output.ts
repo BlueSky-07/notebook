@@ -13,6 +13,9 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { GeneratedUsage } from './generated-usage';
 
 /**
  * 
@@ -25,13 +28,19 @@ export interface GeneratingTaskOutput {
      * @type {string}
      * @memberof GeneratingTaskOutput
      */
-    'generatedContent'?: string;
+    'generatedText'?: string;
     /**
      * generated reasoning
      * @type {string}
      * @memberof GeneratingTaskOutput
      */
     'generatedReasoning'?: string;
+    /**
+     * generated usage
+     * @type {GeneratedUsage}
+     * @memberof GeneratingTaskOutput
+     */
+    'generatedUsage'?: GeneratedUsage;
     /**
      * error message
      * @type {string}

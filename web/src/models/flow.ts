@@ -29,8 +29,16 @@ export function getInitialFlowNode(
       x: 0,
       y: 0,
     },
-    width: 500,
-    height: 300,
+    width: 100,
+    height: 100,
+    ...(dataType === NodeDataTypeEnum.Text && {
+      width: 800,
+      height: 400,
+    }),
+    ...(dataType === NodeDataTypeEnum.Image && {
+      width: 400,
+      height: 400,
+    }),
     data: {
       ...(dataType === NodeDataTypeEnum.Text && {
         content: '',

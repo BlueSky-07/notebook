@@ -10,13 +10,22 @@ import DeleteFlow from './actions/delete-flow';
 import RenameFlow from './actions/rename-flow';
 import { useState } from 'react';
 import debounce from 'lodash-es/debounce';
+import { MaybePromise } from '@/utils/type';
 
 interface FlowBrowserProps {
   flowId?: FlowEntity['id'];
+  // default: ['search', 'create', 'rename', 'delete', 'navigate'];
+  features?: Array<
+    'search' | 'create' | 'rename' | 'delete' | 'navigate' | 'select'
+  >;
+  onSelect?: (flowId: FlowEntity['id']) => MaybePromise<void>;
 }
 
 export const FlowBrowser = (props: FlowBrowserProps) => {
-  const { flowId } = props;
+  const {
+    flowId,
+    features = ['search', 'create', 'rename', 'delete', 'navigate'],
+  } = props;
   const [keyword, setKeyword] = useState<string>('');
   const navigate = useNavigate();
   const listResp = useRequest(
@@ -32,22 +41,27 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
   return (
     <div className={styles.flowList}>
       <div className={styles.header}>
-        <Input.Search
-          placeholder="Search"
-          style={{ marginRight: 8 }}
-          value={keyword}
-          onChange={(nextKeyword) => {
-            setKeyword(nextKeyword);
-            debounceSearch();
-          }}
-          allowClear={true}
-        />
-        <CreateFlow
-          onCreate={(newFlowId) => {
-            navigate(`/flow/${newFlowId}`);
-            listResp.run();
-          }}
-        />
+        {features.includes('search') && (
+          <Input.Search
+            placeholder="Search"
+            style={{ marginRight: features.includes('create') ? 8 : 0 }}
+            value={keyword}
+            onChange={(nextKeyword) => {
+              setKeyword(nextKeyword);
+              debounceSearch();
+            }}
+            allowClear={true}
+          />
+        )}
+
+        {features.includes('create') && (
+          <CreateFlow
+            onCreate={(newFlowId) => {
+              navigate(`/flow/${newFlowId}`);
+              listResp.run();
+            }}
+          />
+        )}
       </div>
 
       <Skeleton
@@ -68,27 +82,36 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
                   }}
                   key={item.id}
                   actions={[
-                    <RenameFlow
-                      flow={item}
-                      onRename={() => {
-                        listResp.run();
-                      }}
-                    />,
-                    <DeleteFlow
-                      flow={item}
-                      onDelete={() => {
-                        listResp.run();
-                        if (flowId === item.id) {
-                          navigate('/flow');
-                        }
-                      }}
-                    />,
-                  ]}
+                    features.includes('rename') && (
+                      <RenameFlow
+                        flow={item}
+                        onRename={() => {
+                          listResp.run();
+                        }}
+                      />
+                    ),
+                    features.includes('delete') && (
+                      <DeleteFlow
+                        flow={item}
+                        onDelete={() => {
+                          listResp.run();
+                          if (flowId === item.id) {
+                            navigate('/flow');
+                          }
+                        }}
+                      />
+                    ),
+                  ].filter(Boolean)}
                 >
                   <div
                     className={styles.flowItem}
                     onClick={() => {
-                      navigate(`/flow/${item.id}`);
+                      if (features.includes('navigate')) {
+                        navigate(`/flow/${item.id}`);
+                      }
+                      if (features.includes('select')) {
+                        props.onSelect?.(item.id);
+                      }
                     }}
                   >
                     <div className={styles.name}>{item.name}</div>

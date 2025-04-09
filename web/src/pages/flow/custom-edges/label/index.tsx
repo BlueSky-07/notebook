@@ -5,6 +5,7 @@ import {
   Edge,
   EdgeLabelRenderer,
   getStraightPath,
+  getBezierPath,
   Position,
 } from '@xyflow/react';
 import useFlowStore, { type FlowState } from '@/stores/flow';
@@ -37,16 +38,20 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
     })),
   );
 
-  const [_edgePath, labelX, labelY] = getStraightPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-  });
+  /**
+   * Straight Path
+   */
+  const [_straightLabelXEdgePath, straightLabelX, straightLabelY] =
+    getStraightPath({
+      sourceX,
+      sourceY,
+      targetX,
+      targetY,
+    });
 
   const centerY = (targetY - sourceY) / 2 + sourceY;
   const fixHorizontalArrow = 20;
-  const edgePath = [
+  const straightEdgePath = [
     `M ${sourceX} ${sourceY}`,
     sourcePosition === Position.Right &&
       `L ${sourceX + (sourcePosition === Position.Right ? fixHorizontalArrow : 0)} ${sourceY}`,
@@ -59,6 +64,41 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
     .filter(Boolean)
     .join(' ');
 
+  /**
+   * Bezier Path
+   */
+  const [
+    bezierEdgePath,
+    bezierLabelX,
+    bezierLabelY,
+    bezierOffsetX,
+    bezierOffsetY,
+  ] = getBezierPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+  });
+
+  const { edgePath, labelX, labelY, offsetX, offsetY } = {
+    straight: {
+      edgePath: straightEdgePath,
+      labelX: straightLabelX,
+      labelY: straightLabelY,
+      offsetX: undefined,
+      offsetY: undefined,
+    },
+    bezier: {
+      edgePath: bezierEdgePath,
+      labelX: bezierLabelX,
+      labelY: bezierLabelY,
+      offsetX: bezierOffsetX,
+      offsetY: bezierOffsetY,
+    },
+  }['bezier'];
+
   return (
     <>
       <BaseEdge
@@ -68,8 +108,8 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <Input
-          size="small"
+        <Input.TextArea
+          autoSize={{ minRows: 1, maxRows: 5 }}
           value={data.label}
           onChange={(v) => {
             updateEdgeData(id, {
@@ -77,7 +117,7 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
             });
           }}
           style={{
-            width: 150,
+            maxWidth: 250,
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',
