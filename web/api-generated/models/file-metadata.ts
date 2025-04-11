@@ -17,32 +17,38 @@
 /**
  * 
  * @export
- * @interface NodeData
+ * @interface FileMetadata
  */
-export interface NodeData {
+export interface FileMetadata {
     /**
-     * text content
+     * filename extension
      * @type {string}
-     * @memberof NodeData
+     * @memberof FileMetadata
      */
-    'content'?: string;
+    'extension': string;
     /**
-     * image src
-     * @type {string}
-     * @memberof NodeData
-     */
-    'src'?: string;
-    /**
-     * file id
+     * file size, unit: byte
      * @type {number}
-     * @memberof NodeData
+     * @memberof FileMetadata
      */
-    'fileId'?: number;
+    'size': number;
     /**
-     * background (css)
+     * MIME
      * @type {string}
-     * @memberof NodeData
+     * @memberof FileMetadata
      */
-    'background'?: string;
+    'mime': string;
+    /**
+     * image file width
+     * @type {number}
+     * @memberof FileMetadata
+     */
+    'width'?: number;
+    /**
+     * image file height
+     * @type {number}
+     * @memberof FileMetadata
+     */
+    'height'?: number;
 }
 

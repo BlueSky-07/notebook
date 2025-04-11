@@ -14,6 +14,9 @@ import { AiModule } from './ai/ai.module';
 import getConfiguration from './utils/configuration';
 import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlite3/BetterSqlite3ConnectionOptions';
+import { S3Module } from 'nestjs-s3';
+import { StorageModule } from './storage/storage.module';
+import { FileEntity } from './storage/storage.entity';
 
 @Module({
   imports: [
@@ -28,7 +31,13 @@ import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlit
           TypeOrmModuleOptions,
           'entities' | 'synchronize'
         > = {
-          entities: [FlowEntity, NodeEntity, EdgeEntity, GeneratingTaskEntity],
+          entities: [
+            FlowEntity,
+            NodeEntity,
+            EdgeEntity,
+            GeneratingTaskEntity,
+            FileEntity,
+          ],
           synchronize: true,
         };
 
@@ -55,12 +64,38 @@ import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlit
       },
       inject: [ConfigService],
     }),
+    S3Module.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          config: {
+            endpoint: configService.get<string>('storage.s3.endpoint'),
+            region: configService.get<string>('storage.s3.region'),
+            credentials: {
+              accessKeyId: configService.get<string>('storage.s3.accessKey'),
+              secretAccessKey: configService.get<string>(
+                'storage.s3.secretKey',
+              ),
+            },
+            forcePathStyle: configService.get<boolean>(
+              'storage.s3.forcePathStyle',
+            ),
+            signatureVersion: configService.get<string>(
+              'storage.s3.forcePathStyle',
+            ),
+          },
+        };
+      },
+    }),
+
     InngestModule,
     FlowModule,
     NodeModule,
     EdgeModule,
     GeneratingTaskModule,
     AiModule,
+    StorageModule,
   ],
 })
 export class AppModule {}

@@ -7,6 +7,7 @@ clients/edge-api.ts
 clients/flow-api.ts
 clients/generating-task-api.ts
 clients/node-api.ts
+clients/storage-api.ts
 common.ts
 configuration.ts
 docs/AiApi.md
@@ -32,6 +33,10 @@ docs/EdgeEntity.md
 docs/EdgeHandleEnum.md
 docs/EdgeLayout.md
 docs/EdgePatchInput.md
+docs/FileDeleteResponse.md
+docs/FileEntity.md
+docs/FileMetadata.md
+docs/FileQueryInput.md
 docs/FlowAddInput.md
 docs/FlowAddResponse.md
 docs/FlowApi.md
@@ -60,6 +65,8 @@ docs/NodeEntity.md
 docs/NodeLayout.md
 docs/NodePatchInput.md
 docs/NodeState.md
+docs/StorageApi.md
+docs/StorageBucketName.md
 git_push.sh
 index.ts
 models/ai-model-info.ts
@@ -83,6 +90,10 @@ models/edge-entity.ts
 models/edge-handle-enum.ts
 models/edge-layout.ts
 models/edge-patch-input.ts
+models/file-delete-response.ts
+models/file-entity.ts
+models/file-metadata.ts
+models/file-query-input.ts
 models/flow-add-input.ts
 models/flow-add-response.ts
 models/flow-delete-response.ts
@@ -109,3 +120,4 @@ models/node-entity.ts
 models/node-layout.ts
 models/node-patch-input.ts
 models/node-state.ts
+models/storage-bucket-name.ts

@@ -34,6 +34,9 @@ import { useRef } from 'react';
 import { IconImage } from '@arco-design/web-react/icon';
 import viewModeRefPlugin, { ViewModeRef } from './plugins/view-mode-ref';
 import CodeEditor from './components/code-editor';
+import { Upload } from '@arco-design/web-react';
+import API from '@/services/api';
+import { FileEntity } from '@api/models';
 
 interface MarkdownEditorProps extends Pick<MDXEditorProps, 'readOnly'> {
   value?: string;
@@ -75,8 +78,8 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
             ImageDialog: () => null,
             imageUploadHandler: async (file) => {
               // drag or paste to upload image
-              // todo upload image
-              return 'http://image.com/image.png';
+              const resp = await API.storage.uploadFileObject(file);
+              return `/api/storage/object?id=${resp.data.id}`;
             },
           }),
           codeBlockPlugin({
@@ -125,16 +128,36 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
                 <InsertTable />
                 <InsertThematicBreak />
                 <InsertCodeBlock />
-                <ButtonWithTooltip
-                  title="Upload image"
-                  onClick={() => {
-                    // todo upload image
-                    editorRef.current?.insertMarkdown(
-                      `![image](http://image.com/image.png)`,
-                    );
-                  }}
-                >
-                  <IconImage style={{ fontSize: 24 }} />
+                <ButtonWithTooltip title="Upload image">
+                  <Upload
+                    accept="image/*"
+                    limit={1}
+                    fileList={[]}
+                    customRequest={async (customRequestProps) => {
+                      const { file, onSuccess, onError, onProgress } =
+                        customRequestProps;
+                      try {
+                        onProgress(10);
+                        const resp = await API.storage.uploadFileObject(file);
+                        onSuccess(resp.data);
+                        onProgress(100);
+                      } catch (e) {
+                        onError(e);
+                      }
+                    }}
+                    onChange={(fileList) => {
+                      const file = fileList[0];
+                      if (file && file.status === 'done') {
+                        const fileId = (file.response as FileEntity).id;
+                        editorRef.current?.insertMarkdown(
+                          `![image](/api/storage/object?id=${fileId})`,
+                        );
+                      }
+                    }}
+                    showUploadList={false}
+                  >
+                    <IconImage style={{ fontSize: 24 }} />
+                  </Upload>
                 </ButtonWithTooltip>
               </DiffSourceToggleWrapper>
             ),

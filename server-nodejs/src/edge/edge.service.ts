@@ -13,7 +13,7 @@ import {
   BatchEdgePatchInputItem,
   EdgeAddInput,
   EdgePatchInput,
-} from './edge.type';
+} from './edge.dto';
 import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
 import { omit } from 'lodash';

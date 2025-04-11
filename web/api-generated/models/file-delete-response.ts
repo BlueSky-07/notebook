@@ -17,26 +17,14 @@
 /**
  * 
  * @export
- * @interface AiInfoResponse
+ * @interface FileDeleteResponse
  */
-export interface AiInfoResponse {
+export interface FileDeleteResponse {
     /**
      * 
      * @type {boolean}
-     * @memberof AiInfoResponse
+     * @memberof FileDeleteResponse
      */
-    'enabled': boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof AiInfoResponse
-     */
-    'provider'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AiInfoResponse
-     */
-    'modelName'?: string;
+    'done': boolean;
 }
 

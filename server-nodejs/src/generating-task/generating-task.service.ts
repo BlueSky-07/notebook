@@ -17,7 +17,7 @@ import { EdgeService } from '../edge/edge.service';
 import {
   GeneratingTaskAddInput,
   GeneratingTaskPatchInput,
-} from './generating-task.type';
+} from './generating-task.dto';
 import { Repository } from 'typeorm';
 import { InngestService } from '../inngest/inngest.service';
 import * as Prompt from './prompt';

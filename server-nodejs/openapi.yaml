@@ -502,6 +502,89 @@ paths:
                 $ref: "#/components/schemas/AiModelsResponse"
       tags:
         - Ai
+  /storage/info:
+    get:
+      operationId: getFileInfo
+      parameters:
+        - name: id
+          required: false
+          in: query
+          schema:
+            default: ""
+            type: number
+        - name: path
+          required: false
+          in: query
+          schema:
+            default: ""
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileEntity"
+      tags:
+        - Storage
+  /storage/object:
+    get:
+      operationId: getFileObject
+      parameters:
+        - name: id
+          required: false
+          in: query
+          schema:
+            default: ""
+            type: number
+        - name: path
+          required: false
+          in: query
+          schema:
+            default: ""
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags:
+        - Storage
+  /storage:
+    post:
+      operationId: uploadFileObject
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/FileAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileEntity"
+      tags:
+        - Storage
+    delete:
+      operationId: deleteFile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileQueryInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileDeleteResponse"
+      tags:
+        - Storage
 info:
   title: Notebook Server
   description: ""
@@ -541,6 +624,9 @@ components:
         src:
           type: string
           description: image src
+        fileId:
+          type: number
+          description: file id
         background:
           type: string
           description: background (css)
@@ -1118,3 +1204,90 @@ components:
       required:
         - enabled
         - models
+    StorageBucketName:
+      type: string
+      enum:
+        - uploaded
+        - generated
+        - temp
+    FileMetadata:
+      type: object
+      properties:
+        extension:
+          type: string
+          description: filename extension
+        size:
+          type: number
+          description: "file size, unit: byte"
+        mime:
+          type: string
+          description: MIME
+        width:
+          type: number
+          description: image file width
+        height:
+          type: number
+          description: image file height
+      required:
+        - extension
+        - size
+        - mime
+    FileEntity:
+      type: object
+      properties:
+        bucket:
+          default: uploaded
+          allOf:
+            - $ref: "#/components/schemas/StorageBucketName"
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        path:
+          type: string
+        metadata:
+          $ref: "#/components/schemas/FileMetadata"
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - bucket
+        - id
+        - name
+        - description
+        - path
+        - metadata
+        - updatedAt
+    FileAddInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: filename
+          default: ""
+        description:
+          type: string
+          default: ""
+        file:
+          type: string
+          format: binary
+      required:
+        - file
+    FileQueryInput:
+      type: object
+      properties:
+        id:
+          type: number
+          default: ""
+        path:
+          type: string
+          default: ""
+    FileDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done

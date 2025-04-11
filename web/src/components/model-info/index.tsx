@@ -1,4 +1,5 @@
 import {
+  Tag,
   Divider,
   Tooltip,
   type TooltipProps,
@@ -20,20 +21,26 @@ export const ModelInfo = (props: ModelInfoProps) => {
   const provider = props.provider || props.id?.split('@')[1];
   const name = props.name || props.id?.split('@')[0];
 
-  const [providerName, providerIcon] = getModelProviderIcon(provider);
+  const [providerName, providerIcon] = getModelProviderIcon(provider) ?? [
+    provider,
+  ];
   const modelNameIcon = getModelNameIcon(name);
   const isSame = providerIcon === modelNameIcon && Boolean(modelNameIcon);
 
   return (
     <div className={styles.modelInfo}>
-      {providerIcon && (
-        <Tooltip content={providerName} disabled={!providerName}>
-          {createElement(providerIcon, { size: 14, style: { lineHeight: 22 } })}
-        </Tooltip>
-      )}
+      <Tooltip content={providerName} disabled={!providerName}>
+        {providerIcon ? (
+          createElement(providerIcon, { size: 14, style: { lineHeight: 22 } })
+        ) : (
+          <Tag className={styles.provider} size="small" color="gray">
+            {providerName.slice(0, 5)}
+          </Tag>
+        )}
+      </Tooltip>
       {!isSame && modelNameIcon && (
         <>
-          <Divider type="vertical" />
+          {providerIcon && <Divider type="vertical" />}
           {createElement(modelNameIcon, {
             size: 14,
             style: { lineHeight: 22 },

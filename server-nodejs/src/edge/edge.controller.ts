@@ -18,7 +18,7 @@ import {
   EdgeAddResponse,
   EdgeDeleteResponse,
   EdgePatchInput,
-} from './edge.type';
+} from './edge.dto';
 import { omit } from 'lodash';
 
 @Controller('edge')

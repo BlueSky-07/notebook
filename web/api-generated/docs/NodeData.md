@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content** | **string** | text content | [optional] [default to undefined]
 **src** | **string** | image src | [optional] [default to undefined]
+**fileId** | **number** | file id | [optional] [default to undefined]
 **background** | **string** | background (css) | [optional] [default to undefined]
 
 ## Example
@@ -17,6 +18,7 @@ import { NodeData } from './api';
 const instance: NodeData = {
     content,
     src,
+    fileId,
     background,
 };
 ```

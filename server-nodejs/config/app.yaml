@@ -13,6 +13,19 @@ db:
   better-sqlite3:
     database: database/notebook.db
 
+storage:
+  s3:
+    endpoint: http://localhost:9100 # minio endpoint
+    region: us-east-1
+    secretKey: minioadmin
+    accessKey: minioadmin
+    forcePathStyle: true
+    signatureVersion: v4
+  buckets: # override buckets, see STORAGE_BUCKET_NAME
+    uploaded: uploaded
+    generated: generated
+    temp: temp
+
 inngest:
   isDev: true
   baseUrl: http://localhost:9108

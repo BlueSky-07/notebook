@@ -3,7 +3,7 @@ import {
   GeneratingTaskAddInput,
   GeneratingTaskAddResponse,
   GeneratingTaskStopResponse,
-} from './generating-task.type';
+} from './generating-task.dto';
 import { omit } from 'lodash';
 import { GeneratingTaskEntity } from './generating-task.entity';
 import { GeneratingTaskService } from './generating-task.service';

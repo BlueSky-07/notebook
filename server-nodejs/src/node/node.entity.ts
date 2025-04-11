@@ -6,6 +6,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneratingTaskStatus } from '../generating-task/generating-task.entity';
+import { FileEntity } from '../storage/storage.entity';
 
 export enum NodeDataType {
   Text = 'Text',
@@ -18,6 +19,9 @@ export class NodeData {
 
   @ApiProperty({ type: String, required: false, description: 'image src' })
   src?: string;
+
+  @ApiProperty({ type: Number, required: false, description: 'file id' })
+  fileId?: FileEntity['id'];
 
   @ApiProperty({
     type: String,

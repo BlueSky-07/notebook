@@ -19,7 +19,7 @@ import {
   NodeAddResponse,
   NodeDeleteResponse,
   NodePatchInput,
-} from './node.type';
+} from './node.dto';
 import { omit } from 'lodash';
 
 @Controller('node')

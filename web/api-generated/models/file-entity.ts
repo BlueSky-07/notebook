@@ -15,46 +15,60 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { EdgeEntity } from './edge-entity';
+import type { FileMetadata } from './file-metadata';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NodeEntity } from './node-entity';
+import type { StorageBucketName } from './storage-bucket-name';
 
 /**
  * 
  * @export
- * @interface DocumentFull
+ * @interface FileEntity
  */
-export interface DocumentFull {
+export interface FileEntity {
+    /**
+     * 
+     * @type {StorageBucketName}
+     * @memberof FileEntity
+     */
+    'bucket': StorageBucketName;
     /**
      * 
      * @type {number}
-     * @memberof DocumentFull
+     * @memberof FileEntity
      */
-    'flowId': number;
+    'id': number;
     /**
      * 
      * @type {string}
-     * @memberof DocumentFull
+     * @memberof FileEntity
      */
     'name': string;
     /**
      * 
      * @type {string}
-     * @memberof DocumentFull
+     * @memberof FileEntity
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FileEntity
+     */
+    'path': string;
+    /**
+     * 
+     * @type {FileMetadata}
+     * @memberof FileEntity
+     */
+    'metadata': FileMetadata;
+    /**
+     * 
+     * @type {string}
+     * @memberof FileEntity
      */
     'updatedAt': string;
-    /**
-     * 
-     * @type {Array<NodeEntity>}
-     * @memberof DocumentFull
-     */
-    'nodes': Array<NodeEntity>;
-    /**
-     * 
-     * @type {Array<EdgeEntity>}
-     * @memberof DocumentFull
-     */
-    'edges': Array<EdgeEntity>;
 }
+
+
 

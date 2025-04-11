@@ -14,10 +14,19 @@
 
 
 
-export * from './clients/ai-api';
-export * from './clients/edge-api';
-export * from './clients/flow-api';
-export * from './clients/generating-task-api';
-export * from './clients/node-api';
-export * from './clients/storage-api';
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const StorageBucketName = {
+    Uploaded: 'uploaded',
+    Generated: 'generated',
+    Temp: 'temp'
+} as const;
+
+export type StorageBucketName = typeof StorageBucketName[keyof typeof StorageBucketName];
+
+
 

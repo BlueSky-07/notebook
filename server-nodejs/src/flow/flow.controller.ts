@@ -18,7 +18,7 @@ import {
   FlowListInput,
   FlowListResponse,
   FlowPatchInput,
-} from './flow.type';
+} from './flow.dto';
 import { omit } from 'lodash';
 
 @Controller('flow')

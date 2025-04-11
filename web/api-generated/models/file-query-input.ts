@@ -17,38 +17,20 @@
 /**
  * 
  * @export
- * @interface DocumentSlim
+ * @interface FileQueryInput
  */
-export interface DocumentSlim {
+export interface FileQueryInput {
     /**
      * 
      * @type {number}
-     * @memberof DocumentSlim
+     * @memberof FileQueryInput
      */
-    'flowId': number;
+    'id'?: number;
     /**
      * 
      * @type {string}
-     * @memberof DocumentSlim
+     * @memberof FileQueryInput
      */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DocumentSlim
-     */
-    'updatedAt': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DocumentSlim
-     */
-    'nodeIds': Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DocumentSlim
-     */
-    'edgeIds': Array<string>;
+    'path'?: string;
 }
 

@@ -13,7 +13,7 @@ import {
   FlowListInput,
   FlowListResponse,
   FlowPatchInput,
-} from './flow.type';
+} from './flow.dto';
 import { convertListInputPaginationToFindOptions } from '../utils/pagination';
 import { NodeService } from '../node/node.service';
 import { EdgeService } from '../edge/edge.service';

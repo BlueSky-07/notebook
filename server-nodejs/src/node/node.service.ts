@@ -13,7 +13,7 @@ import {
   BatchNodePatchInputItem,
   NodeAddInput,
   NodePatchInput,
-} from './node.type';
+} from './node.dto';
 import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
 import { omit } from 'lodash';
@@ -48,6 +48,7 @@ export class NodeService {
   ): Promise<NodeEntity> {
     const record = await this.getNode(id);
     const res = await this.nodeRepository.update(id, nodePatchInput);
+    // todo delete unused image file
     if (res.affected) {
       await NodeEvent.trigger(
         this.inngestService.inngest,
@@ -93,6 +94,7 @@ export class NodeService {
 
   async deleteNode(id: NodeEntity['id']): Promise<boolean> {
     const record = await this.getNode(id);
+    // todo delete unused image file
     const res = await this.nodeRepository.delete({
       id,
     });
@@ -152,6 +154,7 @@ export class NodeService {
   async deleteNodesByIds(ids: NodeEntity['id'][]): Promise<boolean> {
     const filteredIds = Array.from(new Set(ids));
     const records = await this.getNodesByIds(filteredIds);
+    // todo delete unused image files
     if (!records.length) throw new BadRequestException(`Nodes do not exist`);
     const res = await this.nodeRepository.delete({
       id: In(filteredIds),
@@ -179,6 +182,7 @@ export class NodeService {
 
   async deleteNodesByFlowId(flowId: FlowEntity['id']): Promise<boolean> {
     const records = await this.getNodesByFlowId(flowId);
+    // todo delete unused image files
     if (!records.length) throw new BadRequestException(`Nodes do not exist`);
     const res = await this.nodeRepository.delete({
       flowId,

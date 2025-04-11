@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { createOpenAI, OpenAIProviderSettings } from '@ai-sdk/openai';
 import { ConfigService } from '@nestjs/config';
-import { AiModelsResponse, AiModelConfig } from './ai.type';
+import { AiModelsResponse, AiModelConfig } from './ai.dto';
 import { fetch, ProxyAgent, type RequestInfo, type RequestInit } from 'undici';
 import { LanguageModelV1 } from 'ai';
 import { pick } from 'lodash';
