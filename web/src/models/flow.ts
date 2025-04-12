@@ -70,6 +70,15 @@ export function getInitialFlowEdge(
       }),
     },
     type: dataType,
+    markerEnd: {
+      type: MarkerType.Arrow,
+      width: 40,
+      height: 40,
+      orient: {
+        [EdgeHandleEnum.Left]: 'horizontal',
+        // [EdgeHandleEnum.Top]: 'vertical'
+      }[targetHandle],
+    },
   };
 }
 

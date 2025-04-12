@@ -1,4 +1,4 @@
-import { EdgeDataTypeEnum, EdgeEntity } from '@api/models';
+import { EdgeDataTypeEnum, EdgeEntity, EdgeHandleEnum } from '@api/models';
 import {
   BaseEdge,
   EdgeProps,
@@ -10,7 +10,11 @@ import {
 } from '@xyflow/react';
 import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useShallow } from 'zustand/shallow';
-import { Input } from '@arco-design/web-react';
+import { Typography } from '@arco-design/web-react';
+import TipButton from '@/components/tip-button';
+import { IconDelete } from '@arco-design/web-react/icon';
+import cs from 'classnames';
+import styles from './styles.module.less';
 
 type CustomEdgeLabelData = Pick<EdgeEntity['data'], 'label'>;
 
@@ -30,12 +34,16 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
     markerEnd,
     sourcePosition,
     targetPosition,
+    targetHandleId,
   } = props;
 
-  const { updateEdgeData } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'updateEdgeData'>>((state) => ({
-      updateEdgeData: state.updateEdgeData,
-    })),
+  const { updateEdgeData, deleteEdge } = useFlowStore(
+    useShallow<FlowState, Pick<FlowState, 'updateEdgeData' | 'deleteEdge'>>(
+      (state) => ({
+        updateEdgeData: state.updateEdgeData,
+        deleteEdge: state.deleteEdge,
+      }),
+    ),
   );
 
   /**
@@ -108,22 +116,53 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <Input.TextArea
-          autoSize={{ minRows: 1, maxRows: 5 }}
-          value={data.label}
-          onChange={(v) => {
-            updateEdgeData(id, {
-              label: v,
-            });
-          }}
+        <div
+          className={cs('nodrag nopan', styles.customLabelEdge)}
           style={{
-            maxWidth: 250,
-            position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            pointerEvents: 'all',
           }}
-          className="nodrag nopan"
-        />
+        >
+          <div className={styles.toolbar}>
+            <TipButton
+              tip="Delete Edge"
+              icon={<IconDelete />}
+              status="danger"
+              size="mini"
+              type="text"
+              popconfirmProps={{
+                okButtonProps: {
+                  status: 'danger',
+                },
+                icon: <IconDelete style={{ color: 'rgb(var(--danger-6))' }} />,
+                title: (
+                  <span style={{ color: 'rgb(var(--danger-6))' }}>
+                    Delete Node
+                  </span>
+                ),
+                content: `Are you sure to delete edge?`,
+                okText: 'Yes',
+                onOk: () => {
+                  deleteEdge(id);
+                },
+              }}
+            />
+          </div>
+          <Typography.Text
+            className={styles.label}
+            editable={{
+              tooltipProps: {
+                content: 'Edit Label',
+              },
+              onChange: (v) => {
+                updateEdgeData(id, {
+                  label: v,
+                });
+              },
+            }}
+          >
+            {data.label}
+          </Typography.Text>
+        </div>
       </EdgeLabelRenderer>
     </>
   );

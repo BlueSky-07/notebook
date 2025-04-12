@@ -33,6 +33,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/await-thenable': 'warn',
       'no-empty': 'off'
     },
   },

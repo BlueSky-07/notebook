@@ -1,0 +1,21 @@
+.models-pane {
+  .description {
+    font-weight: 400;
+    color: var(--color-text-2);
+    margin-bottom: 8px;
+  }
+}
+
+.nodes-pane {
+  :global {
+    .arco-tree-node-selected .arco-tree-node-title {
+      &:not(:has(.preview)) {
+        background: var(--color-primary-light-1);
+
+        &:hover {
+          background: var(--color-fill-2);
+        }
+      }
+    }
+  }
+}

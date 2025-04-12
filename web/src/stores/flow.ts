@@ -13,13 +13,19 @@ import { FlowModel } from '@/models/flow';
 import { AiModelInfo, FlowEntity, NodeEntity } from '@api/models';
 import { NodeApi } from '@api/clients/node-api';
 import { EdgeApi } from '@api/clients/edge-api';
+import { RefObject } from 'react';
+import { ReactFlowRef } from 'src/pages/flow/components/react-flow-ref-forwarder';
 
 export interface FlowState extends FlowModel {
   // Rxjs Subject
   subject?: FlowSubject;
 
   // Life Cycles
-  bootstrap: (flowId: FlowEntity['id']) => void;
+  reactFlowRef: RefObject<ReactFlowRef>;
+  bootstrap: (
+    flowId: FlowEntity['id'],
+    reactFlowRef: RefObject<ReactFlowRef>,
+  ) => void;
   getFlowId: () => FlowEntity['id'];
   getNode: (nodeId: string) => Node | undefined;
 
@@ -37,6 +43,7 @@ export interface FlowState extends FlowModel {
     center?: XYPosition,
   ) => Promise<Node>;
   deleteNode: (id: Node['id']) => ReturnType<NodeApi['deleteNode']>;
+  deleteEdge: (id: Edge['id']) => ReturnType<EdgeApi['deleteEdge']>;
   updateNodeData: (
     id: Node['id'],
     data: Node['data'],
@@ -47,6 +54,7 @@ export interface FlowState extends FlowModel {
   ) => ReturnType<EdgeApi['patchEdge']>;
 
   // Other States
+  selectedNodeIds: Node['id'][];
   modelId?: AiModelInfo['id'];
 
   // Other User Actions Callbacks
@@ -58,7 +66,11 @@ const useFlowStore = create<FlowState>((set, get) => {
     subject: undefined,
     nodes: [],
     edges: [],
-    bootstrap: (flowId: FlowEntity['id']) => {
+    reactFlowRef: null,
+    bootstrap: (
+      flowId: FlowEntity['id'],
+      reactFlowRef: RefObject<ReactFlowRef>,
+    ) => {
       const lastSubject = get().subject;
       if (lastSubject) {
         lastSubject.complete();
@@ -67,7 +79,7 @@ const useFlowStore = create<FlowState>((set, get) => {
       subject.subscribe((data) => {
         return set({ ...data });
       });
-      set({ subject });
+      set({ subject, selectedNodeIds: [], reactFlowRef });
       subject.loadFromAPI();
       // subject.loadFromLocalStorage()
     },
@@ -92,6 +104,25 @@ const useFlowStore = create<FlowState>((set, get) => {
             get().subject?.deleteNode(change.id);
             break;
           }
+          case 'select': {
+            const selectedNodeIds = get().selectedNodeIds;
+            if (
+              selectedNodeIds.includes(change.id) &&
+              change.selected === false
+            ) {
+              set({
+                selectedNodeIds: selectedNodeIds.filter(
+                  (id) => id !== change.id,
+                ),
+              });
+            } else if (
+              !selectedNodeIds.includes(change.id) &&
+              change.selected === true
+            ) {
+              set({ selectedNodeIds: selectedNodeIds.concat(change.id) });
+            }
+          }
+          // fall through for ui update
           default: {
             const nextNodes = applyNodeChanges(changes, get().nodes);
             get().subject?.next({
@@ -118,12 +149,24 @@ const useFlowStore = create<FlowState>((set, get) => {
       }
     },
     onConnect: (connection) => {
-      get().subject?.addEdge(
-        connection.source,
-        connection.target,
-        connection.sourceHandle,
-        connection.targetHandle,
-      );
+      const selectedNodeIds = get().selectedNodeIds;
+      if (selectedNodeIds.includes(connection.source)) {
+        for (const source of selectedNodeIds) {
+          get().subject?.addEdge(
+            source,
+            connection.target,
+            connection.sourceHandle,
+            connection.targetHandle,
+          );
+        }
+      } else {
+        get().subject?.addEdge(
+          connection.source,
+          connection.target,
+          connection.sourceHandle,
+          connection.targetHandle,
+        );
+      }
     },
     setNodes: (nodes) => {
       get().subject?.next({
@@ -145,12 +188,16 @@ const useFlowStore = create<FlowState>((set, get) => {
     deleteNode: async (id: Node['id']) => {
       return get().subject?.deleteNode(id);
     },
+    deleteEdge: async (id: Edge['id']) => {
+      return get().subject?.deleteEdge(id);
+    },
     updateNodeData: async (id: Node['id'], data: Node['data']) => {
       return get().subject?.updateNodeData(id, data);
     },
     updateEdgeData: async (id: Node['id'], data: Edge['data']) => {
       return get().subject?.updateEdgeData(id, data);
     },
+    selectedNodeIds: [],
     modelId: localStorage.getItem('model-id'),
     updateModelId: (modelId: AiModelInfo['id']) => {
       set({ modelId });

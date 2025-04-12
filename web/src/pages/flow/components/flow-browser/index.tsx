@@ -73,6 +73,7 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
           <div className={styles.header}></div>
           {listResp.data?.data && (
             <List<FlowEntity>
+              bordered={false}
               dataSource={listResp.data.data.items}
               render={(item) => (
                 <List.Item

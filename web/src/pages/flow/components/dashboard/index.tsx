@@ -7,13 +7,17 @@ import {
 } from '@xyflow/react';
 import { useShallow } from 'zustand/react/shallow';
 import useFlowStore, { type FlowState } from '@/stores/flow';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCustomNodes } from '../../custom-nodes';
 import { useCustomEdges } from '../../custom-edges';
 import { Footer } from '../footer';
 import { ConfigProvider } from '@arco-design/web-react';
 import { FlowEntity } from '@api/models';
 import enUS from '@arco-design/web-react/es/locale/en-US';
+import ConnectionLine from '../connection-line';
+import ReactFlowRefForwarder, {
+  ReactFlowRef,
+} from '../react-flow-ref-forwarder';
 
 interface FlowDashboardProps {
   flowId?: FlowEntity['id'];
@@ -21,6 +25,7 @@ interface FlowDashboardProps {
 
 export const FlowDashboard = (props: FlowDashboardProps) => {
   const { flowId } = props;
+  const reactFlowRefForwarder = useRef<ReactFlowRef>(null);
 
   const nodeTypes = useCustomNodes();
   const edgeTypes = useCustomEdges();
@@ -49,7 +54,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
 
   useEffect(() => {
     if (flowId) {
-      bootstrap(flowId);
+      bootstrap(flowId, reactFlowRefForwarder);
     }
   }, [bootstrap, flowId]);
 
@@ -81,12 +86,10 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
         // fitView={true}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        connectionLineComponent={ConnectionLine}
       >
         <MiniMap pannable={true} zoomable={true} />
-        <Panel
-          position="bottom-left"
-          style={{ backgroundColor: 'white', padding: 10 }}
-        >
+        <Panel position="bottom-left">
           <Footer />
         </Panel>
         <Background
@@ -95,6 +98,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
           color="#ccc"
           variant={BackgroundVariant.Dots}
         />
+        <ReactFlowRefForwarder ref={reactFlowRefForwarder} />
       </ReactFlow>
     </ConfigProvider>
   );

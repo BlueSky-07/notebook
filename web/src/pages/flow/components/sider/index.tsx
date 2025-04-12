@@ -1,12 +1,11 @@
-import { Menu, Tabs, Tag } from '@arco-design/web-react';
+import { Menu, Tabs } from '@arco-design/web-react';
 import { ReactNode } from 'react';
 import FlowBrowser from '@/pages/flow/components/flow-browser';
 import { FlowEntity } from '@api/models';
 import styles from './styles.module.less';
-import ModelSelector from '@/components/model-selector';
-import useFlowStore, { type FlowState } from '@/stores/flow';
-import { useShallow } from 'zustand/shallow';
 import { FLOW_SIDER_ITEMS } from './const';
+import ModelsPane from './panes/models-pane';
+import NodesPane from './panes/nodes-pane';
 
 interface FlowSiderProps {
   flowId?: FlowEntity['id'];
@@ -17,15 +16,6 @@ interface FlowSiderProps {
 
 export const FlowSider = (props: FlowSiderProps) => {
   const { flowId, collapsed, activeTab, setActiveTab } = props;
-
-  const { modelId, updateModelId } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'modelId' | 'updateModelId'>>(
-      (state) => ({
-        modelId: state.modelId,
-        updateModelId: state.updateModelId,
-      }),
-    ),
-  );
 
   if (collapsed) {
     return (
@@ -76,22 +66,8 @@ export const FlowSider = (props: FlowSiderProps) => {
         animation={false}
       >
         {renderTabPane(FLOW_SIDER_ITEMS.flows, <FlowBrowser flowId={flowId} />)}
-        {renderTabPane(
-          FLOW_SIDER_ITEMS.models,
-          <ModelSelector
-            type="radio"
-            id={modelId}
-            onChange={updateModelId}
-            notAvailableContent={
-              <Tag color="red" size="small">
-                AI Models Not Available
-              </Tag>
-            }
-            selectProps={{
-              placeholder: 'Model',
-            }}
-          />,
-        )}
+        {renderTabPane(FLOW_SIDER_ITEMS.nodes, <NodesPane />)}
+        {renderTabPane(FLOW_SIDER_ITEMS.models, <ModelsPane />)}
       </Tabs>
     </div>
   );

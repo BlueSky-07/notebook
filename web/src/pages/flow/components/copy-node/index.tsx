@@ -73,7 +73,7 @@ export const CopyNode = (props: CopyNodeProps) => {
         }}
       />
       <Drawer
-        title="Copy"
+        title="Copy to Flow"
         visible={visible}
         onCancel={() => setVisible(false)}
         width={300}

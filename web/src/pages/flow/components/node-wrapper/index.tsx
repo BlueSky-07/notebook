@@ -1,9 +1,10 @@
 import cs from 'classnames';
 import styles from './styles.module.less';
-import { ReactNode, type Ref, useImperativeHandle, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import {
   NodeProps,
   NodeResizer,
+  useReactFlow,
   type Node,
   type NodeResizerProps,
 } from '@xyflow/react';
@@ -12,7 +13,11 @@ import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useShallow } from 'zustand/shallow';
 import CopyNode from '@/pages/flow/components/copy-node';
 import { ColorPicker, Space } from '@arco-design/web-react';
-import { IconBgColors, IconDelete } from '@arco-design/web-react/icon';
+import {
+  IconBgColors,
+  IconDelete,
+  IconFullscreen,
+} from '@arco-design/web-react/icon';
 import TipButton from '@/components/tip-button';
 import usePatchNode from '@/pages/flow/hooks/usePatchNode';
 import DefaultHandles from '@/pages/flow/custom-handles';
@@ -40,6 +45,7 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
 ) => {
   const { title, footer, children, className, data, id, selected } = props;
   const [background, setBackground] = useState(data.background || 'white');
+  const reactFlow = useReactFlow();
 
   const { getFlowId, getNode, deleteNode } = useFlowStore(
     useShallow<
@@ -72,6 +78,18 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
         <div className={cs(styles.header, styles.buttons)}>
           {title}
           <Space className={styles.flex}>
+            <TipButton
+              tip="Fit at center"
+              icon={<IconFullscreen />}
+              size="mini"
+              type="text"
+              onClick={() => {
+                reactFlow.fitView({
+                  duration: 500,
+                  nodes: [{ id }],
+                });
+              }}
+            />
             <CopyNode flowId={getFlowId()} node={getNode(id)} />
             <ColorPicker
               showPreset={true}

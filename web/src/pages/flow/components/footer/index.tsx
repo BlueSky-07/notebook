@@ -1,9 +1,11 @@
-import { Space, Button } from '@arco-design/web-react';
+import { Space } from '@arco-design/web-react';
 import { NodeDataTypeEnum, NodeEntity } from '@api/models';
-import { IconPlusCircle } from '@arco-design/web-react/icon';
+import { IconImage, IconPen } from '@arco-design/web-react/icon';
 import { useShallow } from 'zustand/react/shallow';
 import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useReactFlow, useStoreApi } from '@xyflow/react';
+import styles from './styles.module.less';
+import TipButton from '@/components/tip-button';
 
 export const Footer = () => {
   const store = useStoreApi();
@@ -30,22 +32,18 @@ export const Footer = () => {
   );
 
   return (
-    <Space>
-      <IconPlusCircle /> Add
-      <Button
+    <Space className={styles.footer}>
+      Add
+      <TipButton
+        tip="Text Node"
+        icon={<IconPen />}
         onClick={() => handleAdd(NodeDataTypeEnum.Text)}
-        type="text"
-        size="mini"
-      >
-        Text
-      </Button>
-      <Button
+      />
+      <TipButton
+        tip="Image Node"
+        icon={<IconImage />}
         onClick={() => handleAdd(NodeDataTypeEnum.Image)}
-        type="text"
-        size="mini"
-      >
-        Image
-      </Button>
+      />
     </Space>
   );
 };

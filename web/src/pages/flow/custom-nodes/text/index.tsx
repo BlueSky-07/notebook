@@ -14,7 +14,8 @@ import usePatchNode from '@/pages/flow/hooks/usePatchNode';
 import useGeneratingTask from '@/pages/flow/hooks/useGeneratingTask';
 import API from '@/services/api';
 
-type CustomNodeTextData = Pick<NodeEntity['data'], 'content'> & CustomNodeData;
+export type CustomNodeTextData = Pick<NodeEntity['data'], 'content'> &
+  CustomNodeData;
 
 type CustomNodeTextProps = NodeProps<
   Node<CustomNodeTextData, typeof NodeDataTypeEnum.Text>
