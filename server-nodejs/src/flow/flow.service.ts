@@ -97,6 +97,8 @@ export class FlowService {
     const res = await this.flowRepository.delete({
       id,
     });
+    await this.nodeService.deleteNodesByFlowId(id);
+    await this.edgeService.deleteEdgesByFlowId(id);
     if (res.affected) {
       return true;
     } else {

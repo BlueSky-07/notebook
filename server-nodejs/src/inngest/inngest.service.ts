@@ -8,6 +8,7 @@ import { GeneratingTaskService } from '../generating-task/generating-task.servic
 import { AiService } from '../ai/ai.service';
 import { ConfigService } from '@nestjs/config';
 import { FileReferenceService } from '../file/file-reference.service';
+import { EdgeService } from '../edge/edge.service';
 
 @Injectable()
 export class InngestService {
@@ -20,6 +21,8 @@ export class InngestService {
     private readonly flowService: FlowService,
     @Inject(forwardRef(() => NodeService))
     private readonly nodeService: NodeService,
+    @Inject(forwardRef(() => EdgeService))
+    private readonly edgeService: EdgeService,
     @Inject(forwardRef(() => GeneratingTaskService))
     private readonly generatingTaskService: GeneratingTaskService,
     private readonly aiService: AiService,
@@ -36,6 +39,7 @@ export class InngestService {
       logger: this.logger,
       flowService,
       nodeService,
+      edgeService,
       generatingTaskService,
       aiService,
       fileReferenceService,

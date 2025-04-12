@@ -44,5 +44,11 @@ export interface NodeLayout {
      * @memberof NodeLayout
      */
     'height': number;
+    /**
+     * hidden
+     * @type {boolean}
+     * @memberof NodeLayout
+     */
+    'hidden'?: boolean;
 }
 

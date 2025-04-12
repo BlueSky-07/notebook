@@ -16,6 +16,7 @@ import { ColorPicker, Space } from '@arco-design/web-react';
 import {
   IconBgColors,
   IconDelete,
+  IconEyeInvisible,
   IconFullscreen,
 } from '@arco-design/web-react/icon';
 import TipButton from '@/components/tip-button';
@@ -47,14 +48,18 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
   const [background, setBackground] = useState(data.background || 'white');
   const reactFlow = useReactFlow();
 
-  const { getFlowId, getNode, deleteNode } = useFlowStore(
+  const { getFlowId, getNode, deleteNode, updateNodeHidden } = useFlowStore(
     useShallow<
       FlowState,
-      Pick<FlowState, 'getFlowId' | 'getNode' | 'deleteNode'>
+      Pick<
+        FlowState,
+        'getFlowId' | 'getNode' | 'deleteNode' | 'updateNodeHidden'
+      >
     >((state) => ({
       getFlowId: state.getFlowId,
       getNode: state.getNode,
       deleteNode: state.deleteNode,
+      updateNodeHidden: state.updateNodeHidden,
     })),
   );
 
@@ -88,6 +93,15 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
                   duration: 500,
                   nodes: [{ id }],
                 });
+              }}
+            />
+            <TipButton
+              tip="Hide"
+              icon={<IconEyeInvisible />}
+              size="mini"
+              type="text"
+              onClick={() => {
+                updateNodeHidden(id, true);
               }}
             />
             <CopyNode flowId={getFlowId()} node={getNode(id)} />

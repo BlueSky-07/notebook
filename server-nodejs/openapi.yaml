@@ -279,61 +279,6 @@ paths:
                 $ref: "#/components/schemas/NodeDeleteResponse"
       tags:
         - Node
-  /generating-task:
-    post:
-      operationId: addGeneratingTask
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GeneratingTaskAddInput"
-      responses:
-        "201":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneratingTaskAddResponse"
-      tags:
-        - GeneratingTask
-  /generating-task/{id}/stop:
-    post:
-      operationId: stopGeneratingTask
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "201":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneratingTaskStopResponse"
-      tags:
-        - GeneratingTask
-  /generating-task/{id}:
-    get:
-      operationId: getGeneratingTask
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: number
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneratingTaskEntity"
-      tags:
-        - GeneratingTask
   /edge/batch:
     post:
       operationId: addEdges
@@ -489,6 +434,61 @@ paths:
                 $ref: "#/components/schemas/EdgeDeleteResponse"
       tags:
         - Edge
+  /generating-task:
+    post:
+      operationId: addGeneratingTask
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneratingTaskAddInput"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskAddResponse"
+      tags:
+        - GeneratingTask
+  /generating-task/{id}/stop:
+    post:
+      operationId: stopGeneratingTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskStopResponse"
+      tags:
+        - GeneratingTask
+  /generating-task/{id}:
+    get:
+      operationId: getGeneratingTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratingTaskEntity"
+      tags:
+        - GeneratingTask
   /ai/models:
     get:
       operationId: getModels
@@ -629,6 +629,9 @@ components:
           type: number
         height:
           type: number
+        hidden:
+          type: boolean
+          description: hidden
       required:
         - positionX
         - positionY
@@ -948,6 +951,125 @@ components:
             - $ref: "#/components/schemas/NodeDataTypeEnum"
         state:
           $ref: "#/components/schemas/NodeState"
+    EdgeAddInput:
+      type: object
+      properties:
+        flowId:
+          type: number
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeLayout"
+        data:
+          default:
+            label: ""
+          allOf:
+            - $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
+      required:
+        - flowId
+        - layout
+    BatchEdgeAddInput:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/EdgeAddInput"
+      required:
+        - edges
+    BatchEdgeAddResponse:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
+    BatchEdgePatchInputItem:
+      type: object
+      properties:
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeLayout"
+        data:
+          $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
+        id:
+          type: number
+      required:
+        - id
+    BatchEdgePatchInput:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchEdgePatchInputItem"
+      required:
+        - edges
+    BatchEdgeDeleteInput:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: number
+      required:
+        - ids
+    EdgeDeleteResponse:
+      type: object
+      properties:
+        done:
+          type: boolean
+      required:
+        - done
+    EdgeAddResponse:
+      type: object
+      properties:
+        id:
+          type: number
+      required:
+        - id
+    EdgePatchInput:
+      type: object
+      properties:
+        sourceNodeId:
+          type: number
+        targetNodeId:
+          type: number
+        layout:
+          default:
+            sourceHandle: Right
+            targetHandle: Top
+          allOf:
+            - $ref: "#/components/schemas/EdgeLayout"
+        data:
+          $ref: "#/components/schemas/EdgeData"
+        dataType:
+          default: Label
+          allOf:
+            - $ref: "#/components/schemas/EdgeDataTypeEnum"
     GeneratingTaskInputInAddInput:
       type: object
       properties:
@@ -1079,125 +1201,6 @@ components:
         - input
         - output
         - updatedAt
-    EdgeAddInput:
-      type: object
-      properties:
-        flowId:
-          type: number
-        sourceNodeId:
-          type: number
-        targetNodeId:
-          type: number
-        layout:
-          default:
-            sourceHandle: Right
-            targetHandle: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeLayout"
-        data:
-          default:
-            label: ""
-          allOf:
-            - $ref: "#/components/schemas/EdgeData"
-        dataType:
-          default: Label
-          allOf:
-            - $ref: "#/components/schemas/EdgeDataTypeEnum"
-      required:
-        - flowId
-        - layout
-    BatchEdgeAddInput:
-      type: object
-      properties:
-        edges:
-          type: array
-          items:
-            $ref: "#/components/schemas/EdgeAddInput"
-      required:
-        - edges
-    BatchEdgeAddResponse:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            type: number
-      required:
-        - ids
-    BatchEdgePatchInputItem:
-      type: object
-      properties:
-        sourceNodeId:
-          type: number
-        targetNodeId:
-          type: number
-        layout:
-          default:
-            sourceHandle: Right
-            targetHandle: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeLayout"
-        data:
-          $ref: "#/components/schemas/EdgeData"
-        dataType:
-          default: Label
-          allOf:
-            - $ref: "#/components/schemas/EdgeDataTypeEnum"
-        id:
-          type: number
-      required:
-        - id
-    BatchEdgePatchInput:
-      type: object
-      properties:
-        edges:
-          type: array
-          items:
-            $ref: "#/components/schemas/BatchEdgePatchInputItem"
-      required:
-        - edges
-    BatchEdgeDeleteInput:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            type: number
-      required:
-        - ids
-    EdgeDeleteResponse:
-      type: object
-      properties:
-        done:
-          type: boolean
-      required:
-        - done
-    EdgeAddResponse:
-      type: object
-      properties:
-        id:
-          type: number
-      required:
-        - id
-    EdgePatchInput:
-      type: object
-      properties:
-        sourceNodeId:
-          type: number
-        targetNodeId:
-          type: number
-        layout:
-          default:
-            sourceHandle: Right
-            targetHandle: Top
-          allOf:
-            - $ref: "#/components/schemas/EdgeLayout"
-        data:
-          $ref: "#/components/schemas/EdgeData"
-        dataType:
-          default: Label
-          allOf:
-            - $ref: "#/components/schemas/EdgeDataTypeEnum"
     AiModelInfo:
       type: object
       properties:

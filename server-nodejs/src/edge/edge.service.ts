@@ -206,4 +206,36 @@ export class EdgeService {
       );
     }
   }
+
+  async deleteEdgesByNodeId(
+    nodeId: EdgeEntity['id'],
+  ): Promise<EdgeEntity['id'][]> {
+    const records = await this.edgeRepository.find({
+      where: [{ sourceNodeId: nodeId }, { targetNodeId: nodeId }],
+    });
+    if (!records.length) return [];
+    const res = await this.edgeRepository.delete({
+      id: In(records.map((record) => record.id)),
+    });
+    if (res.affected) {
+      const deletedEdgeIds: EdgeEntity['id'][] = records.map(
+        (record) => record.id,
+      );
+      await Promise.all(
+        records.map((record) =>
+          EdgeEvent.trigger(
+            this.inngestService.inngest,
+            EdgeEvent.EVENT_NAMES.EDGE_DELETED,
+            {
+              edgeId: record.id,
+              flowId: record.flowId,
+            },
+          ),
+        ),
+      );
+      return deletedEdgeIds;
+    } else {
+      return [];
+    }
+  }
 }

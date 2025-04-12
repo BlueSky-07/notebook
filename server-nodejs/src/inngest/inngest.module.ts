@@ -6,11 +6,13 @@ import { GeneratingTaskModule } from '../generating-task/generating-task.module'
 import { AiModule } from '../ai/ai.module';
 import { ConfigModule } from '@nestjs/config';
 import { FileModule } from '../file/file.module';
+import { EdgeModule } from '../edge/edge.module';
 
 @Module({
   imports: [
     forwardRef(() => FlowModule),
     forwardRef(() => NodeModule),
+    forwardRef(() => EdgeModule),
     forwardRef(() => GeneratingTaskModule),
     AiModule,
     ConfigModule,

@@ -30,6 +30,7 @@ export function getInitialFlowNode(
     },
     width: 100,
     height: 100,
+    hidden: false,
     ...(dataType === NodeDataTypeEnum.Text && {
       width: 800,
       height: 400,
@@ -91,6 +92,7 @@ export function convertNodeEntityToFlowNode(nodeEntity: NodeEntity): Node {
     },
     width: nodeEntity.layout.width,
     height: nodeEntity.layout.height,
+    hidden: nodeEntity.layout.hidden,
     data: {
       ...nodeEntity.data,
       $state: nodeEntity.state,

@@ -66,7 +66,7 @@ export const createUpdateNodeByGeneratingTaskFunction = (
             ...nodeRecord.data,
             content: [nodeRecord.data.content, taskRecord.output.generatedText]
               .filter(Boolean)
-              .join(''),
+              .join('\n\n'),
           },
           state: {
             generatingTaskId: event.data.generatingTaskId,

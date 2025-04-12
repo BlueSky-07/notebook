@@ -25,7 +25,7 @@ export interface FlowState extends FlowModel {
   bootstrap: (
     flowId: FlowEntity['id'],
     reactFlowRef: RefObject<ReactFlowRef>,
-  ) => void;
+  ) => Promise<void>;
   getFlowId: () => FlowEntity['id'];
   getNode: (nodeId: string) => Node | undefined;
 
@@ -48,6 +48,10 @@ export interface FlowState extends FlowModel {
     id: Node['id'],
     data: Node['data'],
   ) => ReturnType<NodeApi['patchNode']>;
+  updateNodeHidden: (
+    id: Node['id'],
+    hidden: Node['hidden'],
+  ) => ReturnType<NodeApi['patchNode']>;
   updateEdgeData: (
     id: Node['id'],
     data: Edge['data'],
@@ -67,7 +71,7 @@ const useFlowStore = create<FlowState>((set, get) => {
     nodes: [],
     edges: [],
     reactFlowRef: null,
-    bootstrap: (
+    bootstrap: async (
       flowId: FlowEntity['id'],
       reactFlowRef: RefObject<ReactFlowRef>,
     ) => {
@@ -80,8 +84,15 @@ const useFlowStore = create<FlowState>((set, get) => {
         return set({ ...data });
       });
       set({ subject, selectedNodeIds: [], reactFlowRef });
-      subject.loadFromAPI();
+      await subject.loadFromAPI();
       // subject.loadFromLocalStorage()
+      setTimeout(() => {
+        reactFlowRef.current?.get().fitView({
+          maxZoom: 1.25,
+          minZoom: 0.5,
+          duration: 500,
+        });
+      });
     },
     getFlowId: () => {
       return get().subject?.getFlowId();
@@ -193,6 +204,9 @@ const useFlowStore = create<FlowState>((set, get) => {
     },
     updateNodeData: async (id: Node['id'], data: Node['data']) => {
       return get().subject?.updateNodeData(id, data);
+    },
+    updateNodeHidden: async (id: Node['id'], hidden: Node['hidden']) => {
+      return get().subject?.updateNodeHidden(id, hidden);
     },
     updateEdgeData: async (id: Node['id'], data: Edge['data']) => {
       return get().subject?.updateEdgeData(id, data);

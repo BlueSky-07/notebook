@@ -132,7 +132,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
             //       generatingTaskResp.data?.data?.output?.generatedText, // todo stream output here
             //     ]
             //       .filter(Boolean)
-            //       .join('')
+            //       .join('\n\n')
             //   :
             content
           }

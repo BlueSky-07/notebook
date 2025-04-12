@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **positionY** | **number** |  | [default to undefined]
 **width** | **number** |  | [default to undefined]
 **height** | **number** |  | [default to undefined]
+**hidden** | **boolean** | hidden | [optional] [default to undefined]
 
 ## Example
 
@@ -20,6 +21,7 @@ const instance: NodeLayout = {
     positionY,
     width,
     height,
+    hidden,
 };
 ```
 

@@ -4,6 +4,10 @@ import {
   FlowUpdatedFunctionDependencies,
 } from '../flow/functions/update-flow-updated-at';
 import {
+  createDeleteEdgesAfterNodeDeleted,
+  DeleteEdgesAfterNodeDeletedDependencies,
+} from '../edge/functions/delete-edges-after-node-deleted';
+import {
   createGenerateTextNodeContentFunction,
   GenerateTextNodeContentFunctionDependencies,
 } from '../generating-task/functions/generate-text-node-content';
@@ -18,6 +22,7 @@ import {
 
 type AllFunctionDependencies = // all dependencies
   FlowUpdatedFunctionDependencies &
+    DeleteEdgesAfterNodeDeletedDependencies &
     GenerateTextNodeContentFunctionDependencies &
     UpdateNodeByGeneratingTaskFunctionDependencies &
     UpdateFileReferencesForNodeDependencies;
@@ -28,6 +33,7 @@ export const createInngestFunctions = (
 ) => {
   return [
     createUpdateFlowUpdatedAtFunction(inngest, dependencies),
+    createDeleteEdgesAfterNodeDeleted(inngest, dependencies),
     createGenerateTextNodeContentFunction(inngest, dependencies),
     createUpdateNodeByGeneratingTaskFunction(inngest, dependencies),
     createUpdateFileReferencesForNodeFunction(inngest, dependencies),

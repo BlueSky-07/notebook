@@ -7,7 +7,7 @@ import { useShallow } from 'zustand/shallow';
 
 interface UsePatchNodeProps<NodeData extends Partial<NodeEntity['data']>> {
   id: Node['id'];
-  data?: NodeData;
+  data: NodeData;
 }
 
 export const usePatchNode = <NodeData extends Partial<NodeEntity['data']>>(

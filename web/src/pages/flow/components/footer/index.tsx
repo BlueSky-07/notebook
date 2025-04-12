@@ -1,21 +1,30 @@
-import { Space } from '@arco-design/web-react';
+import { Divider, Space } from '@arco-design/web-react';
 import { NodeDataTypeEnum, NodeEntity } from '@api/models';
-import { IconImage, IconPen } from '@arco-design/web-react/icon';
+import {
+  IconFullscreen,
+  IconImage,
+  IconMinus,
+  IconPen,
+  IconPlus,
+} from '@arco-design/web-react/icon';
 import { useShallow } from 'zustand/react/shallow';
 import useFlowStore, { type FlowState } from '@/stores/flow';
-import { useReactFlow, useStoreApi } from '@xyflow/react';
+import { useReactFlow, useStoreApi, useViewport } from '@xyflow/react';
 import styles from './styles.module.less';
 import TipButton from '@/components/tip-button';
+import { LAYOUT_MAX_ZOOM, LAYOUT_MIN_ZOOM } from '@/pages/flow/const';
 
 export const Footer = () => {
   const store = useStoreApi();
-  const { screenToFlowPosition } = useReactFlow();
+  const reactFlow = useReactFlow();
+  const { x, y, zoom } = useViewport();
+  const zoomPercent = Math.ceil(zoom * 100);
 
   const handleAdd = (type: NodeEntity['dataType']) => {
     const { domNode } = store.getState();
     const boundingRect = domNode?.getBoundingClientRect();
     if (boundingRect) {
-      const center = screenToFlowPosition({
+      const center = reactFlow.screenToFlowPosition({
         x: boundingRect.x + boundingRect.width / 2,
         y: boundingRect.y + boundingRect.height / 2,
       });
@@ -33,16 +42,62 @@ export const Footer = () => {
 
   return (
     <Space className={styles.footer}>
-      Add
+      <TipButton
+        tip="Fit"
+        icon={<IconFullscreen />}
+        size="mini"
+        onClick={() => {
+          reactFlow.fitView({
+            duration: 500,
+          });
+        }}
+      />
+      <TipButton
+        tip="Zoom Out"
+        icon={<IconMinus />}
+        size="mini"
+        onClick={() => {
+          reactFlow.setViewport({
+            x,
+            y,
+            zoom:
+              Math.max(
+                Math.min(zoomPercent - 10, LAYOUT_MAX_ZOOM),
+                LAYOUT_MIN_ZOOM,
+              ) / 100,
+          });
+        }}
+      />
+      <span>{zoomPercent} %</span>
+      <TipButton
+        tip="Zoom In"
+        icon={<IconPlus />}
+        size="mini"
+        onClick={() => {
+          reactFlow.setViewport({
+            x,
+            y,
+            zoom:
+              Math.max(
+                Math.min(zoomPercent + 10, LAYOUT_MAX_ZOOM),
+                LAYOUT_MIN_ZOOM,
+              ) / 100,
+          });
+        }}
+      />
+      <Divider type="vertical" />
+      <span>Add</span>
       <TipButton
         tip="Text Node"
         icon={<IconPen />}
         onClick={() => handleAdd(NodeDataTypeEnum.Text)}
+        type="text"
       />
       <TipButton
         tip="Image Node"
         icon={<IconImage />}
         onClick={() => handleAdd(NodeDataTypeEnum.Image)}
+        type="text"
       />
     </Space>
   );

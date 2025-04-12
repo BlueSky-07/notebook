@@ -61,6 +61,13 @@ export class NodeLayout {
 
   @ApiProperty({ type: Number })
   height: number;
+
+  @ApiProperty({
+    type: Boolean,
+    required: false,
+    description: 'hidden',
+  })
+  hidden?: boolean;
 }
 
 @Entity({

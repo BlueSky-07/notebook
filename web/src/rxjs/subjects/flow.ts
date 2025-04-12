@@ -44,16 +44,14 @@ export default class FlowSubject {
     return this.flowId;
   }
 
-  loadFromAPI() {
+  async loadFromAPI() {
     this.storage = FLOW_SUBJECT_STORAGE.API;
-    API.flow
-      .getFlowFull(this.flowId)
-      .then((r) => {
-        this.subject.next(convertFlowFullToFlowModel(r.data));
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    try {
+      const r = await API.flow.getFlowFull(this.flowId);
+      this.subject.next(convertFlowFullToFlowModel(r.data));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   loadFromLocalStorage(autoSave = true) {
@@ -156,7 +154,7 @@ export default class FlowSubject {
     }
   }
 
-  updateNodePosition(id: string, change: NodePositionChange) {
+  updateNodePosition(id: Node['id'], change: NodePositionChange) {
     const nodes = this.getValue('nodes');
     const nodeIndex = nodes.findIndex((node) => node.id === id);
     if (nodeIndex !== -1) {
@@ -179,6 +177,7 @@ export default class FlowSubject {
               positionY: change.position.y,
               width: node.width,
               height: node.height,
+              hidden: node.hidden,
             },
           }),
         ),
@@ -186,7 +185,7 @@ export default class FlowSubject {
     }
   }
 
-  updateNodeDimension(id: string, change: NodeDimensionChange) {
+  updateNodeDimension(id: Node['id'], change: NodeDimensionChange) {
     const nodes = this.getValue('nodes');
     const nodeIndex = nodes.findIndex((node) => node.id === id);
     if (nodeIndex !== -1) {
@@ -213,6 +212,7 @@ export default class FlowSubject {
               positionY: node.position.y,
               width: change.dimensions?.width ?? node.width,
               height: change.dimensions?.height ?? node.height,
+              hidden: node.hidden,
             },
           }),
         ),
@@ -220,7 +220,33 @@ export default class FlowSubject {
     }
   }
 
-  deleteNode(id: string) {
+  updateNodeHidden(id: Node['id'], hidden: Node['hidden']) {
+    const nodes = this.getValue('nodes');
+    const nodeIndex = nodes.findIndex((node) => node.id === id);
+    if (nodeIndex !== -1) {
+      this.next({
+        nodes: produce(nodes, (draft) => {
+          draft[nodeIndex].hidden = hidden;
+        }),
+      });
+      const node = nodes[nodeIndex];
+      return this.dispatchStorage(
+        debounceRequest(`update-node-layout-${id}`, () =>
+          API.node.patchNode(parseInt(id), {
+            layout: {
+              positionX: node.position.x,
+              positionY: node.position.y,
+              width: node.width,
+              height: node.height,
+              hidden,
+            },
+          }),
+        ),
+      )();
+    }
+  }
+
+  deleteNode(id: Node['id']) {
     const nodes = this.getValue('nodes');
     const nodeIndex = nodes.findIndex((node) => node.id === id);
     if (nodeIndex !== -1) {
@@ -238,10 +264,10 @@ export default class FlowSubject {
   }
 
   async addEdge(
-    source: string,
-    target: string,
-    sourceHandle: string,
-    targetHandle: string,
+    source: Edge['source'],
+    target: Edge['target'],
+    sourceHandle: Edge['sourceHandle'],
+    targetHandle: Edge['targetHandle'],
     dataType: EdgeEntity['dataType'] = EdgeDataTypeEnum.Label,
   ) {
     const newEdge = getInitialFlowEdge(
@@ -269,7 +295,7 @@ export default class FlowSubject {
     });
   }
 
-  updateEdgeData(id: string, data: Edge['data']) {
+  updateEdgeData(id: Edge['id'], data: Edge['data']) {
     const edges = this.getValue('edges');
     const edgeIndex = edges.findIndex((edge) => edge.id === id);
     if (edgeIndex !== -1) {
@@ -286,7 +312,7 @@ export default class FlowSubject {
     }
   }
 
-  deleteEdge(id: string) {
+  deleteEdge(id: Edge['id']) {
     const edges = this.getValue('edges');
     const edgeIndex = edges.findIndex((edge) => edge.id === id);
     if (edgeIndex !== -1) {
