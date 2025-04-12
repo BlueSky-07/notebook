@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { NodeEntity } from './node.entity';
+import { NodeDataType, NodeEntity } from './node.entity';
 import {
   BatchNodePatchInputItem,
   NodeAddInput,
@@ -18,6 +18,9 @@ import { FlowEntity } from '../flow/flow.entity';
 import { InngestService } from '../inngest/inngest.service';
 import { omit } from 'lodash';
 import NodeEvent from './node.event';
+import { extractImageLinksFromMarkdown } from '../utils/markdown';
+import { FileEntity } from '../file/file.entity';
+import { extractFileFromLink } from '../file/file.helper';
 
 @Injectable()
 export class NodeService {
@@ -48,7 +51,6 @@ export class NodeService {
   ): Promise<NodeEntity> {
     const record = await this.getNode(id);
     const res = await this.nodeRepository.update(id, nodePatchInput);
-    // todo delete unused image file
     if (res.affected) {
       await NodeEvent.trigger(
         this.inngestService.inngest,
@@ -94,7 +96,6 @@ export class NodeService {
 
   async deleteNode(id: NodeEntity['id']): Promise<boolean> {
     const record = await this.getNode(id);
-    // todo delete unused image file
     const res = await this.nodeRepository.delete({
       id,
     });
@@ -154,7 +155,6 @@ export class NodeService {
   async deleteNodesByIds(ids: NodeEntity['id'][]): Promise<boolean> {
     const filteredIds = Array.from(new Set(ids));
     const records = await this.getNodesByIds(filteredIds);
-    // todo delete unused image files
     if (!records.length) throw new BadRequestException(`Nodes do not exist`);
     const res = await this.nodeRepository.delete({
       id: In(filteredIds),
@@ -182,7 +182,6 @@ export class NodeService {
 
   async deleteNodesByFlowId(flowId: FlowEntity['id']): Promise<boolean> {
     const records = await this.getNodesByFlowId(flowId);
-    // todo delete unused image files
     if (!records.length) throw new BadRequestException(`Nodes do not exist`);
     const res = await this.nodeRepository.delete({
       flowId,
@@ -206,5 +205,29 @@ export class NodeService {
         `Nodes does not delete successfully`,
       );
     }
+  }
+
+  async extractFileIdsFromNodeData(
+    nodeRecord: NodeEntity,
+  ): Promise<FileEntity['id'][]> {
+    const fileIds: FileEntity['id'][] = [];
+    switch (nodeRecord.dataType) {
+      case NodeDataType.Text: {
+        const markdown = nodeRecord.data.content;
+        const images = await extractImageLinksFromMarkdown(markdown);
+        for (const image of images) {
+          const extracted = extractFileFromLink(image);
+          if (extracted?.id) fileIds.push(extracted.id);
+        }
+        break;
+      }
+      case NodeDataType.Image: {
+        const image = nodeRecord.data.src;
+        const extracted = extractFileFromLink(image);
+        if (extracted?.id) fileIds.push(extracted.id);
+        break;
+      }
+    }
+    return fileIds;
   }
 }

@@ -19,6 +19,8 @@ export * from './edge-entity';
 export * from './edge-handle-enum';
 export * from './edge-layout';
 export * from './edge-patch-input';
+export * from './file-admin-clear-no-references-input';
+export * from './file-admin-clear-no-references-response';
 export * from './file-delete-response';
 export * from './file-entity';
 export * from './file-metadata';

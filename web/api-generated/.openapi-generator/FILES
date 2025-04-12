@@ -4,10 +4,10 @@ api.ts
 base.ts
 clients/ai-api.ts
 clients/edge-api.ts
+clients/file-api.ts
 clients/flow-api.ts
 clients/generating-task-api.ts
 clients/node-api.ts
-clients/storage-api.ts
 common.ts
 configuration.ts
 docs/AiApi.md
@@ -33,6 +33,9 @@ docs/EdgeEntity.md
 docs/EdgeHandleEnum.md
 docs/EdgeLayout.md
 docs/EdgePatchInput.md
+docs/FileAdminClearNoReferencesInput.md
+docs/FileAdminClearNoReferencesResponse.md
+docs/FileApi.md
 docs/FileDeleteResponse.md
 docs/FileEntity.md
 docs/FileMetadata.md
@@ -65,7 +68,6 @@ docs/NodeEntity.md
 docs/NodeLayout.md
 docs/NodePatchInput.md
 docs/NodeState.md
-docs/StorageApi.md
 docs/StorageBucketName.md
 git_push.sh
 index.ts
@@ -90,6 +92,8 @@ models/edge-entity.ts
 models/edge-handle-enum.ts
 models/edge-layout.ts
 models/edge-patch-input.ts
+models/file-admin-clear-no-references-input.ts
+models/file-admin-clear-no-references-response.ts
 models/file-delete-response.ts
 models/file-entity.ts
 models/file-metadata.ts

@@ -7,12 +7,13 @@ import {
 } from '@xyflow/react';
 import { useShallow } from 'zustand/react/shallow';
 import useFlowStore, { type FlowState } from '@/stores/flow';
-import { useEffect, useId } from 'react';
+import { useEffect } from 'react';
 import { useCustomNodes } from '../../custom-nodes';
 import { useCustomEdges } from '../../custom-edges';
 import { Footer } from '../footer';
 import { ConfigProvider } from '@arco-design/web-react';
 import { FlowEntity } from '@api/models';
+import enUS from '@arco-design/web-react/es/locale/en-US';
 
 interface FlowDashboardProps {
   flowId?: FlowEntity['id'];
@@ -20,7 +21,6 @@ interface FlowDashboardProps {
 
 export const FlowDashboard = (props: FlowDashboardProps) => {
   const { flowId } = props;
-  const popupContainerId = useId();
 
   const nodeTypes = useCustomNodes();
   const edgeTypes = useCustomEdges();
@@ -55,6 +55,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
 
   return (
     <ConfigProvider
+      locale={enUS}
       // fit react-flow zoom ratio
       componentConfig={{
         Tooltip: {
@@ -94,7 +95,6 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
           color="#ccc"
           variant={BackgroundVariant.Dots}
         />
-        <div id={popupContainerId} />
       </ReactFlow>
     </ConfigProvider>
   );

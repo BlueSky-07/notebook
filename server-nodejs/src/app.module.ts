@@ -16,7 +16,9 @@ import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectio
 import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlite3/BetterSqlite3ConnectionOptions';
 import { S3Module } from 'nestjs-s3';
 import { StorageModule } from './storage/storage.module';
-import { FileEntity } from './storage/storage.entity';
+import { FileEntity } from './file/file.entity';
+import { FileReferenceEntity } from './file/file-reference.entity';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { FileEntity } from './storage/storage.entity';
             EdgeEntity,
             GeneratingTaskEntity,
             FileEntity,
+            FileReferenceEntity,
           ],
           synchronize: true,
         };
@@ -96,6 +99,7 @@ import { FileEntity } from './storage/storage.entity';
     GeneratingTaskModule,
     AiModule,
     StorageModule,
+    FileModule,
   ],
 })
 export class AppModule {}

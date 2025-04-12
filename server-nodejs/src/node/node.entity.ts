@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneratingTaskStatus } from '../generating-task/generating-task.entity';
-import { FileEntity } from '../storage/storage.entity';
+import { FileEntity } from '../file/file.entity';
 
 export enum NodeDataType {
   Text = 'Text',

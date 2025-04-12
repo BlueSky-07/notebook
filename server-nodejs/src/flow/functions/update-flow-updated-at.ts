@@ -21,6 +21,7 @@ export const createUpdateFlowUpdatedAtFunction = (
   return inngest.createFunction(
     {
       id: UPDATE_FLOW_UPDATED_AT_FUNCTION_ID,
+      retries: 0,
       debounce: {
         period: '10s',
         key: 'event.data.flowId',

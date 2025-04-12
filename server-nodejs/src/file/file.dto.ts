@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FileEntity } from './file.entity';
 
 export class FileAddInput {
   @ApiProperty({
@@ -27,4 +28,21 @@ export class FileQueryInput {
 
   @ApiProperty({ type: String, required: false, default: '' })
   path?: string;
+}
+
+export class FileAdminClearNoReferencesInput {
+  @ApiProperty({ type: Boolean, required: false, default: true })
+  dryRun?: boolean;
+}
+
+export class FileAdminClearNoReferencesResponse {
+  @ApiProperty({
+    type: Number,
+    description: 'id of deleted files',
+    isArray: true,
+  })
+  ids: FileEntity['id'][];
+
+  @ApiProperty({ type: Number, description: 'count of deleted files' })
+  count: number;
 }

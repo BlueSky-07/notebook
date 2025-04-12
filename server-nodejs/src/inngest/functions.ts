@@ -11,10 +11,16 @@ import {
   createUpdateNodeByGeneratingTaskFunction,
   UpdateNodeByGeneratingTaskFunctionDependencies,
 } from '../generating-task/functions/update-node-by-generating-task';
+import {
+  createUpdateFileReferencesForNodeFunction,
+  UpdateFileReferencesForNodeDependencies,
+} from '../file/functions/update-file-references-for-node';
 
-type AllFunctionDependencies = FlowUpdatedFunctionDependencies &
-  GenerateTextNodeContentFunctionDependencies &
-  UpdateNodeByGeneratingTaskFunctionDependencies;
+type AllFunctionDependencies = // all dependencies
+  FlowUpdatedFunctionDependencies &
+    GenerateTextNodeContentFunctionDependencies &
+    UpdateNodeByGeneratingTaskFunctionDependencies &
+    UpdateFileReferencesForNodeDependencies;
 
 export const createInngestFunctions = (
   inngest: Inngest,
@@ -24,5 +30,6 @@ export const createInngestFunctions = (
     createUpdateFlowUpdatedAtFunction(inngest, dependencies),
     createGenerateTextNodeContentFunction(inngest, dependencies),
     createUpdateNodeByGeneratingTaskFunction(inngest, dependencies),
+    createUpdateFileReferencesForNodeFunction(inngest, dependencies),
   ];
 };

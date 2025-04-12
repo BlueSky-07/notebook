@@ -18,7 +18,7 @@
   "dependencies": {
     "@arco-design/web-react": "^2.66.1",
     "@lobehub/icons": "^1.96.0",
-    "@mdxeditor/editor": "^3.29.3",
+    "@mdxeditor/editor": "^3.30.0",
     "@monaco-editor/react": "^4.7.0",
     "@xyflow/react": "^12.5.5",
     "ahooks": "^3.8.4",

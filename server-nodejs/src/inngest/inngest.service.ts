@@ -7,6 +7,7 @@ import { NodeService } from '../node/node.service';
 import { GeneratingTaskService } from '../generating-task/generating-task.service';
 import { AiService } from '../ai/ai.service';
 import { ConfigService } from '@nestjs/config';
+import { FileReferenceService } from '../file/file-reference.service';
 
 @Injectable()
 export class InngestService {
@@ -23,6 +24,7 @@ export class InngestService {
     private readonly generatingTaskService: GeneratingTaskService,
     private readonly aiService: AiService,
     private readonly configService: ConfigService,
+    private readonly fileReferenceService: FileReferenceService,
   ) {
     this.inngest = new Inngest({
       id: 'notebook-inngest',
@@ -36,6 +38,7 @@ export class InngestService {
       nodeService,
       generatingTaskService,
       aiService,
+      fileReferenceService,
     });
   }
 }

@@ -1,18 +1,21 @@
 import { Select } from '@arco-design/web-react';
 import styles from './styles.module.less';
 import MonacoEditor, { loader } from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+import TipButton from '@/components/tip-button';
+import { IconDelete } from '@arco-design/web-react/icon';
+import {
+  activeEditor$,
+  CodeBlockEditorProps,
+  useCellValues,
+  useCodeBlockEditorContext,
+} from '@mdxeditor/editor';
 
-interface CodeEditorProps {
-  language?: string;
-  code?: string;
-  onChangeLanguage: (language?: CodeEditorProps['language']) => void;
-  onChangeCode: (code?: CodeEditorProps['code']) => void;
-}
-
-export const CodeEditor = (props: CodeEditorProps) => {
-  const { language, code, onChangeLanguage, onChangeCode } = props;
-  const [inited, setInited] = useState(false);
+export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
+  const { language, code } = props;
+  const ctx = useCodeBlockEditorContext();
+  const [activeEditor] = useCellValues(activeEditor$);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     loader.config({
@@ -20,19 +23,22 @@ export const CodeEditor = (props: CodeEditorProps) => {
         vs: location.origin + '/public/monaco-editor/min/vs',
       },
     });
-    setInited(true);
+    setInitialized(true);
   }, []);
 
-  if (!inited) return null;
+  if (!initialized) return null;
 
   return (
-    <div className={styles.codeEditor}>
+    <div
+      className={styles.codeEditor}
+      onKeyDown={(e) => e.nativeEvent.stopImmediatePropagation()}
+    >
       <div className={styles.header}>
-        <span>Code Block</span>
         <Select
           value={language}
           allowCreate={true}
           options={[
+            { label: 'Text', value: 'text' },
             { label: 'JavaScript', value: 'javascript' },
             { label: 'TypeScript', value: 'typescript' },
             { label: 'Python', value: 'python' },
@@ -51,12 +57,23 @@ export const CodeEditor = (props: CodeEditorProps) => {
             { label: 'JSON', value: 'json' },
             { label: 'YAML', value: 'yaml' },
             { label: 'Markdown', value: 'markdown' },
-            { label: 'Text', value: 'text' },
           ]}
-          onChange={(value) => onChangeLanguage(value)}
+          onChange={(value) => ctx.setLanguage(value)}
           size="mini"
           style={{
             width: 150,
+          }}
+        />
+        <TipButton
+          tip="Delete"
+          icon={<IconDelete />}
+          status="danger"
+          type="text"
+          size="mini"
+          onClick={() => {
+            activeEditor.update(() => {
+              ctx.lexicalNode.remove();
+            });
           }}
         />
       </div>
@@ -69,7 +86,7 @@ export const CodeEditor = (props: CodeEditorProps) => {
           height="100%"
           language={language}
           value={code}
-          onChange={onChangeCode}
+          onChange={(value) => ctx.setCode(value)}
         />
       </div>
     </div>

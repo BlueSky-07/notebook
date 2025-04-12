@@ -22,17 +22,56 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { FileAdminClearNoReferencesInput } from '../models';
+// @ts-ignore
+import type { FileAdminClearNoReferencesResponse } from '../models';
+// @ts-ignore
 import type { FileDeleteResponse } from '../models';
 // @ts-ignore
 import type { FileEntity } from '../models';
 // @ts-ignore
 import type { FileQueryInput } from '../models';
 /**
- * StorageApi - axios parameter creator
+ * FileApi - axios parameter creator
  * @export
  */
-export const StorageApiAxiosParamCreator = function (configuration?: Configuration) {
+export const FileApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {FileAdminClearNoReferencesInput} fileAdminClearNoReferencesInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clearNoReferencesFiles: async (fileAdminClearNoReferencesInput: FileAdminClearNoReferencesInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'fileAdminClearNoReferencesInput' is not null or undefined
+            assertParamExists('clearNoReferencesFiles', 'fileAdminClearNoReferencesInput', fileAdminClearNoReferencesInput)
+            const localVarPath = `/file/admin/clear-no-references`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(fileAdminClearNoReferencesInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {FileQueryInput} fileQueryInput 
@@ -42,7 +81,7 @@ export const StorageApiAxiosParamCreator = function (configuration?: Configurati
         deleteFile: async (fileQueryInput: FileQueryInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'fileQueryInput' is not null or undefined
             assertParamExists('deleteFile', 'fileQueryInput', fileQueryInput)
-            const localVarPath = `/storage`;
+            const localVarPath = `/file`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -76,7 +115,7 @@ export const StorageApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         getFileInfo: async (id?: number, path?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/storage/info`;
+            const localVarPath = `/file/info`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -115,7 +154,7 @@ export const StorageApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         getFileObject: async (id?: number, path?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/storage/object`;
+            const localVarPath = `/file/object`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -157,7 +196,7 @@ export const StorageApiAxiosParamCreator = function (configuration?: Configurati
         uploadFileObject: async (file: File, name?: string, description?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'file' is not null or undefined
             assertParamExists('uploadFileObject', 'file', file)
-            const localVarPath = `/storage`;
+            const localVarPath = `/file`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -200,12 +239,24 @@ export const StorageApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * StorageApi - functional programming interface
+ * FileApi - functional programming interface
  * @export
  */
-export const StorageApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = StorageApiAxiosParamCreator(configuration)
+export const FileApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FileApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @param {FileAdminClearNoReferencesInput} fileAdminClearNoReferencesInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async clearNoReferencesFiles(fileAdminClearNoReferencesInput: FileAdminClearNoReferencesInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileAdminClearNoReferencesResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.clearNoReferencesFiles(fileAdminClearNoReferencesInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FileApi.clearNoReferencesFiles']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * 
          * @param {FileQueryInput} fileQueryInput 
@@ -215,7 +266,7 @@ export const StorageApiFp = function(configuration?: Configuration) {
         async deleteFile(fileQueryInput: FileQueryInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileDeleteResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFile(fileQueryInput, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StorageApi.deleteFile']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FileApi.deleteFile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -228,7 +279,7 @@ export const StorageApiFp = function(configuration?: Configuration) {
         async getFileInfo(id?: number, path?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileEntity>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFileInfo(id, path, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StorageApi.getFileInfo']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FileApi.getFileInfo']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -241,7 +292,7 @@ export const StorageApiFp = function(configuration?: Configuration) {
         async getFileObject(id?: number, path?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFileObject(id, path, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StorageApi.getFileObject']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FileApi.getFileObject']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -255,19 +306,28 @@ export const StorageApiFp = function(configuration?: Configuration) {
         async uploadFileObject(file: File, name?: string, description?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileEntity>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFileObject(file, name, description, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StorageApi.uploadFileObject']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FileApi.uploadFileObject']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * StorageApi - factory interface
+ * FileApi - factory interface
  * @export
  */
-export const StorageApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = StorageApiFp(configuration)
+export const FileApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FileApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {FileAdminClearNoReferencesInput} fileAdminClearNoReferencesInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clearNoReferencesFiles(fileAdminClearNoReferencesInput: FileAdminClearNoReferencesInput, options?: RawAxiosRequestConfig): AxiosPromise<FileAdminClearNoReferencesResponse> {
+            return localVarFp.clearNoReferencesFiles(fileAdminClearNoReferencesInput, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {FileQueryInput} fileQueryInput 
@@ -312,21 +372,32 @@ export const StorageApiFactory = function (configuration?: Configuration, basePa
 };
 
 /**
- * StorageApi - object-oriented interface
+ * FileApi - object-oriented interface
  * @export
- * @class StorageApi
+ * @class FileApi
  * @extends {BaseAPI}
  */
-export class StorageApi extends BaseAPI {
+export class FileApi extends BaseAPI {
+    /**
+     * 
+     * @param {FileAdminClearNoReferencesInput} fileAdminClearNoReferencesInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FileApi
+     */
+    public clearNoReferencesFiles(fileAdminClearNoReferencesInput: FileAdminClearNoReferencesInput, options?: RawAxiosRequestConfig) {
+        return FileApiFp(this.configuration).clearNoReferencesFiles(fileAdminClearNoReferencesInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {FileQueryInput} fileQueryInput 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof StorageApi
+     * @memberof FileApi
      */
     public deleteFile(fileQueryInput: FileQueryInput, options?: RawAxiosRequestConfig) {
-        return StorageApiFp(this.configuration).deleteFile(fileQueryInput, options).then((request) => request(this.axios, this.basePath));
+        return FileApiFp(this.configuration).deleteFile(fileQueryInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -335,10 +406,10 @@ export class StorageApi extends BaseAPI {
      * @param {string} [path] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof StorageApi
+     * @memberof FileApi
      */
     public getFileInfo(id?: number, path?: string, options?: RawAxiosRequestConfig) {
-        return StorageApiFp(this.configuration).getFileInfo(id, path, options).then((request) => request(this.axios, this.basePath));
+        return FileApiFp(this.configuration).getFileInfo(id, path, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -347,10 +418,10 @@ export class StorageApi extends BaseAPI {
      * @param {string} [path] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof StorageApi
+     * @memberof FileApi
      */
     public getFileObject(id?: number, path?: string, options?: RawAxiosRequestConfig) {
-        return StorageApiFp(this.configuration).getFileObject(id, path, options).then((request) => request(this.axios, this.basePath));
+        return FileApiFp(this.configuration).getFileObject(id, path, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -360,10 +431,10 @@ export class StorageApi extends BaseAPI {
      * @param {string} [description] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof StorageApi
+     * @memberof FileApi
      */
     public uploadFileObject(file: File, name?: string, description?: string, options?: RawAxiosRequestConfig) {
-        return StorageApiFp(this.configuration).uploadFileObject(file, name, description, options).then((request) => request(this.axios, this.basePath));
+        return FileApiFp(this.configuration).uploadFileObject(file, name, description, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

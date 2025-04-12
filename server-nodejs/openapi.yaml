@@ -502,7 +502,7 @@ paths:
                 $ref: "#/components/schemas/AiModelsResponse"
       tags:
         - Ai
-  /storage/info:
+  /file/info:
     get:
       operationId: getFileInfo
       parameters:
@@ -526,8 +526,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/FileEntity"
       tags:
-        - Storage
-  /storage/object:
+        - File
+  /file/object:
     get:
       operationId: getFileObject
       parameters:
@@ -547,8 +547,27 @@ paths:
         "200":
           description: ""
       tags:
-        - Storage
-  /storage:
+        - File
+  /file/admin/clear-no-references:
+    delete:
+      operationId: clearNoReferencesFiles
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileAdminClearNoReferencesInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileAdminClearNoReferencesResponse"
+      tags:
+        - File
+  /file:
     post:
       operationId: uploadFileObject
       parameters: []
@@ -566,7 +585,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/FileEntity"
       tags:
-        - Storage
+        - File
     delete:
       operationId: deleteFile
       parameters: []
@@ -584,7 +603,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/FileDeleteResponse"
       tags:
-        - Storage
+        - File
 info:
   title: Notebook Server
   description: ""
@@ -1260,6 +1279,26 @@ components:
         - path
         - metadata
         - updatedAt
+    FileAdminClearNoReferencesInput:
+      type: object
+      properties:
+        dryRun:
+          type: boolean
+          default: true
+    FileAdminClearNoReferencesResponse:
+      type: object
+      properties:
+        ids:
+          description: id of deleted files
+          type: array
+          items:
+            type: number
+        count:
+          type: number
+          description: count of deleted files
+      required:
+        - ids
+        - count
     FileAddInput:
       type: object
       properties:

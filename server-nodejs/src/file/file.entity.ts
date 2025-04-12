@@ -4,10 +4,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { STORAGE_BUCKET_NAME } from './storage.const';
+import {
+  STORAGE_BUCKET_NAME,
+  type StorageBucketName,
+} from '../storage/storage.const';
 import { ApiProperty } from '@nestjs/swagger';
-
-export type StorageBucketName = STORAGE_BUCKET_NAME;
 
 export class FileMetadata {
   @ApiProperty({

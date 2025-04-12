@@ -1,6 +1,6 @@
 import cs from 'classnames';
 import styles from './styles.module.less';
-import { ReactNode, useState } from 'react';
+import { ReactNode, type Ref, useImperativeHandle, useState } from 'react';
 import {
   NodeProps,
   NodeResizer,
@@ -21,13 +21,17 @@ export type CustomNodeData = Pick<NodeEntity['data'], 'background'> & {
   $state?: NodeEntity['state'];
 };
 
-interface NodeWrapperProps<Data extends CustomNodeData, Type extends string>
-  extends NodeProps<Node<Data, Type>> {
+export interface NodeWrapperProps<
+  Data extends CustomNodeData,
+  Type extends string,
+> extends NodeProps<Node<Data, Type>> {
   title?: ReactNode;
   footer?: ReactNode;
   resizable?: boolean; // default: true
   resizerProps?: NodeResizerProps; // default: { minWidth: 300, minHeight: 300, maxWidth: 2000, maxHeight: 2000 }
-  children?: ReactNode;
+  children?:
+    | ReactNode
+    | ((props: Pick<CustomNodeData, 'background'>) => ReactNode);
   className?: string;
 }
 
@@ -117,7 +121,7 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
         </div>
 
         <div className={cs('nodrag nopan nowheel', styles.body)}>
-          {children}
+          {typeof children === 'function' ? children({ background }) : children}
         </div>
 
         {footer && (

@@ -14,10 +14,17 @@
 
 
 
-export * from './clients/ai-api';
-export * from './clients/edge-api';
-export * from './clients/file-api';
-export * from './clients/flow-api';
-export * from './clients/generating-task-api';
-export * from './clients/node-api';
+/**
+ * 
+ * @export
+ * @interface FileAdminClearNoReferencesInput
+ */
+export interface FileAdminClearNoReferencesInput {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FileAdminClearNoReferencesInput
+     */
+    'dryRun'?: boolean;
+}
 

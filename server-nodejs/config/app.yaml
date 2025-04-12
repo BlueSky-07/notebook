@@ -15,7 +15,7 @@ db:
 
 storage:
   s3:
-    endpoint: http://localhost:9100 # minio endpoint
+    endpoint: http://localhost:9109 # minio endpoint
     region: us-east-1
     secretKey: minioadmin
     accessKey: minioadmin

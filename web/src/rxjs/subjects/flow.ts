@@ -19,7 +19,7 @@ import API from '@/services/api';
 import { EdgeDataTypeEnum, EdgeEntity, NodeEntity } from '@api/models';
 import { produce } from 'immer';
 import { debounceRequest } from '@/utils/debounce-request';
-import { random } from 'lodash-es';
+import { get, random, set } from 'lodash-es';
 
 export enum FLOW_SUBJECT_STORAGE {
   API,
@@ -200,8 +200,8 @@ export default class FlowSubject {
         }),
       });
       const node = nodes[nodeIndex];
-      if (change.resizing) {
-        // don't save layout of resizing node, just update ui
+      if (change.resizing || !node.selected) {
+        // don't save layout of resizing node or non-selected node, just update ui
         return;
       }
 

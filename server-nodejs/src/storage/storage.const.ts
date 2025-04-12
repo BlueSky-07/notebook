@@ -3,3 +3,5 @@ export enum STORAGE_BUCKET_NAME {
   GENERATED = 'generated', // ai generated files
   TEMP = 'temp', // temp files
 }
+
+export type StorageBucketName = STORAGE_BUCKET_NAME;

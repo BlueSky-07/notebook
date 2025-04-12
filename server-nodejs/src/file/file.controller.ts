@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Post,
   Query,
   Res,
@@ -13,30 +12,30 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { StorageService } from './storage.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import {
   FileAddInput,
+  FileAdminClearNoReferencesInput,
+  FileAdminClearNoReferencesResponse,
   FileDeleteResponse,
   FileQueryInput,
-} from './storage.dto';
-import { FileEntity } from './storage.entity';
-import { STORAGE_BUCKET_NAME } from './storage.const';
+} from './file.dto';
+import { FileEntity } from './file.entity';
 import { Readable } from 'stream';
 import { type ReadableStream } from 'stream/web';
-import { type GetObjectCommandOutput } from '@aws-sdk/client-s3';
+import { FileService } from './file.service';
 
-@Controller('storage')
-export class StorageController {
-  constructor(private readonly storageService: StorageService) {}
+@Controller('file')
+export class FileController {
+  constructor(private readonly fileService: FileService) {}
 
   @Get('info')
   getFileInfo(@Query() fileQueryInput: FileQueryInput): Promise<FileEntity> {
     if (fileQueryInput.id != null)
-      return this.storageService.getFileById(fileQueryInput.id);
+      return this.fileService.getFileById(fileQueryInput.id);
     if (fileQueryInput.path != null)
-      return this.storageService.getFileByPath(fileQueryInput.path);
+      return this.fileService.getFileByPath(fileQueryInput.path);
     throw new BadRequestException('id or path is required');
   }
 
@@ -48,8 +47,9 @@ export class StorageController {
      * another way:
      *
      * @Get(':id')
-     * async getFileObject(@Query() fileQueryInput: FileQueryInput, @Res() res: Response) {
-     *   const fileObject = await this.storageService.getFileObjectById(fileQueryInput.id)
+     * async getFileObject(@Param() id: id, @Res() res: Response) {
+     *   const record = await this.fileService.getFileById(fileQueryInput.id);
+     *   const fileObject = await this.fileService.getFileObject(record);
      *   const readable = Readable.fromWeb(
      *     fileObject.Body.transformToWebStream() as ReadableStream
      *   )
@@ -58,17 +58,13 @@ export class StorageController {
      *   readable.pipe(res)
      * }
      */
-    let fileObject: GetObjectCommandOutput;
-    if (fileQueryInput.id != null)
-      fileObject = await this.storageService.getFileObjectById(
-        fileQueryInput.id,
-      );
-    else if (fileQueryInput.path != null)
-      fileObject = await this.storageService.getFileObjectByBucketKey(
-        STORAGE_BUCKET_NAME.UPLOADED,
-        fileQueryInput.path,
-      );
+    let record: FileEntity;
+    if (fileQueryInput.id != null) {
+      record = await this.fileService.getFileById(fileQueryInput.id);
+    } else if (fileQueryInput.path != null)
+      record = await this.fileService.getFileByPath(fileQueryInput.path);
     else throw new BadRequestException('id or path is required');
+    const fileObject = await this.fileService.getFileObject(record);
     const readable = Readable.fromWeb(
       fileObject.Body.transformToWebStream() as ReadableStream,
     );
@@ -78,6 +74,17 @@ export class StorageController {
     });
   }
 
+  @Delete('admin/clear-no-references')
+  async clearNoReferencesFiles(
+    @Body() fileAdminClearNoReferencesInput: FileAdminClearNoReferencesInput,
+  ): Promise<FileAdminClearNoReferencesResponse> {
+    const deletedFileIds =
+      await this.fileService.batchDeleteFilesByNoReferences(
+        fileAdminClearNoReferencesInput.dryRun,
+      );
+    return { ids: deletedFileIds, count: deletedFileIds.length };
+  }
+
   @Post('')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
@@ -85,22 +92,18 @@ export class StorageController {
     @UploadedFile() file: Express.Multer.File,
     @Body() fileAddInput: FileAddInput,
   ): Promise<FileEntity> {
-    return this.storageService.putFile(
-      STORAGE_BUCKET_NAME.UPLOADED,
-      file,
-      fileAddInput,
-    );
+    return this.fileService.addFile(file, fileAddInput);
   }
 
-  @Delete()
+  @Delete('')
   async deleteFile(
     @Body() fileQueryInput: FileQueryInput,
   ): Promise<FileDeleteResponse> {
     let done: boolean;
     if (fileQueryInput.id != null)
-      done = await this.storageService.deleteFileById(fileQueryInput.id);
+      done = await this.fileService.deleteFileById(fileQueryInput.id);
     if (fileQueryInput.path != null)
-      done = await this.storageService.deleteFileByPath(fileQueryInput.path);
+      done = await this.fileService.deleteFileByPath(fileQueryInput.path);
     else throw new BadRequestException('id or path is required');
     return { done };
   }

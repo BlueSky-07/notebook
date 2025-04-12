@@ -5,6 +5,7 @@ import { NodeModule } from '../node/node.module';
 import { GeneratingTaskModule } from '../generating-task/generating-task.module';
 import { AiModule } from '../ai/ai.module';
 import { ConfigModule } from '@nestjs/config';
+import { FileModule } from '../file/file.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     forwardRef(() => GeneratingTaskModule),
     AiModule,
     ConfigModule,
+    FileModule,
   ],
   providers: [InngestService],
   exports: [InngestService],

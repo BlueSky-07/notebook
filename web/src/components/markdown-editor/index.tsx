@@ -25,7 +25,6 @@ import {
   thematicBreakPlugin,
   toolbarPlugin,
   UndoRedo,
-  useCodeBlockEditorContext,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import styles from './styles.module.less';
@@ -37,6 +36,7 @@ import CodeEditor from './components/code-editor';
 import { Upload } from '@arco-design/web-react';
 import API from '@/services/api';
 import { FileEntity } from '@api/models';
+import { getFileEntityLink } from '@/utils/storage';
 
 interface MarkdownEditorProps extends Pick<MDXEditorProps, 'readOnly'> {
   value?: string;
@@ -78,34 +78,16 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
             ImageDialog: () => null,
             imageUploadHandler: async (file) => {
               // drag or paste to upload image
-              const resp = await API.storage.uploadFileObject(file);
-              return `/api/storage/object?id=${resp.data.id}`;
+              const resp = await API.file.uploadFileObject(file);
+              return getFileEntityLink(resp.data);
             },
           }),
           codeBlockPlugin({
             codeBlockEditorDescriptors: [
               {
-                match: (languate, meta) => true,
+                match: () => true,
                 priority: 0,
-                Editor: (codeBlockProps) => {
-                  const ctx = useCodeBlockEditorContext();
-                  return (
-                    <div
-                      onKeyDown={(e) =>
-                        e.nativeEvent.stopImmediatePropagation()
-                      }
-                    >
-                      <CodeEditor
-                        language={codeBlockProps.language}
-                        code={codeBlockProps.code}
-                        onChangeLanguage={(language) =>
-                          ctx.setLanguage(language)
-                        }
-                        onChangeCode={(code) => ctx.setCode(code)}
-                      ></CodeEditor>
-                    </div>
-                  );
-                },
+                Editor: CodeEditor,
               },
             ],
             defaultCodeBlockLanguage: 'text',
@@ -131,14 +113,14 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
                 <ButtonWithTooltip title="Upload image">
                   <Upload
                     accept="image/*"
-                    limit={1}
                     fileList={[]}
+                    limit={1}
                     customRequest={async (customRequestProps) => {
                       const { file, onSuccess, onError, onProgress } =
                         customRequestProps;
                       try {
                         onProgress(10);
-                        const resp = await API.storage.uploadFileObject(file);
+                        const resp = await API.file.uploadFileObject(file);
                         onSuccess(resp.data);
                         onProgress(100);
                       } catch (e) {
@@ -146,11 +128,11 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
                       }
                     }}
                     onChange={(fileList) => {
-                      const file = fileList[0];
+                      const file = fileList.at(-1);
                       if (file && file.status === 'done') {
-                        const fileId = (file.response as FileEntity).id;
+                        const typedFile = file.response as FileEntity;
                         editorRef.current?.insertMarkdown(
-                          `![image](/api/storage/object?id=${fileId})`,
+                          `![image](${getFileEntityLink(typedFile)})`,
                         );
                       }
                     }}

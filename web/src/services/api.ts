@@ -5,7 +5,7 @@ import {
   EdgeApi,
   GeneratingTaskApi,
   AiApi,
-  StorageApi,
+  FileApi,
 } from '@api/api';
 
 export const API_CONFIGURATION: Configuration = {
@@ -18,7 +18,7 @@ const apiClients = {
   edge: new EdgeApi(API_CONFIGURATION),
   generatingTask: new GeneratingTaskApi(API_CONFIGURATION),
   ai: new AiApi(API_CONFIGURATION),
-  storage: new StorageApi(API_CONFIGURATION),
+  file: new FileApi(API_CONFIGURATION),
 };
 
 export default apiClients;
