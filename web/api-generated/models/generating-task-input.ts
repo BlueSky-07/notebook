@@ -18,6 +18,9 @@
 import type { EdgeEntity } from './edge-entity';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { GeneratingTaskInputPrompt } from './generating-task-input-prompt';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { NodeEntity } from './node-entity';
 
 /**
@@ -34,10 +37,10 @@ export interface GeneratingTaskInput {
     'modelId'?: string;
     /**
      * prompt to trigger generating task
-     * @type {string}
+     * @type {Array<GeneratingTaskInputPrompt>}
      * @memberof GeneratingTaskInput
      */
-    'prompt'?: string;
+    'prompt'?: Array<GeneratingTaskInputPrompt>;
     /**
      * 
      * @type {Array<Array<NodeEntity>>}

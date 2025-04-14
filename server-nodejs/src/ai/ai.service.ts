@@ -14,7 +14,10 @@ export class AiService {
     string,
     {
       client: LanguageModelV1;
-      options: Pick<AiModelConfig, 'id' | 'provider' | 'modelName'>;
+      options: Pick<
+        AiModelConfig,
+        'id' | 'provider' | 'modelName' | 'features'
+      >;
     }
   > = new Map();
 
@@ -26,7 +29,10 @@ export class AiService {
       const mc = enabledModelConfigs[i];
       this.models.set(mc.id, {
         client: this.initModelClient(mc),
-        options: pick(mc, ['id', 'provider', 'modelName']),
+        options: {
+          ...pick(mc, ['id', 'provider', 'modelName']),
+          features: mc.features ?? ['text-generation'],
+        },
       });
     }
     this.enabled = enabledModelConfigs.length > 0;

@@ -39,4 +39,9 @@ ai:
       baseUrl: https://api.openai.com/v1/models # required
       proxy: http://localhost:7890              # optional
       disabled: true                            # optional
+      features:                                 # optional, default: ['text-generation']
+        - text-generation
+        - reasoning
+        - vision                       # image recognition
+        - image-generation
 

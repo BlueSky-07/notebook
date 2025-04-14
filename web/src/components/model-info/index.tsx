@@ -1,23 +1,27 @@
 import {
   Tag,
-  Divider,
   Tooltip,
   type TooltipProps,
   Typography,
+  Space,
 } from '@arco-design/web-react';
 import { getModelProviderIcon, getModelNameIcon } from './helper';
 import { createElement } from 'react';
 import styles from './styles.module.less';
+import { AiModelInfo } from '@api/models';
+import { MODEL_FEATURES } from './const';
 
 interface ModelInfoProps {
   id?: string;
   provider?: string;
   name?: string;
   nameTooltipProps?: TooltipProps;
+  providerIconVisible?: boolean;
+  features?: AiModelInfo['features'];
 }
 
 export const ModelInfo = (props: ModelInfoProps) => {
-  const { nameTooltipProps } = props;
+  const { nameTooltipProps, providerIconVisible = true, features = [] } = props;
   const provider = props.provider || props.id?.split('@')[1];
   const name = props.name || props.id?.split('@')[0];
 
@@ -27,34 +31,50 @@ export const ModelInfo = (props: ModelInfoProps) => {
   const modelNameIcon = getModelNameIcon(name);
   const isSame = providerIcon === modelNameIcon && Boolean(modelNameIcon);
 
+  const renderFeatureTip = () => {
+    const featureConfigs = features.map((feature) => MODEL_FEATURES[feature]);
+    if (!featureConfigs.length) return null;
+
+    return (
+      <Space className={styles.feature}>
+        {featureConfigs.map((feature) => (
+          <Tooltip content={feature.label}>{feature.icon}</Tooltip>
+        ))}
+      </Space>
+    );
+  };
+
   return (
-    <div className={styles.modelInfo}>
-      <Tooltip content={providerName} disabled={!providerName}>
-        {providerIcon ? (
-          createElement(providerIcon, { size: 14, style: { lineHeight: 22 } })
-        ) : (
-          <Tag className={styles.provider} size="small" color="gray">
-            {providerName.slice(0, 5)}
-          </Tag>
+    <>
+      <div className={styles.modelInfo}>
+        {renderFeatureTip()}
+        {providerIconVisible && (
+          <Tooltip content={providerName} disabled={!providerName}>
+            {providerIcon ? (
+              createElement(providerIcon, { size: 14 })
+            ) : (
+              <Tag className={styles.provider} size="small" color="gray">
+                {providerName.slice(0, 5)}
+              </Tag>
+            )}
+          </Tooltip>
         )}
-      </Tooltip>
-      {!isSame && modelNameIcon && (
-        <>
-          {providerIcon && <Divider type="vertical" />}
-          {createElement(modelNameIcon, {
-            size: 14,
-            style: { lineHeight: 22 },
-          })}
-        </>
-      )}
-      <div className={styles.name}>
-        <Typography.Ellipsis
-          showTooltip={{ position: 'right', ...nameTooltipProps }}
-        >
-          {name}
-        </Typography.Ellipsis>
+        {!isSame && modelNameIcon && (
+          <>
+            {createElement(modelNameIcon, {
+              size: 14,
+            })}
+          </>
+        )}
+        <div className={styles.name}>
+          <Typography.Ellipsis
+            showTooltip={{ position: 'right', ...nameTooltipProps }}
+          >
+            {name}
+          </Typography.Ellipsis>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

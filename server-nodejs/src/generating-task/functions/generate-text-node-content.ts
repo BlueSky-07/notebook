@@ -72,7 +72,11 @@ export const createGenerateTextNodeContentFunction = (
         const record = await generatingTaskService.getGeneratingTask(
           event.data.generatingTaskId,
         );
-        if (record.input.prompt) return 'prompt is not empty, continue';
+        if (
+          record.input.prompt?.[0] &&
+          (record.input.prompt[0].text || record.input.prompt[0].src)
+        )
+          return 'prompt is not empty, continue';
         await generatingTaskService.patchGeneratingTask(
           event.data.generatingTaskId,
           {
@@ -115,7 +119,16 @@ export const createGenerateTextNodeContentFunction = (
           generateText,
           {
             model,
-            prompt: record.input.prompt,
+            // prompt: record.input.prompt,
+            messages: [
+              {
+                role: 'user',
+                content:
+                  await generatingTaskService.prepareGeneratingTaskPrompt(
+                    record.input.prompt,
+                  ),
+              },
+            ],
           },
         );
         const stepResult = {

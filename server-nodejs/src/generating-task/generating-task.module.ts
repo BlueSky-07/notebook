@@ -7,6 +7,7 @@ import { GeneratingTaskService } from './generating-task.service';
 import { FlowModule } from '../flow/flow.module';
 import { NodeModule } from '../node/node.module';
 import { EdgeModule } from '../edge/edge.module';
+import { FileModule } from '../file/file.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EdgeModule } from '../edge/edge.module';
     forwardRef(() => NodeModule),
     forwardRef(() => EdgeModule),
     forwardRef(() => InngestModule),
+    FileModule,
   ],
   controllers: [GeneratingTaskController],
   providers: [GeneratingTaskService],

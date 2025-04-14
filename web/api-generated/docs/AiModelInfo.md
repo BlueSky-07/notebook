@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **id** | **string** |  | [default to undefined]
 **provider** | **string** |  | [default to undefined]
 **modelName** | **string** |  | [default to undefined]
+**features** | **Array&lt;string&gt;** |  | [default to undefined]
 
 ## Example
 
@@ -18,6 +19,7 @@ const instance: AiModelInfo = {
     id,
     provider,
     modelName,
+    features,
 };
 ```
 

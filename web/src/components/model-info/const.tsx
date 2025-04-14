@@ -17,6 +17,13 @@ import {
   Zhipu,
 } from '@lobehub/icons';
 import { PresetModelIcon } from './type';
+import { ReactNode } from 'react';
+import {
+  IconImage,
+  IconItalic,
+  IconPalette,
+  IconBulb,
+} from '@arco-design/web-react/icon';
 
 export const MODEL_PROVIDER_ICON: Record<string, PresetModelIcon> = {
   AlibabaCloud: {
@@ -93,5 +100,30 @@ export const MODEL_NAME_ICON: Record<string, PresetModelIcon> = {
   Qwen: {
     regex: /qwen|qwq/i,
     icon: Qwen.Color,
+  },
+};
+
+export const MODEL_FEATURES: Record<
+  string,
+  {
+    label: string;
+    icon: ReactNode;
+  }
+> = {
+  'text-generation': {
+    label: 'Text Generation',
+    icon: <IconItalic />,
+  },
+  reasoning: {
+    label: 'Reasoning',
+    icon: <IconBulb />,
+  },
+  vision: {
+    label: 'Vision',
+    icon: <IconImage />,
+  },
+  'image-generation': {
+    label: 'Image Generation',
+    icon: <IconPalette />,
   },
 };

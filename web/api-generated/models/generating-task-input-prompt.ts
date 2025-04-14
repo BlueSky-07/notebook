@@ -13,36 +13,35 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { GeneratingTaskInputPromptType } from './generating-task-input-prompt-type';
 
 /**
  * 
  * @export
- * @interface AiModelInfo
+ * @interface GeneratingTaskInputPrompt
  */
-export interface AiModelInfo {
+export interface GeneratingTaskInputPrompt {
+    /**
+     * 
+     * @type {GeneratingTaskInputPromptType}
+     * @memberof GeneratingTaskInputPrompt
+     */
+    'type': GeneratingTaskInputPromptType;
     /**
      * 
      * @type {string}
-     * @memberof AiModelInfo
+     * @memberof GeneratingTaskInputPrompt
      */
-    'id': string;
+    'text'?: string;
     /**
      * 
      * @type {string}
-     * @memberof AiModelInfo
+     * @memberof GeneratingTaskInputPrompt
      */
-    'provider': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AiModelInfo
-     */
-    'modelName': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AiModelInfo
-     */
-    'features': Array<string>;
+    'src'?: string;
 }
+
+
 

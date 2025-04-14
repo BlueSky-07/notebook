@@ -1117,6 +1117,23 @@ components:
           type: boolean
       required:
         - done
+    GeneratingTaskInputPromptType:
+      type: string
+      enum:
+        - Text
+        - Image
+    GeneratingTaskInputPrompt:
+      type: object
+      properties:
+        type:
+          allOf:
+            - $ref: "#/components/schemas/GeneratingTaskInputPromptType"
+        text:
+          type: string
+        src:
+          type: string
+      required:
+        - type
     GeneratingTaskInput:
       type: object
       properties:
@@ -1124,8 +1141,10 @@ components:
           type: string
           description: model id
         prompt:
-          type: string
           description: prompt to trigger generating task
+          type: array
+          items:
+            $ref: "#/components/schemas/GeneratingTaskInputPrompt"
         sourceNodeSnapshots:
           type: array
           items:
@@ -1210,10 +1229,15 @@ components:
           type: string
         modelName:
           type: string
+        features:
+          type: array
+          items:
+            type: string
       required:
         - id
         - provider
         - modelName
+        - features
     AiModelsResponse:
       type: object
       properties:

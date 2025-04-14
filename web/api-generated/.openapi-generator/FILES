@@ -55,6 +55,8 @@ docs/GeneratingTaskApi.md
 docs/GeneratingTaskEntity.md
 docs/GeneratingTaskInput.md
 docs/GeneratingTaskInputInAddInput.md
+docs/GeneratingTaskInputPrompt.md
+docs/GeneratingTaskInputPromptType.md
 docs/GeneratingTaskOutput.md
 docs/GeneratingTaskStatusEnum.md
 docs/GeneratingTaskStopResponse.md
@@ -110,6 +112,8 @@ models/generating-task-add-input.ts
 models/generating-task-add-response.ts
 models/generating-task-entity.ts
 models/generating-task-input-in-add-input.ts
+models/generating-task-input-prompt-type.ts
+models/generating-task-input-prompt.ts
 models/generating-task-input.ts
 models/generating-task-output.ts
 models/generating-task-status-enum.ts

@@ -39,15 +39,23 @@ export class FileService {
       },
     );
 
-    const res = await this.fileRepository.insert({
-      name: metadata.filename,
-      description: fileAddInput.description,
-      metadata,
-      bucket: STORAGE_BUCKET_NAME.UPLOADED,
-      path: key,
-    });
-    const fileId = res.generatedMaps[0].id as number;
-    return this.getFileById(fileId);
+    try {
+      const res = await this.fileRepository.insert({
+        name: metadata.filename,
+        description: fileAddInput.description,
+        metadata,
+        bucket: STORAGE_BUCKET_NAME.UPLOADED,
+        path: key,
+      });
+      const fileId = res.generatedMaps[0].id as number;
+      return this.getFileById(fileId);
+    } catch (e) {
+      await this.storageService.deleteFileObject(
+        STORAGE_BUCKET_NAME.UPLOADED,
+        key,
+      );
+      throw e;
+    }
   }
 
   async getFileById(id: FileEntity['id']): Promise<FileEntity> {

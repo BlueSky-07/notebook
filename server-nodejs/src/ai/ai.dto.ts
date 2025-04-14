@@ -7,6 +7,8 @@ export class AiModelInfo {
   provider: string;
   @ApiProperty({ type: String })
   modelName: string;
+  @ApiProperty({ type: String, isArray: true })
+  features: string[];
 }
 
 @ApiExtraModels(AiModelInfo)
@@ -26,4 +28,7 @@ export interface AiModelConfig {
   baseUrl: string;
   proxy?: string;
   disabled?: boolean;
+  features: Array<
+    'text-generation' | 'reasoning' | 'vision' | 'image-generation'
+  >;
 }

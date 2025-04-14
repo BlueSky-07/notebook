@@ -60,9 +60,11 @@ export interface FlowState extends FlowModel {
   // Other States
   selectedNodeIds: Node['id'][];
   modelId?: AiModelInfo['id'];
+  minimapVisible: boolean;
 
   // Other User Actions Callbacks
-  updateModelId: (modelId: AiModelInfo['id']) => void;
+  updateModelId: (modelId?: AiModelInfo['id']) => void;
+  toggleMinimapVisible: (minimapVisible?: boolean) => void;
 }
 
 const useFlowStore = create<FlowState>((set, get) => {
@@ -213,9 +215,16 @@ const useFlowStore = create<FlowState>((set, get) => {
     },
     selectedNodeIds: [],
     modelId: localStorage.getItem('model-id'),
-    updateModelId: (modelId: AiModelInfo['id']) => {
+    minimapVisible: localStorage.getItem('minimap-visible') !== 'false',
+    updateModelId: (modelId?: AiModelInfo['id']) => {
       set({ modelId });
-      localStorage.setItem('model-id', modelId);
+      localStorage.setItem('model-id', modelId || '');
+    },
+    toggleMinimapVisible: (minimapVisible?: boolean) => {
+      const visible =
+        minimapVisible == null ? !get().minimapVisible : minimapVisible;
+      set({ minimapVisible: visible });
+      localStorage.setItem('minimap-visible', visible.toString());
     },
   };
 });

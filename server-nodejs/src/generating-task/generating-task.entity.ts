@@ -16,6 +16,30 @@ export enum GeneratingTaskStatus {
   Stopped = 'Stopped',
 }
 
+export enum GeneratingTaskInputPromptType {
+  Text = 'Text',
+  Image = 'Image',
+}
+
+export class GeneratingTaskInputPrompt {
+  @ApiProperty({
+    enum: GeneratingTaskInputPromptType,
+    enumName: 'GeneratingTaskInputPromptType',
+  })
+  type: GeneratingTaskInputPromptType;
+
+  @ApiProperty({
+    type: String,
+  })
+  text?: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  src?: string;
+}
+
+@ApiExtraModels(GeneratingTaskInputPrompt)
 export class GeneratingTaskInput {
   @ApiProperty({
     type: String,
@@ -24,10 +48,11 @@ export class GeneratingTaskInput {
   modelId?: string;
 
   @ApiProperty({
-    type: String,
+    type: GeneratingTaskInputPrompt,
+    isArray: true,
     description: 'prompt to trigger generating task',
   })
-  prompt?: string;
+  prompt?: GeneratingTaskInputPrompt[];
 
   @ApiProperty({
     type: NodeEntity,

@@ -51,7 +51,11 @@
           }
         }
 
-        p, h6, h5, ul, ol, li, blockquote, pre, table, th, tr, td, a { margin: 5px; }
+        p, h6, h5, ul, ol, li, blockquote, pre, table, th, tr, td, a {
+          &:not([class^="arco"]) {
+            margin: 5px;
+          }
+        }
         h6, h5, h4 { font-size: unset; }
         h4 { margin: 6px 5px; }
         h3 { margin: 8px 5px; }

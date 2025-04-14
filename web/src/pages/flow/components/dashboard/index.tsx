@@ -29,28 +29,37 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
 
   const nodeTypes = useCustomNodes();
   const edgeTypes = useCustomEdges();
-  const { bootstrap, nodes, edges, onNodesChange, onEdgesChange, onConnect } =
-    useFlowStore(
-      useShallow<
+  const {
+    bootstrap,
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    minimapVisible,
+  } = useFlowStore(
+    useShallow<
+      FlowState,
+      Pick<
         FlowState,
-        Pick<
-          FlowState,
-          | 'bootstrap'
-          | 'nodes'
-          | 'edges'
-          | 'onNodesChange'
-          | 'onEdgesChange'
-          | 'onConnect'
-        >
-      >((state) => ({
-        bootstrap: state.bootstrap,
-        nodes: state.nodes,
-        edges: state.edges,
-        onNodesChange: state.onNodesChange,
-        onEdgesChange: state.onEdgesChange,
-        onConnect: state.onConnect,
-      })),
-    );
+        | 'bootstrap'
+        | 'nodes'
+        | 'edges'
+        | 'onNodesChange'
+        | 'onEdgesChange'
+        | 'onConnect'
+        | 'minimapVisible'
+      >
+    >((state) => ({
+      bootstrap: state.bootstrap,
+      nodes: state.nodes,
+      edges: state.edges,
+      onNodesChange: state.onNodesChange,
+      onEdgesChange: state.onEdgesChange,
+      onConnect: state.onConnect,
+      minimapVisible: state.minimapVisible,
+    })),
+  );
 
   useEffect(() => {
     if (flowId) {
@@ -88,7 +97,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
         edgeTypes={edgeTypes}
         connectionLineComponent={ConnectionLine}
       >
-        <MiniMap pannable={true} zoomable={true} />
+        {minimapVisible && <MiniMap pannable={true} zoomable={true} />}
         <Panel position="bottom-left">
           <Footer />
         </Panel>

@@ -9,6 +9,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   GeneratingTaskEntity,
+  GeneratingTaskInputPromptType,
   GeneratingTaskStatus,
 } from './generating-task.entity';
 import { FlowService } from '../flow/flow.service';
@@ -22,6 +23,10 @@ import { Repository } from 'typeorm';
 import { InngestService } from '../inngest/inngest.service';
 import * as Prompt from './prompt';
 import GeneratingTaskEvent from './generating-task.event';
+import { UserContent } from 'ai';
+import { extractFileFromLink } from '../file/file.helper';
+import { FileService } from '../file/file.service';
+import { FileEntity } from '../file/file.entity';
 
 @Injectable()
 export class GeneratingTaskService {
@@ -36,6 +41,7 @@ export class GeneratingTaskService {
     private readonly edgeService: EdgeService,
     @Inject(forwardRef(() => InngestService))
     private readonly inngestService: InngestService,
+    private readonly fileService: FileService,
   ) {}
 
   async addGeneratingTask(
@@ -159,5 +165,60 @@ export class GeneratingTaskService {
       throw new NotFoundException(`Generating Task does not exist: ${id}`);
     }
     return record;
+  }
+
+  async prepareGeneratingTaskPrompt(
+    prompt: GeneratingTaskEntity['input']['prompt'],
+  ): Promise<UserContent> {
+    const userContent: UserContent = [];
+    if (!prompt.length) return [];
+    for (const part of prompt) {
+      switch (part.type) {
+        case GeneratingTaskInputPromptType.Text: {
+          userContent.push({
+            type: 'text',
+            text: part.text,
+          });
+          break;
+        }
+        case GeneratingTaskInputPromptType.Image: {
+          const src = part.src;
+          let buffer: ArrayBuffer;
+          try {
+            let file = extractFileFromLink(src);
+            if (file) {
+              if (file.id && (!file.bucket || !file.path)) {
+                file = await this.fileService.getFileById(file.id);
+              }
+              if (file.bucket && file.path) {
+                const fileObject = await this.fileService.getFileObject(
+                  file as Pick<FileEntity, 'bucket' | 'path'>,
+                );
+                buffer = Buffer.from(
+                  await fileObject.Body.transformToByteArray(),
+                );
+              }
+            } else {
+              buffer = await fetch(src).then((resp) => resp.arrayBuffer());
+            }
+            if (buffer) {
+              userContent.push({
+                type: 'image',
+                image: buffer,
+                providerOptions: {
+                  openai: { imageDetail: 'low' },
+                },
+              });
+            } else {
+              throw new Error('Cannot get image');
+            }
+          } catch (e) {
+            // skip non-fetched image
+          }
+          break;
+        }
+      }
+    }
+    return userContent;
   }
 }

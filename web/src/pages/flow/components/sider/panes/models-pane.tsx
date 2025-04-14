@@ -29,6 +29,9 @@ export const ModelsPane = () => {
         selectProps={{
           placeholder: 'Model',
         }}
+        onSelectedNotFound={() => {
+          updateModelId(undefined);
+        }}
       />
     </div>
   );

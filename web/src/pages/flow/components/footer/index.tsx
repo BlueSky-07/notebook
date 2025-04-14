@@ -1,6 +1,7 @@
 import { Divider, Space } from '@arco-design/web-react';
 import { NodeDataTypeEnum, NodeEntity } from '@api/models';
 import {
+  IconApps,
   IconFullscreen,
   IconImage,
   IconMinus,
@@ -34,14 +35,28 @@ export const Footer = () => {
     }
   };
 
-  const { addNode } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'addNode'>>((state) => ({
+  const { addNode, minimapVisible, toggleMinimapVisible } = useFlowStore(
+    useShallow<
+      FlowState,
+      Pick<FlowState, 'addNode' | 'minimapVisible' | 'toggleMinimapVisible'>
+    >((state) => ({
       addNode: state.addNode,
+      minimapVisible: state.minimapVisible,
+      toggleMinimapVisible: state.toggleMinimapVisible,
     })),
   );
 
   return (
     <Space className={styles.footer}>
+      <TipButton
+        tip="Minimap"
+        icon={<IconApps />}
+        size="mini"
+        type={minimapVisible ? 'primary' : 'default'}
+        onClick={() => {
+          toggleMinimapVisible();
+        }}
+      />
       <TipButton
         tip="Fit"
         icon={<IconFullscreen />}

@@ -38,6 +38,8 @@ export * from './generating-task-add-response';
 export * from './generating-task-entity';
 export * from './generating-task-input';
 export * from './generating-task-input-in-add-input';
+export * from './generating-task-input-prompt';
+export * from './generating-task-input-prompt-type';
 export * from './generating-task-output';
 export * from './generating-task-status-enum';
 export * from './generating-task-stop-response';

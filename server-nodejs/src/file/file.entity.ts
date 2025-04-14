@@ -62,7 +62,7 @@ export class FileEntity {
 
   @Column({
     type: 'text',
-    default: '',
+    default: null,
   })
   description: string;
 

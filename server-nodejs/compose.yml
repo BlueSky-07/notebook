@@ -103,6 +103,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - minio_data:/data
     networks:
       - notebook-server
 
@@ -111,3 +113,4 @@ networks:
 
 volumes:
   mysql_data:
+  minio_data:
