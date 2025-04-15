@@ -167,7 +167,7 @@ export class GeneratingTaskService {
     return record;
   }
 
-  async prepareGeneratingTaskPrompt(
+  async prepareGeneratingTaskStructuredPrompt(
     prompt: GeneratingTaskEntity['input']['prompt'],
   ): Promise<UserContent> {
     const userContent: UserContent = [];
@@ -220,5 +220,25 @@ export class GeneratingTaskService {
       }
     }
     return userContent;
+  }
+
+  async prepareGeneratingTaskStringPrompt(
+    prompt: GeneratingTaskEntity['input']['prompt'],
+  ): Promise<string> {
+    if (!prompt.length) return '';
+    const prompts: string[] = [];
+    for (const part of prompt) {
+      switch (part.type) {
+        case GeneratingTaskInputPromptType.Text: {
+          prompts.push(part.text || '');
+          break;
+        }
+        case GeneratingTaskInputPromptType.Image: {
+          // skip image part
+          continue;
+        }
+      }
+    }
+    return prompts.join('\n\n');
   }
 }

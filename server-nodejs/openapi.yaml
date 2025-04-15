@@ -1182,6 +1182,9 @@ components:
         generatedText:
           type: string
           description: generated content
+        generatedFile:
+          type: number
+          description: generated file
         generatedReasoning:
           type: string
           description: generated reasoning

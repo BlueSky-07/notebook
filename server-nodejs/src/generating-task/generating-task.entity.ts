@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { EdgeEntity } from '../edge/edge.entity';
+import { FileEntity } from '../file/file.entity';
 
 export enum GeneratingTaskStatus {
   Pending = 'Pending',
@@ -84,6 +85,8 @@ export class GeneratedUsage {
 export class GeneratingTaskOutput {
   @ApiProperty({ type: String, description: 'generated content' })
   generatedText?: string;
+  @ApiProperty({ type: Number, description: 'generated file' })
+  generatedFile?: FileEntity['id'];
   @ApiProperty({ type: String, description: 'generated reasoning' })
   generatedReasoning?: string;
   @ApiProperty({ type: GeneratedUsage, description: 'generated usage' })

@@ -42,6 +42,7 @@ ai:
       features:                                 # optional, default: ['text-generation']
         - text-generation
         - reasoning
-        - vision                       # image recognition
+        - vision                                # image recognition
         - image-generation
+        - video-generation
 

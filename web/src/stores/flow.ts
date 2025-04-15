@@ -14,7 +14,7 @@ import { AiModelInfo, FlowEntity, NodeEntity } from '@api/models';
 import { NodeApi } from '@api/clients/node-api';
 import { EdgeApi } from '@api/clients/edge-api';
 import { RefObject } from 'react';
-import { ReactFlowRef } from 'src/pages/flow/components/react-flow-ref-forwarder';
+import { ReactFlowRef } from '@/pages/flow/components/react-flow-ref-forwarder';
 
 export interface FlowState extends FlowModel {
   // Rxjs Subject

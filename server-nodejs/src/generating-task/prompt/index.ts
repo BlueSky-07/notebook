@@ -8,7 +8,23 @@ export function generatePromptFromTargetNodeByNodesAndEdges(
   nodes: NodeEntity[],
   edges: EdgeEntity[],
 ): PromptPart[] {
+  switch (targetNode.dataType) {
+    case NodeDataType.Text: {
+      return generatePromptForTextTargetNode(targetNode, nodes, edges);
+    }
+    case NodeDataType.Image: {
+      return generatePromptForImageTargetNode(nodes, edges);
+    }
+  }
+}
+
+export function generatePromptForTextTargetNode(
+  targetNode: NodeEntity,
+  nodes: NodeEntity[],
+  edges: EdgeEntity[],
+): PromptPart[] {
   const prompts: PromptPart[] = [];
+
   for (const edge of edges) {
     const sourceNode = nodes.find((node) => node.id === edge.sourceNodeId);
     if (!sourceNode?.dataType) continue;
@@ -44,6 +60,7 @@ export function generatePromptFromTargetNodeByNodesAndEdges(
       }
     }
   }
+
   if (!prompts.length) {
     return [
       {
@@ -71,7 +88,57 @@ export function generatePromptFromTargetNodeByNodesAndEdges(
       type: GeneratingTaskInputPromptType.Text,
       text: `
 请你理解以上材料，不要做任何额外的解释，
-${targetNode.data.content || '续写一段长度大约200字的文章。续写内容如下：'}`,
+${
+  targetNode.data.content ||
+  {
+    [NodeDataType.Text]: '续写一段长度大约200字的文章。续写内容如下：',
+    [NodeDataType.Image]: '生成一张图片',
+  }[targetNode.dataType]
+}`,
+    },
+  ];
+}
+
+export function generatePromptForImageTargetNode(
+  nodes: NodeEntity[],
+  edges: EdgeEntity[],
+): PromptPart[] {
+  const prompts: PromptPart[] = [];
+
+  for (const edge of edges) {
+    const sourceNode = nodes.find((node) => node.id === edge.sourceNodeId);
+    if (!sourceNode?.dataType) continue;
+    if (sourceNode.layout.hidden) continue; // skip hidden connection
+    switch (sourceNode.dataType) {
+      case NodeDataType.Text: {
+        if (!sourceNode.data.content) continue;
+        prompts.push({
+          type: GeneratingTaskInputPromptType.Text,
+          text: sourceNode.data.content,
+        });
+        break;
+      }
+      case NodeDataType.Image: {
+        // not support image generation from image
+        break;
+      }
+    }
+  }
+
+  if (!prompts.length) {
+    return [
+      {
+        type: GeneratingTaskInputPromptType.Text,
+        text: '',
+      },
+    ];
+  }
+
+  return [
+    ...prompts,
+    {
+      type: GeneratingTaskInputPromptType.Text,
+      text: '\n\n根据以上内容，生成一张图片',
     },
   ];
 }

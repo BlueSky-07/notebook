@@ -4,6 +4,7 @@ import {
   STORAGE_BUCKET_NAME,
   type StorageBucketName,
 } from '../storage/storage.const';
+import { pick } from 'lodash';
 
 export function extractFileFromLink(
   link: string = '',
@@ -24,4 +25,16 @@ export function extractFileFromLink(
       path,
     };
   }
+}
+
+export function makeFileLinkForWeb(
+  file: Partial<Pick<FileEntity, 'id' | 'bucket' | 'path'>>,
+) {
+  return `${WEB_FILE_ENTITY_LINK_PREFIX}?${new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(file)
+        .filter(([k, v]) => v != null)
+        .map(([k, v]) => [k, v.toString()]),
+    ),
+  )}`;
 }

@@ -12,6 +12,10 @@ import {
   GenerateTextNodeContentFunctionDependencies,
 } from '../generating-task/functions/generate-text-node-content';
 import {
+  createGenerateImageNodeSrcFunction,
+  GenerateImageNodeSrcFunctionDependencies,
+} from '../generating-task/functions/generate-image-node-src';
+import {
   createUpdateNodeByGeneratingTaskFunction,
   UpdateNodeByGeneratingTaskFunctionDependencies,
 } from '../generating-task/functions/update-node-by-generating-task';
@@ -24,6 +28,7 @@ type AllFunctionDependencies = // all dependencies
   FlowUpdatedFunctionDependencies &
     DeleteEdgesAfterNodeDeletedDependencies &
     GenerateTextNodeContentFunctionDependencies &
+    GenerateImageNodeSrcFunctionDependencies &
     UpdateNodeByGeneratingTaskFunctionDependencies &
     UpdateFileReferencesForNodeDependencies;
 
@@ -35,6 +40,7 @@ export const createInngestFunctions = (
     createUpdateFlowUpdatedAtFunction(inngest, dependencies),
     createDeleteEdgesAfterNodeDeleted(inngest, dependencies),
     createGenerateTextNodeContentFunction(inngest, dependencies),
+    createGenerateImageNodeSrcFunction(inngest, dependencies),
     createUpdateNodeByGeneratingTaskFunction(inngest, dependencies),
     createUpdateFileReferencesForNodeFunction(inngest, dependencies),
   ];

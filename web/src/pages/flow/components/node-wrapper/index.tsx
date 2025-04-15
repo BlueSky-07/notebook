@@ -20,7 +20,7 @@ import {
   IconFullscreen,
 } from '@arco-design/web-react/icon';
 import TipButton from '@/components/tip-button';
-import usePatchNode from '@/pages/flow/hooks/usePatchNode';
+import usePatchNode from '@/pages/flow/hooks/use-patch-node';
 import DefaultHandles from '@/pages/flow/custom-handles';
 
 export type CustomNodeData = Pick<NodeEntity['data'], 'background'> & {

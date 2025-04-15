@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ai-sdk/openai':
-        specifier: ^1.3.11
-        version: 1.3.11(zod@3.24.2)
+        specifier: ^1.3.12
+        version: 1.3.12(zod@3.24.2)
       '@aws-sdk/client-s3':
         specifier: ^3.787.0
         version: 3.787.0
@@ -30,8 +30,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(@nestjs/common@11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.22(better-sqlite3@11.9.1)(mysql2@3.14.0)(reflect-metadata@0.2.2)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@22.14.1)(typescript@5.8.3)))
       ai:
-        specifier: ^4.3.6
-        version: 4.3.6(react@19.0.0)(zod@3.24.2)
+        specifier: ^4.3.7
+        version: 4.3.7(react@19.0.0)(zod@3.24.2)
       better-sqlite3:
         specifier: ^11.9.1
         version: 11.9.1
@@ -80,7 +80,7 @@ importers:
     devDependencies:
       '@nestjs/cli':
         specifier: ^11.0.6
-        version: 11.0.6(@swc/cli@0.6.0(@swc/core@1.11.21)(chokidar@4.0.3))(@swc/core@1.11.21)(@types/node@22.14.1)
+        version: 11.0.6(@swc/cli@0.7.2(@swc/core@1.11.21)(chokidar@4.0.3))(@swc/core@1.11.21)(@types/node@22.14.1)
       '@nestjs/schematics':
         specifier: ^11.0.5
         version: 11.0.5(chokidar@4.0.3)(typescript@5.8.3)
@@ -94,8 +94,8 @@ importers:
         specifier: ^2.18.4
         version: 2.18.4(@nestjs/platform-express@11.0.17)(encoding@0.1.13)
       '@swc/cli':
-        specifier: ^0.6.0
-        version: 0.6.0(@swc/core@1.11.21)(chokidar@4.0.3)
+        specifier: ^0.7.2
+        version: 0.7.2(@swc/core@1.11.21)(chokidar@4.0.3)
       '@swc/core':
         specifier: ^1.11.21
         version: 1.11.21
@@ -165,8 +165,8 @@ importers:
 
 packages:
 
-  '@ai-sdk/openai@1.3.11':
-    resolution: {integrity: sha512-MZDh17JHKbSZG5MkbequDbjj3qcwBYnFQWY4DebAixOlpFw7aTDm5H38vKc6QPn7uQgS2MkggArVK6C0y6qGoA==}
+  '@ai-sdk/openai@1.3.12':
+    resolution: {integrity: sha512-ueAP69p8a/ZR2ns+pmlr9h/nyV2/DAwzfnPUGZiLpXbxWnLXd2g3a7l38CuEhBydH/nOfDb/byMgpS8+bnJHTg==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.0.0
@@ -1497,8 +1497,8 @@ packages:
   '@sqltools/formatter@1.2.5':
     resolution: {integrity: sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==}
 
-  '@swc/cli@0.6.0':
-    resolution: {integrity: sha512-Q5FsI3Cw0fGMXhmsg7c08i4EmXCrcl+WnAxb6LYOLHw4JFFC3yzmx9LaXZ7QMbA+JZXbigU2TirI7RAfO0Qlnw==}
+  '@swc/cli@0.7.2':
+    resolution: {integrity: sha512-B73b2Orrd0tauaX3Jct9MxkAI79U3OMHzRB++x2wfyq+JPjgC6foJK6zyY2JI0vsTlaTbGpx9+hsowTQ8RtQFA==}
     engines: {node: '>= 16.14.0'}
     hasBin: true
     peerDependencies:
@@ -1858,8 +1858,8 @@ packages:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
     engines: {node: '>=8'}
 
-  ai@4.3.6:
-    resolution: {integrity: sha512-cRL/9zFfPRRfVUOk+ll5FHy08FVc692voFzXWJ2YPD9KS+mkjDPp72QT9Etr0ZD/mdlJZHYq4ZHIts7nRpdD6A==}
+  ai@4.3.7:
+    resolution: {integrity: sha512-lUwpDjv4neo/OBe092LYOZtFMoMtrBDf3/bKUuM8Tc+2MCpLNgD21NDT9+Zo6Z0g1vRzz2VIurNwH/FumVFG9g==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ^19 || ^19.0.0-rc
@@ -4833,7 +4833,7 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/openai@1.3.11(zod@3.24.2)':
+  '@ai-sdk/openai@1.3.12(zod@3.24.2)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
       '@ai-sdk/provider-utils': 2.2.7(zod@3.24.2)
@@ -6146,7 +6146,7 @@ snapshots:
       axios: 1.8.3
       rxjs: 7.8.2
 
-  '@nestjs/cli@11.0.6(@swc/cli@0.6.0(@swc/core@1.11.21)(chokidar@4.0.3))(@swc/core@1.11.21)(@types/node@22.14.1)':
+  '@nestjs/cli@11.0.6(@swc/cli@0.7.2(@swc/core@1.11.21)(chokidar@4.0.3))(@swc/core@1.11.21)(@types/node@22.14.1)':
     dependencies:
       '@angular-devkit/core': 19.2.6(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.2.6(chokidar@4.0.3)
@@ -6168,7 +6168,7 @@ snapshots:
       webpack: 5.98.0(@swc/core@1.11.21)
       webpack-node-externals: 3.0.0
     optionalDependencies:
-      '@swc/cli': 0.6.0(@swc/core@1.11.21)(chokidar@4.0.3)
+      '@swc/cli': 0.7.2(@swc/core@1.11.21)(chokidar@4.0.3)
       '@swc/core': 1.11.21
     transitivePeerDependencies:
       - '@types/node'
@@ -6717,7 +6717,7 @@ snapshots:
 
   '@sqltools/formatter@1.2.5': {}
 
-  '@swc/cli@0.6.0(@swc/core@1.11.21)(chokidar@4.0.3)':
+  '@swc/cli@0.7.2(@swc/core@1.11.21)(chokidar@4.0.3)':
     dependencies:
       '@swc/core': 1.11.21
       '@swc/counter': 0.1.3
@@ -7132,7 +7132,7 @@ snapshots:
       indent-string: 4.0.0
     optional: true
 
-  ai@4.3.6(react@19.0.0)(zod@3.24.2):
+  ai@4.3.7(react@19.0.0)(zod@3.24.2):
     dependencies:
       '@ai-sdk/provider': 1.1.3
       '@ai-sdk/provider-utils': 2.2.7(zod@3.24.2)

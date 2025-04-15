@@ -1,46 +1,47 @@
 import { Logger } from '@nestjs/common';
 import { Inngest, NonRetriableError } from 'inngest';
-import {
-  GeneratedUsage,
-  GeneratingTaskStatus,
-} from '../generating-task.entity';
+import { GeneratingTaskStatus } from '../generating-task.entity';
 import { GeneratingTaskService } from '../generating-task.service';
 import { AiService } from '../../ai/ai.service';
-import { generateText } from 'ai';
-import { get, pick } from 'lodash';
+import { experimental_generateImage as generateImage } from 'ai';
 import GeneratingTaskEvent, {
   GeneratingTaskEventSchemas,
 } from '../generating-task.event';
 import { StandardEventSchema } from 'inngest/components/EventSchemas';
 import { matchEventNames } from '../../inngest/helper';
 import { NodeDataType } from '../../node/node.entity';
+import { FileService } from '../../file/file.service';
+import { STORAGE_BUCKET_NAME } from '../../storage/storage.const';
+import { get } from 'lodash';
 
-export interface GenerateTextNodeContentFunctionDependencies {
+export interface GenerateImageNodeSrcFunctionDependencies {
   logger: Logger;
   generatingTaskService: GeneratingTaskService;
   aiService: AiService;
+  fileService: FileService;
 }
 
-const GenerateTextNodeContentErrors = {
+const GenerateImageNodeSrcErrors = {
   EmptyPrompt: new NonRetriableError('Empty Prompt'),
   NotGenerating: new NonRetriableError(
     'Generating Task status is not generating',
   ),
   EmptyGenerated: new NonRetriableError('Empty Generated'),
   ModelNotFound: new NonRetriableError('Model not found'),
-  ModelNotSupport: new NonRetriableError('Model not support generating text'),
+  ModelNotSupport: new NonRetriableError('Model not support generating image'),
 };
 
-const GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID = 'job/generate-text-node-content';
+const GENERATE_IMAGE_NODE_SRC_FUNCTION_ID = 'job/generate-image-node-src';
 
-export const createGenerateTextNodeContentFunction = (
+export const createGenerateImageNodeSrcFunction = (
   inngest: Inngest,
-  dependencies: GenerateTextNodeContentFunctionDependencies,
+  dependencies: GenerateImageNodeSrcFunctionDependencies,
 ) => {
-  const { logger, generatingTaskService, aiService } = dependencies;
+  const { logger, generatingTaskService, aiService, fileService } =
+    dependencies;
   return inngest.createFunction(
     {
-      id: GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID,
+      id: GENERATE_IMAGE_NODE_SRC_FUNCTION_ID,
       retries: 0,
       cancelOn: [
         {
@@ -52,7 +53,7 @@ export const createGenerateTextNodeContentFunction = (
     },
     {
       event: GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_CREATED,
-      if: `event.data.targetNodeDataType == "${NodeDataType.Text}"`,
+      if: `event.data.targetNodeDataType == "${NodeDataType.Image}"`,
     },
     async (props) => {
       const { step } = props;
@@ -68,7 +69,7 @@ export const createGenerateTextNodeContentFunction = (
 
       await step.run(`check input.prompt`, async () => {
         logger.log(
-          `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Pending`,
+          `${GENERATE_IMAGE_NODE_SRC_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Pending`,
         );
         const record = await generatingTaskService.getGeneratingTask(
           event.data.generatingTaskId,
@@ -83,24 +84,24 @@ export const createGenerateTextNodeContentFunction = (
           {
             status: GeneratingTaskStatus.Failed,
             output: {
-              generatedText: '',
-              errorMessage: GenerateTextNodeContentErrors.EmptyPrompt.message,
+              generatedFile: null,
+              errorMessage: GenerateImageNodeSrcErrors.EmptyPrompt.message,
             },
           },
         );
-        throw GenerateTextNodeContentErrors.EmptyPrompt;
+        throw GenerateImageNodeSrcErrors.EmptyPrompt;
       });
 
       await step.run(`set status to generating`, async () => {
         logger.log(
-          `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Generating`,
+          `${GENERATE_IMAGE_NODE_SRC_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Generating`,
         );
         await generatingTaskService.patchGeneratingTask(
           event.data.generatingTaskId,
           {
             status: GeneratingTaskStatus.Generating,
             output: {
-              generatedText: '',
+              generatedFile: null,
             },
           },
         );
@@ -112,78 +113,68 @@ export const createGenerateTextNodeContentFunction = (
           event.data.generatingTaskId,
         );
         if (record.status !== GeneratingTaskStatus.Generating)
-          throw GenerateTextNodeContentErrors.NotGenerating;
+          throw GenerateImageNodeSrcErrors.NotGenerating;
         const models = aiService.getModel(record.input.modelId);
-        if (!models) throw GenerateTextNodeContentErrors.ModelNotFound;
-        const model = models.llm;
-        if (!model) throw GenerateTextNodeContentErrors.ModelNotSupport;
-        const generatedTextResult = await step.ai.wrap(
+        if (!models) throw GenerateImageNodeSrcErrors.ModelNotFound;
+        const model = models.image;
+        if (!model) throw GenerateImageNodeSrcErrors.ModelNotSupport;
+
+        const generatedImageResult = await step.ai.wrap(
           'generating',
-          generateText,
+          generateImage,
           {
             model,
-            // prompt: await generatingTaskService.prepareGeneratingTaskStringPrompt(
-            //   record.input.prompt,
-            // ),
-            messages: [
-              {
-                role: 'user',
-                content:
-                  await generatingTaskService.prepareGeneratingTaskStructuredPrompt(
-                    record.input.prompt,
-                  ),
-              },
-            ],
+            prompt:
+              await generatingTaskService.prepareGeneratingTaskStringPrompt(
+                record.input.prompt,
+              ),
+            // size: '512x512',
+            n: 1,
           },
         );
-        const stepResult = {
-          ...pick(generatedTextResult, [
-            'text',
-            'sources',
-            'finishReason',
-            'usage',
-          ]),
-          reasoning:
-            generatedTextResult.reasoning ||
-            (get(generatedTextResult, [
-              'response',
-              'body',
-              'choices',
-              '0',
-              'message',
-              'reasoning',
-            ]) as string) ||
-            '',
-        };
 
         record = await generatingTaskService.getGeneratingTask(
           event.data.generatingTaskId,
         );
         if (record.status !== GeneratingTaskStatus.Generating)
-          throw GenerateTextNodeContentErrors.NotGenerating;
+          throw GenerateImageNodeSrcErrors.NotGenerating;
 
-        if (stepResult.text) {
+        const generatedImage = generatedImageResult.images?.[0];
+        if (generatedImage) {
           await step.run(`generated done`, async () => {
             logger.log(
-              `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Done`,
+              `${GENERATE_IMAGE_NODE_SRC_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Done`,
+            );
+            const buffer = Buffer.from(
+              [
+                get(generatedImage, ['base64']),
+                get(generatedImage, ['base64Data']), // xAI grok-2-image-1212
+              ].find(Boolean),
+              'base64',
+            );
+            const file = await fileService.addFile(
+              STORAGE_BUCKET_NAME.GENERATED,
+              {
+                buffer: buffer,
+                size: buffer.byteLength,
+                originalname: 'generated.jpg',
+                mimetype: generatedImage.mimeType || 'image/jpeg',
+              },
             );
             await generatingTaskService.patchGeneratingTask(
               event.data.generatingTaskId,
               {
                 status: GeneratingTaskStatus.Done,
                 output: {
-                  generatedText: stepResult.text,
-                  generatedReasoning: stepResult.reasoning,
-                  generatedUsage: stepResult.usage as GeneratedUsage,
+                  generatedFile: file.id,
                 },
               },
             );
-            return stepResult;
           });
         } else {
           await step.run(`generated empty`, async () => {
             logger.log(
-              `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
+              `${GENERATE_IMAGE_NODE_SRC_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
             );
 
             await generatingTaskService.patchGeneratingTask(
@@ -191,20 +182,19 @@ export const createGenerateTextNodeContentFunction = (
               {
                 status: GeneratingTaskStatus.Failed,
                 output: {
-                  generatedText: stepResult.text,
+                  generatedFile: null,
                   errorMessage:
-                    GenerateTextNodeContentErrors.EmptyGenerated.message,
+                    GenerateImageNodeSrcErrors.EmptyGenerated.message,
                 },
               },
             );
-            return stepResult;
           });
         }
       } catch (error) {
-        if (error === GenerateTextNodeContentErrors.NotGenerating) return;
+        if (error === GenerateImageNodeSrcErrors.NotGenerating) return;
         await step.run(`generated failed`, async () => {
           logger.log(
-            `${GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
+            `${GENERATE_IMAGE_NODE_SRC_FUNCTION_ID} taskId: ${event.data.generatingTaskId}, targetNodeId: ${event.data.targetNodeId} Failed`,
           );
 
           await generatingTaskService.patchGeneratingTask(

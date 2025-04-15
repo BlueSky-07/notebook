@@ -23,6 +23,7 @@ import {
   IconItalic,
   IconPalette,
   IconBulb,
+  IconVideoCamera,
 } from '@arco-design/web-react/icon';
 
 export const MODEL_PROVIDER_ICON: Record<string, PresetModelIcon> = {
@@ -125,5 +126,9 @@ export const MODEL_FEATURES: Record<
   'image-generation': {
     label: 'Image Generation',
     icon: <IconPalette />,
+  },
+  'video-generation': {
+    label: 'Video Generation',
+    icon: <IconVideoCamera />,
   },
 };

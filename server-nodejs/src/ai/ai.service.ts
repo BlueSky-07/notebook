@@ -3,7 +3,7 @@ import { createOpenAI, OpenAIProviderSettings } from '@ai-sdk/openai';
 import { ConfigService } from '@nestjs/config';
 import { AiModelsResponse, AiModelConfig } from './ai.dto';
 import { fetch, ProxyAgent, type RequestInfo, type RequestInit } from 'undici';
-import { LanguageModelV1 } from 'ai';
+import { type LanguageModelV1, type ImageModel } from 'ai';
 import { pick } from 'lodash';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AiService {
   private readonly models: Map<
     string,
     {
-      client: LanguageModelV1;
+      models: ReturnType<AiService['initModelClient']>;
       options: Pick<
         AiModelConfig,
         'id' | 'provider' | 'modelName' | 'features'
@@ -28,7 +28,7 @@ export class AiService {
     for (let i = 0; i < enabledModelConfigs.length; i++) {
       const mc = enabledModelConfigs[i];
       this.models.set(mc.id, {
-        client: this.initModelClient(mc),
+        models: this.initModelClient(mc),
         options: {
           ...pick(mc, ['id', 'provider', 'modelName']),
           features: mc.features ?? ['text-generation'],
@@ -38,12 +38,15 @@ export class AiService {
     this.enabled = enabledModelConfigs.length > 0;
   }
 
-  initModelClient(modelConfig: AiModelConfig): LanguageModelV1 {
+  initModelClient(modelConfig: AiModelConfig): {
+    llm: LanguageModelV1;
+    image: ImageModel;
+  } {
     const dispatcher = modelConfig.proxy
       ? new ProxyAgent(modelConfig.proxy)
       : undefined;
     this.logger.verbose(`${modelConfig.id} initialized`);
-    return createOpenAI({
+    const provider = createOpenAI({
       name: modelConfig.provider,
       apiKey: modelConfig.apiKey,
       baseURL: modelConfig.baseUrl,
@@ -55,11 +58,19 @@ export class AiService {
             });
           }) as unknown as OpenAIProviderSettings['fetch'])
         : undefined,
-    })(modelConfig.modelName);
+    });
+    return {
+      llm: modelConfig.features?.includes('text-generation')
+        ? provider.languageModel(modelConfig.modelName)
+        : null,
+      image: modelConfig.features?.includes('image-generation')
+        ? provider.imageModel(modelConfig.modelName)
+        : null,
+    };
   }
 
-  getModel(id: string): LanguageModelV1 | undefined {
-    return this.models.get(id)?.client;
+  getModel(id: string): ReturnType<typeof this.initModelClient> | undefined {
+    return this.models.get(id)?.models;
   }
 
   getModels(): AiModelsResponse {

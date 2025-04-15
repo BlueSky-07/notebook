@@ -5,14 +5,22 @@ import styles from './styles.module.less';
 import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useShallow } from 'zustand/shallow';
 import { useEffect, useState } from 'react';
-import { IconBulb, IconPen, IconRecordStop } from '@arco-design/web-react/icon';
+import {
+  IconItalic,
+  IconPen,
+  IconRecordStop,
+} from '@arco-design/web-react/icon';
 import MarkdownEditor from '@/components/markdown-editor';
 import NodeWrapper, {
   CustomNodeData,
 } from '@/pages/flow/components/node-wrapper';
-import usePatchNode from '@/pages/flow/hooks/usePatchNode';
-import useGeneratingTask from '@/pages/flow/hooks/useGeneratingTask';
+import usePatchNode from '@/pages/flow/hooks/use-patch-node';
 import API from '@/services/api';
+import {
+  useGeneratingTask,
+  GeneratingTaskTrigger,
+  GeneratingTaskStatus,
+} from '../../components/generating-task';
 
 export type CustomNodeTextData = Pick<NodeEntity['data'], 'content'> &
   CustomNodeData;
@@ -71,71 +79,35 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
       }
       footer={
         <>
-          {!generating && (
-            <Tooltip
-              disabled={Boolean(modelId)}
-              content="Please select a model first"
-            >
-              <Button
-                icon={<IconBulb />}
-                onClick={() =>
-                  generatingTask.start({
-                    targetNodeId: parseInt(id),
-                    flowId: getFlowId(),
-                    input: {
-                      modelId,
-                      sourceNodeIds: Array.from(
-                        new Set(
-                          connections.map((conn) => parseInt(conn.source)),
-                        ),
-                      ),
-                      edgeIds: Array.from(
-                        new Set(
-                          connections.map((conn) => parseInt(conn.edgeId)),
-                        ),
-                      ),
-                    },
-                  })
-                }
-                disabled={!modelId || patchNodeResp.loading}
-              >
-                {generating ? 'Generating' : 'Generate'}
-              </Button>
-            </Tooltip>
-          )}
-          {generating && (
-            <Button
-              icon={<IconRecordStop />}
-              status="danger"
-              onClick={() => generatingTask.stop()}
-            >
-              Stop
-            </Button>
-          )}
-          {generatingTask.id && (
-            <span>
-              GeneratingTask @{generatingTask.id} /{' '}
-              <Tooltip content={generatingTask.data?.output?.errorMessage}>
-                {generatingTask.status}
-              </Tooltip>
-            </span>
-          )}
+          <GeneratingTaskTrigger
+            generating={generating || patchNodeResp.loading}
+            icon={<IconItalic />}
+            disabled={!modelId}
+            disabledTooltip="Please select a model"
+            onStartTask={() => {
+              generatingTask.start({
+                targetNodeId: parseInt(id),
+                flowId: getFlowId(),
+                input: {
+                  modelId,
+                  sourceNodeIds: Array.from(
+                    new Set(connections.map((conn) => parseInt(conn.source))),
+                  ),
+                  edgeIds: Array.from(
+                    new Set(connections.map((conn) => parseInt(conn.edgeId))),
+                  ),
+                },
+              });
+            }}
+            onStopTask={() => generatingTask.stop()}
+          />
+          <GeneratingTaskStatus {...generatingTask} />
         </>
       }
     >
       <Spin loading={generating} className={styles.spin} tip="Generating">
         <MarkdownEditor
-          value={
-            // generating
-            //   ? [
-            //       content,
-            //       generatingTaskResp.data?.data?.output?.generatedText, // todo stream output here
-            //     ]
-            //       .filter(Boolean)
-            //       .join('\n\n')
-            //   :
-            content
-          }
+          value={content}
           onChange={(markdown) => {
             setContent(markdown);
             patchNodeResp.run({ content: markdown });

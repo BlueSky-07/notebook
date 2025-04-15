@@ -7,13 +7,24 @@ import { useState } from 'react';
 import API from '@/services/api';
 import useRequest from 'ahooks/lib/useRequest';
 
-interface UseGeneratingTaskProps {
+export interface UseGeneratingTaskProps {
   id?: GeneratingTaskEntity['id'];
   status?: GeneratingTaskEntity['status'];
   onDone?: (task: GeneratingTaskEntity) => void;
 }
 
-export const useGeneratingTask = (props: UseGeneratingTaskProps) => {
+export interface UseGeneratingTask {
+  generating: boolean;
+  id: GeneratingTaskEntity['id'];
+  status: GeneratingTaskEntity['status'];
+  data?: GeneratingTaskEntity;
+  start: (body: GeneratingTaskAddInput) => Promise<GeneratingTaskEntity['id']>;
+  stop: () => Promise<void>;
+}
+
+export const useGeneratingTask = (
+  props: UseGeneratingTaskProps,
+): UseGeneratingTask => {
   const { onDone } = props;
 
   const [id, setId] = useState(props.id);
@@ -51,6 +62,7 @@ export const useGeneratingTask = (props: UseGeneratingTaskProps) => {
         await API.generatingTask.addGeneratingTask(body);
       setId(createGenerateTaskResp.data.id);
       setStatus(GeneratingTaskStatusEnum.Pending);
+      return createGenerateTaskResp.data.id;
     },
     stop: async () => {
       await API.generatingTask.stopGeneratingTask(id);

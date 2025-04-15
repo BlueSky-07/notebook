@@ -30,6 +30,12 @@ export interface GeneratingTaskOutput {
      */
     'generatedText'?: string;
     /**
+     * generated file
+     * @type {number}
+     * @memberof GeneratingTaskOutput
+     */
+    'generatedFile'?: number;
+    /**
      * generated reasoning
      * @type {string}
      * @memberof GeneratingTaskOutput

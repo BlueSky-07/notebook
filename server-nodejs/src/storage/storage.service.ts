@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectS3, S3 } from 'nestjs-s3';
 import { STORAGE_BUCKET_NAME, type StorageBucketName } from './storage.const';
@@ -46,9 +46,12 @@ export class StorageService {
 
   async putFileObject(
     bucket: StorageBucketName,
-    file: Express.Multer.File,
+    file: Pick<Express.Multer.File, 'buffer'>,
     options?: Omit<PutObjectCommandInput, 'Bucket' | 'Key'>,
   ): Promise<[string, PutObjectCommandOutput]> {
+    const buffer = file.buffer;
+    if (!buffer) throw new BadRequestException('buffer required');
+
     let uuid: string = uuidv7();
     while (true) {
       try {
@@ -61,12 +64,11 @@ export class StorageService {
         break;
       }
     }
-
     const res = await this.s3.putObject({
       ...options,
       Bucket: bucket,
       Key: `${uuid}`,
-      Body: file.buffer,
+      Body: buffer,
     });
 
     return [uuid, res];

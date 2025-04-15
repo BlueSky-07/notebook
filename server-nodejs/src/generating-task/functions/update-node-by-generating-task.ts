@@ -8,6 +8,8 @@ import GeneratingTaskEvent, {
 } from '../generating-task.event';
 import { StandardEventSchema } from 'inngest/components/EventSchemas';
 import { matchEventNames } from '../../inngest/helper';
+import { NodeDataType } from '../../node/node.entity';
+import { makeFileLinkForWeb } from '../../file/file.helper';
 
 export interface UpdateNodeByGeneratingTaskFunctionDependencies {
   logger: Logger;
@@ -64,9 +66,22 @@ export const createUpdateNodeByGeneratingTaskFunction = (
         return await nodeService.patchNode(event.data.targetNodeId, {
           data: {
             ...nodeRecord.data,
-            content: [nodeRecord.data.content, taskRecord.output.generatedText]
-              .filter(Boolean)
-              .join('\n\n'),
+            ...(nodeRecord.dataType === NodeDataType.Text &&
+              taskRecord.output.generatedText && {
+                content: [
+                  nodeRecord.data.content,
+                  taskRecord.output.generatedText,
+                ]
+                  .filter(Boolean)
+                  .join('\n\n'),
+              }),
+            ...(nodeRecord.dataType === NodeDataType.Image &&
+              taskRecord.output.generatedFile != null && {
+                src: makeFileLinkForWeb({
+                  id: taskRecord.output.generatedFile,
+                }),
+                fileId: taskRecord.output.generatedFile,
+              }),
           },
           state: {
             generatingTaskId: event.data.generatingTaskId,

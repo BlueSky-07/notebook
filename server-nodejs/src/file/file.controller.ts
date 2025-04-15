@@ -25,6 +25,7 @@ import { FileEntity } from './file.entity';
 import { Readable } from 'stream';
 import { type ReadableStream } from 'stream/web';
 import { FileService } from './file.service';
+import { STORAGE_BUCKET_NAME } from '../storage/storage.const';
 
 @Controller('file')
 export class FileController {
@@ -92,7 +93,11 @@ export class FileController {
     @UploadedFile() file: Express.Multer.File,
     @Body() fileAddInput: FileAddInput,
   ): Promise<FileEntity> {
-    return this.fileService.addFile(file, fileAddInput);
+    return this.fileService.addFile(
+      STORAGE_BUCKET_NAME.UPLOADED,
+      file,
+      fileAddInput,
+    );
   }
 
   @Delete('')

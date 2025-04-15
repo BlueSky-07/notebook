@@ -32,13 +32,21 @@ export const ModelInfo = (props: ModelInfoProps) => {
   const isSame = providerIcon === modelNameIcon && Boolean(modelNameIcon);
 
   const renderFeatureTip = () => {
-    const featureConfigs = features.map((feature) => MODEL_FEATURES[feature]);
+    const featureConfigs = features.map(
+      (feature) =>
+        MODEL_FEATURES[feature] ?? {
+          label: feature,
+          icon: null,
+        },
+    );
     if (!featureConfigs.length) return null;
 
     return (
       <Space className={styles.feature}>
         {featureConfigs.map((feature) => (
-          <Tooltip content={feature.label}>{feature.icon}</Tooltip>
+          <Tooltip content={feature.label}>
+            {feature.icon ?? feature.label}
+          </Tooltip>
         ))}
       </Space>
     );

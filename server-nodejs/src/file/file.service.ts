@@ -11,7 +11,7 @@ import * as path from 'path';
 import mime from 'mime-types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { STORAGE_BUCKET_NAME } from '../storage/storage.const';
+import { type StorageBucketName } from '../storage/storage.const';
 import type { GetObjectCommandOutput } from '@aws-sdk/client-s3';
 import { FileReferenceService } from './file-reference.service';
 import { pick } from 'lodash';
@@ -26,34 +26,31 @@ export class FileService {
   ) {}
 
   async addFile(
-    file: Express.Multer.File,
-    fileAddInput: FileAddInput,
+    bucket: StorageBucketName,
+    file: Pick<
+      Express.Multer.File,
+      'buffer' | 'size' | 'originalname' | 'mimetype'
+    >,
+    fileAddInput?: Omit<FileAddInput, 'file'>,
   ): Promise<FileEntity> {
     const metadata = await this.getFileMetadata(file, fileAddInput);
-    const [key] = await this.storageService.putFileObject(
-      STORAGE_BUCKET_NAME.UPLOADED,
-      file,
-      {
-        ContentLength: metadata.size,
-        ContentType: metadata.mime,
-      },
-    );
+    const [key] = await this.storageService.putFileObject(bucket, file, {
+      ContentLength: metadata.size,
+      ContentType: metadata.mime,
+    });
 
     try {
       const res = await this.fileRepository.insert({
         name: metadata.filename,
-        description: fileAddInput.description,
+        description: fileAddInput?.description,
         metadata,
-        bucket: STORAGE_BUCKET_NAME.UPLOADED,
+        bucket,
         path: key,
       });
       const fileId = res.generatedMaps[0].id as number;
       return this.getFileById(fileId);
     } catch (e) {
-      await this.storageService.deleteFileObject(
-        STORAGE_BUCKET_NAME.UPLOADED,
-        key,
-      );
+      await this.storageService.deleteFileObject(bucket, key);
       throw e;
     }
   }
@@ -159,17 +156,16 @@ export class FileService {
   }
 
   getFileMetadata(
-    file: File | Express.Multer.File,
-    fileAddInput?: FileAddInput,
+    file: Pick<
+      Express.Multer.File,
+      'buffer' | 'size' | 'originalname' | 'mimetype'
+    >,
+    fileAddInput?: Omit<FileAddInput, 'file'>,
   ): FileEntity['metadata'] & { filename: string } {
-    const filename =
-      fileAddInput.name ||
-      (file as Express.Multer.File).originalname ||
-      (file as File).name;
+    const filename = fileAddInput?.name || file.originalname || 'unamed';
     const extension = path.extname(filename);
     const mimetype: string =
-      (file as Express.Multer.File).mimetype ||
-      (mime.lookup(extension) as string);
+      file.mimetype || (mime.lookup(extension) as string);
     const metadata: FileEntity['metadata'] & { filename: string } = {
       filename,
       extension,
