@@ -4,7 +4,6 @@ import {
   STORAGE_BUCKET_NAME,
   type StorageBucketName,
 } from '../storage/storage.const';
-import { pick } from 'lodash';
 
 export function extractFileFromLink(
   link: string = '',
@@ -12,17 +11,17 @@ export function extractFileFromLink(
   if (link.startsWith(WEB_FILE_ENTITY_LINK_PREFIX)) {
     const search = new URLSearchParams(link.split('?')[1]);
     const id = search.get('id') || null;
-    const parsedId = Number.parseInt(id, 10);
+    const parsedId = Number.parseInt(id || '', 10);
     const bucket = search.get('bucket') || null;
     const path = search.get('path') || null;
     return {
-      id: Number.isNaN(parsedId) ? null : parsedId,
+      id: Number.isNaN(parsedId) ? undefined : parsedId,
       bucket: Object.values(
         STORAGE_BUCKET_NAME as Record<string, string>,
-      ).includes(bucket)
+      ).includes(bucket || '')
         ? (bucket as StorageBucketName)
-        : null,
-      path,
+        : undefined,
+      path: path || undefined,
     };
   }
 }

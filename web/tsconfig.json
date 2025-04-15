@@ -19,7 +19,9 @@
       "@assets/*": ["assets/*"],
       "@api/*": ["api-generated/*"],
       "@/*": ["src/*"],
-    }
+    },
+    "skipLibCheck": true,
+    "strictNullChecks": true
   },
   "include": [
     "src/**/*",

@@ -55,8 +55,8 @@ export function getInitialFlowEdge(
   id: string,
   source: string,
   target: string,
-  sourceHandle: string,
-  targetHandle: string,
+  sourceHandle?: string | null,
+  targetHandle?: string | null,
   dataType: EdgeEntity['dataType'] = EdgeDataTypeEnum.Label,
 ): Edge {
   return {
@@ -78,7 +78,7 @@ export function getInitialFlowEdge(
       orient: {
         [EdgeHandleEnum.Left]: 'horizontal',
         // [EdgeHandleEnum.Top]: 'vertical'
-      }[targetHandle],
+      }[targetHandle || ''],
     },
   };
 }
@@ -111,8 +111,8 @@ export function convertFlowNodeToNodeEntity(
     layout: {
       positionX: flowNode.position.x,
       positionY: flowNode.position.y,
-      width: flowNode.width,
-      height: flowNode.height,
+      width: flowNode.width ?? 100,
+      height: flowNode.height ?? 100,
     },
     data: flowNode.data,
     dataType: flowNode.type as NodeEntity['dataType'],
@@ -122,8 +122,8 @@ export function convertFlowNodeToNodeEntity(
 export function convertEdgeEntityToFlowEdge(edgeEntity: EdgeEntity): Edge {
   return {
     id: edgeEntity.id.toString(),
-    source: edgeEntity.sourceNodeId.toString(),
-    target: edgeEntity.targetNodeId.toString(),
+    source: edgeEntity.sourceNodeId?.toString() ?? '',
+    target: edgeEntity.targetNodeId?.toString() ?? '',
     sourceHandle: edgeEntity.layout.sourceHandle,
     targetHandle: edgeEntity.layout.targetHandle,
     data: edgeEntity.data as Edge['data'],
@@ -135,7 +135,7 @@ export function convertEdgeEntityToFlowEdge(edgeEntity: EdgeEntity): Edge {
       orient: {
         [EdgeHandleEnum.Left]: 'horizontal',
         // [EdgeHandleEnum.Top]: 'vertical'
-      }[edgeEntity.layout.targetHandle] as string,
+      }[edgeEntity.layout.targetHandle || ''] as string,
     },
   };
 }
@@ -155,7 +155,7 @@ export function convertFlowEdgeToEdgeEntity(
       targetHandle:
         flowEdge.targetHandle as EdgeEntity['layout']['targetHandle'],
     },
-    data: flowEdge.data,
+    data: flowEdge.data || {},
     dataType: flowEdge.type as EdgeEntity['dataType'],
   };
 }

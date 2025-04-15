@@ -15,8 +15,8 @@ export interface UseGeneratingTaskProps {
 
 export interface UseGeneratingTask {
   generating: boolean;
-  id: GeneratingTaskEntity['id'];
-  status: GeneratingTaskEntity['status'];
+  id?: GeneratingTaskEntity['id'];
+  status?: GeneratingTaskEntity['status'];
   data?: GeneratingTaskEntity;
   start: (body: GeneratingTaskAddInput) => Promise<GeneratingTaskEntity['id']>;
   stop: () => Promise<void>;
@@ -35,18 +35,20 @@ export const useGeneratingTask = (
       GeneratingTaskStatusEnum.Pending,
       GeneratingTaskStatusEnum.Generating,
     ] as GeneratingTaskStatusEnum[]
-  ).includes(status);
+  ).includes(status || ('' as GeneratingTaskStatusEnum));
 
   const generatingTaskResp = useRequest(
-    () => API.generatingTask.getGeneratingTask(id),
+    () => API.generatingTask.getGeneratingTask(id!),
     {
       refreshDeps: [id],
-      ready: generating || status === GeneratingTaskStatusEnum.Failed,
+      ready:
+        (id != null && generating) ||
+        status === GeneratingTaskStatusEnum.Failed,
       pollingInterval: generating ? 3000 : undefined,
       onSuccess: (resp) => {
         setStatus(resp.data.status);
         if (resp.data.status === GeneratingTaskStatusEnum.Done) {
-          onDone(resp.data);
+          onDone?.(resp.data);
         }
       },
     },
@@ -65,8 +67,10 @@ export const useGeneratingTask = (
       return createGenerateTaskResp.data.id;
     },
     stop: async () => {
-      await API.generatingTask.stopGeneratingTask(id);
-      generatingTaskResp.run();
+      if (id != null) {
+        await API.generatingTask.stopGeneratingTask(id);
+        generatingTaskResp.run();
+      }
     },
   };
 };

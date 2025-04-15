@@ -119,13 +119,13 @@ export class FileService {
         await this.fileReferenceService.getFileReferencesByFileIds(
           records.map((r) => r.id),
         );
-      const noReferencesFiles = records
+      const noReferencesFiles: FileEntity[] = records
         .map((record) =>
           !references.some((reference) => reference.fileId === record.id)
             ? pick(record, ['id', 'bucket', 'path'])
             : null,
         )
-        .filter(Boolean);
+        .filter(Boolean) as FileEntity[];
       deletedFiles.push(...noReferencesFiles);
 
       if (deletedFiles.length - index >= batchSize || i + batchSize >= total) {

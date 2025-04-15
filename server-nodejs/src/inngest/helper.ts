@@ -54,5 +54,5 @@ export function matchEventNames<
   event: Pick<StandardEventSchema, 'name' | 'data'>,
   eventNames: string[],
 ): event is EventSchema & Pick<StandardEventSchema, 'name'> {
-  return eventNames.includes(event.name);
+  return eventNames.includes(event.name || '');
 }

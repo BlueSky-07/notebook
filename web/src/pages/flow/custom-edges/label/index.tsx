@@ -160,7 +160,7 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
               },
             }}
           >
-            {data.label}
+            {data?.label}
           </Typography.Text>
         </div>
       </EdgeLabelRenderer>

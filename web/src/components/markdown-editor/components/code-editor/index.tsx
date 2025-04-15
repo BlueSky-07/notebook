@@ -37,7 +37,8 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
       <ResizeBox
         directions={['bottom']}
         onMovingStart={() => {
-          codeEditorContainerRef.current.style.removeProperty('height');
+          if (codeEditorContainerRef.current)
+            codeEditorContainerRef.current.style.removeProperty('height');
         }}
         className={styles.resizeBox}
       >
@@ -81,7 +82,7 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
             type="text"
             size="mini"
             onClick={() => {
-              activeEditor.update(() => {
+              activeEditor?.update(() => {
                 ctx.lexicalNode.remove();
               });
             }}
@@ -101,7 +102,7 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
             height="100%"
             language={language}
             value={code}
-            onChange={(value) => ctx.setCode(value)}
+            onChange={(value) => ctx.setCode(value || '')}
           />
         </div>
       </ResizeBox>

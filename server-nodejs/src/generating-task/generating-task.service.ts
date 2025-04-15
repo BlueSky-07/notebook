@@ -171,19 +171,19 @@ export class GeneratingTaskService {
     prompt: GeneratingTaskEntity['input']['prompt'],
   ): Promise<UserContent> {
     const userContent: UserContent = [];
-    if (!prompt.length) return [];
+    if (!prompt?.length) return [];
     for (const part of prompt) {
       switch (part.type) {
         case GeneratingTaskInputPromptType.Text: {
           userContent.push({
             type: 'text',
-            text: part.text,
+            text: part.text || '',
           });
           break;
         }
         case GeneratingTaskInputPromptType.Image: {
           const src = part.src;
-          let buffer: ArrayBuffer;
+          let buffer: ArrayBuffer | undefined;
           try {
             let file = extractFileFromLink(src);
             if (file) {
@@ -195,10 +195,10 @@ export class GeneratingTaskService {
                   file as Pick<FileEntity, 'bucket' | 'path'>,
                 );
                 buffer = Buffer.from(
-                  await fileObject.Body.transformToByteArray(),
-                );
+                  (await fileObject.Body?.transformToByteArray()) ?? [],
+                ).buffer;
               }
-            } else {
+            } else if (src) {
               buffer = await fetch(src).then((resp) => resp.arrayBuffer());
             }
             if (buffer) {
@@ -225,7 +225,7 @@ export class GeneratingTaskService {
   async prepareGeneratingTaskStringPrompt(
     prompt: GeneratingTaskEntity['input']['prompt'],
   ): Promise<string> {
-    if (!prompt.length) return '';
+    if (!prompt?.length) return '';
     const prompts: string[] = [];
     for (const part of prompt) {
       switch (part.type) {

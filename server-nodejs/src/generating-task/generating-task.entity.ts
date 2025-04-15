@@ -86,7 +86,7 @@ export class GeneratingTaskOutput {
   @ApiProperty({ type: String, description: 'generated content' })
   generatedText?: string;
   @ApiProperty({ type: Number, description: 'generated file' })
-  generatedFile?: FileEntity['id'];
+  generatedFile?: FileEntity['id'] | null;
   @ApiProperty({ type: String, description: 'generated reasoning' })
   generatedReasoning?: string;
   @ApiProperty({ type: GeneratedUsage, description: 'generated usage' })

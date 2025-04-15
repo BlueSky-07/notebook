@@ -56,7 +56,7 @@ export const NodesPane = () => {
           switcherIcon: {
             [NodeDataTypeEnum.Text]: <IconPen />,
             [NodeDataTypeEnum.Image]: <IconImage />,
-          }[node.type],
+          }[node.type || ''],
         },
         children: [
           node.type === NodeDataTypeEnum.Text && {
@@ -75,7 +75,7 @@ export const NodesPane = () => {
               switcherIcon: null,
             },
           },
-        ].filter(Boolean),
+        ].filter(Boolean) as TreeDataNode[],
       })),
     [nodes],
   );
@@ -83,20 +83,23 @@ export const NodesPane = () => {
   if (!treeData.length) return <Empty />;
 
   return (
+    // @ts-ignore, need arco fix type definition
     <Tree
       className={styles.nodesPane}
       showLine={true}
       draggable={false}
       blockNode={true}
-      selectedKeys={selectedNodeIds
-        .map((nodeId) => {
-          const treeNode = treeData.find((node) => node.key === nodeId);
-          if (treeNode && treeNode.children?.length > 0) {
-            return [nodeId, treeNode.children[0].key];
-          }
-          return nodeId;
-        })
-        .flat(2)}
+      selectedKeys={
+        selectedNodeIds
+          .map((nodeId) => {
+            const treeNode = treeData.find((node) => node.key === nodeId);
+            if (treeNode && (treeNode.children?.length ?? 0) > 0) {
+              return [nodeId, treeNode.children?.[0].key];
+            }
+            return nodeId;
+          })
+          .flat(2) as string[]
+      }
       defaultExpandedKeys={
         treeData
           .map((node) => (node.children?.length ? node.key : false))
@@ -104,7 +107,7 @@ export const NodesPane = () => {
       }
       treeData={treeData}
       renderExtra={(treeNode) => {
-        if (treeNode.dataRef.key.endsWith('preview')) return null;
+        if (treeNode.dataRef?.key?.endsWith('preview')) return null;
         const hidden = (treeNode.dataRef as TreeDataNode).node.hidden;
         return (
           <>
@@ -114,11 +117,11 @@ export const NodesPane = () => {
               type="text"
               disabled={hidden}
               onClick={() => {
-                const reactFlow = reactFlowRef.current?.get();
-                if (reactFlow) {
+                const reactFlow = reactFlowRef?.current?.get();
+                if (reactFlow && treeNode?.dataRef?.key != null) {
                   reactFlow.fitView({
                     duration: 500,
-                    nodes: [{ id: treeNode.dataRef.key }],
+                    nodes: [{ id: treeNode?.dataRef?.key }],
                   });
                 }
               }}
@@ -128,14 +131,16 @@ export const NodesPane = () => {
               icon={hidden ? <IconEye /> : <IconEyeInvisible />}
               type="text"
               onClick={() => {
-                updateNodeHidden(treeNode.dataRef.key, !hidden);
-                onNodesChange([
-                  {
-                    id: treeNode.dataRef.key,
-                    type: 'select',
-                    selected: false,
-                  },
-                ]);
+                if (treeNode?.dataRef?.key != null) {
+                  updateNodeHidden(treeNode.dataRef.key, !hidden);
+                  onNodesChange([
+                    {
+                      id: treeNode.dataRef.key,
+                      type: 'select',
+                      selected: false,
+                    },
+                  ]);
+                }
               }}
             />
           </>
@@ -152,7 +157,7 @@ export const NodesPane = () => {
           },
         ]);
         if (nextSelected) {
-          const reactFlow = reactFlowRef.current?.get();
+          const reactFlow = reactFlowRef?.current?.get();
           if (reactFlow) {
             reactFlow.fitView({
               duration: 500,

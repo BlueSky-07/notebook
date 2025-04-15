@@ -67,7 +67,7 @@ export class FileController {
     else throw new BadRequestException('id or path is required');
     const fileObject = await this.fileService.getFileObject(record);
     const readable = Readable.fromWeb(
-      fileObject.Body.transformToWebStream() as ReadableStream,
+      fileObject.Body?.transformToWebStream() as ReadableStream,
     );
     return new StreamableFile(readable, {
       type: fileObject.ContentType,

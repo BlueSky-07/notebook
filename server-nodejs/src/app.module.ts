@@ -60,7 +60,8 @@ import { FileModule } from './file/file.module';
             return {
               ...baseOptions,
               type: 'better-sqlite3',
-              database: configService.get<string>('db.better-sqlite3.database'),
+              database:
+                configService.get<string>('db.better-sqlite3.database') || '',
             } satisfies BetterSqlite3ConnectionOptions;
         }
         throw new Error('Unsupported database type: ' + dbType);
@@ -76,10 +77,10 @@ import { FileModule } from './file/file.module';
             endpoint: configService.get<string>('storage.s3.endpoint'),
             region: configService.get<string>('storage.s3.region'),
             credentials: {
-              accessKeyId: configService.get<string>('storage.s3.accessKey'),
-              secretAccessKey: configService.get<string>(
-                'storage.s3.secretKey',
-              ),
+              accessKeyId:
+                configService.get<string>('storage.s3.accessKey') || '',
+              secretAccessKey:
+                configService.get<string>('storage.s3.secretKey') || '',
             },
             forcePathStyle: configService.get<boolean>(
               'storage.s3.forcePathStyle',

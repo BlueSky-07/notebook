@@ -9,7 +9,7 @@ import NodesPane from './panes/nodes-pane';
 
 interface FlowSiderProps {
   flowId?: FlowEntity['id'];
-  activeTab?: string;
+  activeTab?: string | null;
   setActiveTab?: (tab: string) => void;
   collapsed?: boolean;
 }
@@ -22,7 +22,7 @@ export const FlowSider = (props: FlowSiderProps) => {
       <Menu
         selectedKeys={[activeTab || FLOW_SIDER_ITEMS.flows.key]}
         onClickMenuItem={(menuItem) => {
-          setActiveTab(menuItem);
+          setActiveTab?.(menuItem);
         }}
       >
         {Object.values(FLOW_SIDER_ITEMS).map((item) => {
@@ -61,7 +61,7 @@ export const FlowSider = (props: FlowSiderProps) => {
         size="small"
         activeTab={activeTab || FLOW_SIDER_ITEMS.flows.key}
         onChange={(nextTab) => {
-          setActiveTab(nextTab);
+          setActiveTab?.(nextTab);
         }}
         animation={false}
       >

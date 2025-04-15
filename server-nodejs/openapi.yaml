@@ -1184,6 +1184,7 @@ components:
           description: generated content
         generatedFile:
           type: number
+          nullable: true
           description: generated file
         generatedReasoning:
           type: string

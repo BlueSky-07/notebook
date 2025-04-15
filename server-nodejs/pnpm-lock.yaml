@@ -57,8 +57,8 @@ importers:
         specifier: ^3.14.0
         version: 3.14.0
       nestjs-s3:
-        specifier: ^2.0.1
-        version: 2.0.1(@aws-sdk/client-s3@3.787.0)(@nestjs/common@11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.17)
+        specifier: ^2.1.0-next.1
+        version: 2.1.0-next.1(@aws-sdk/client-s3@3.787.0)(@nestjs/common@11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.17)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -3673,8 +3673,8 @@ packages:
       '@nestjs/swagger': ^8.0.0
       swagger-ui-express: ^5.0.0
 
-  nestjs-s3@2.0.1:
-    resolution: {integrity: sha512-nnSzBPDXKFWH4nLR8qur5SUHFhlW2embwze7efUtNi5r+0VzAWT/rY0TiMhvMTZUiEJhBdYf+tvYU4ja2C0UTg==}
+  nestjs-s3@2.1.0-next.1:
+    resolution: {integrity: sha512-qIbfe8YMoy4ZWgIcSC58PonvYR3SQZFi5V77Ac3Mbcj1RTXY1K8EOyRMctF0MWSheGFYPT3+X3/4ijAY5aTU1A==}
     peerDependencies:
       '@aws-sdk/client-s3': '>=3.328.0'
       '@nestjs/common': '>=6.7.0'
@@ -9229,7 +9229,7 @@ snapshots:
       - encoding
       - supports-color
 
-  nestjs-s3@2.0.1(@aws-sdk/client-s3@3.787.0)(@nestjs/common@11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.17):
+  nestjs-s3@2.1.0-next.1(@aws-sdk/client-s3@3.787.0)(@nestjs/common@11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.17):
     dependencies:
       '@aws-sdk/client-s3': 3.787.0
       '@nestjs/common': 11.0.17(reflect-metadata@0.2.2)(rxjs@7.8.2)

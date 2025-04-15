@@ -27,6 +27,7 @@ const GenerateImageNodeSrcErrors = {
     'Generating Task status is not generating',
   ),
   EmptyGenerated: new NonRetriableError('Empty Generated'),
+  ModelIdIsMissing: new NonRetriableError('Model id is missing'),
   ModelNotFound: new NonRetriableError('Model not found'),
   ModelNotSupport: new NonRetriableError('Model not support generating image'),
 };
@@ -114,6 +115,8 @@ export const createGenerateImageNodeSrcFunction = (
         );
         if (record.status !== GeneratingTaskStatus.Generating)
           throw GenerateImageNodeSrcErrors.NotGenerating;
+        if (!record.input.modelId)
+          throw GenerateImageNodeSrcErrors.ModelIdIsMissing;
         const models = aiService.getModel(record.input.modelId);
         if (!models) throw GenerateImageNodeSrcErrors.ModelNotFound;
         const model = models.image;

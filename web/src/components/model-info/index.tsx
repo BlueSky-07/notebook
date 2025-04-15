@@ -22,8 +22,8 @@ interface ModelInfoProps {
 
 export const ModelInfo = (props: ModelInfoProps) => {
   const { nameTooltipProps, providerIconVisible = true, features = [] } = props;
-  const provider = props.provider || props.id?.split('@')[1];
-  const name = props.name || props.id?.split('@')[0];
+  const provider = props.provider || props.id?.split('@')[1] || '';
+  const name = props.name || props.id?.split('@')[0] || '';
 
   const [providerName, providerIcon] = getModelProviderIcon(provider) ?? [
     provider,

@@ -23,7 +23,7 @@ export const ConnectionLine = (props: ConnectionLineComponentProps) => {
       const node = getInternalNode(userNode.id);
 
       // we only want to draw a connection line from a source handle
-      if (!node.internals.handleBounds.source) {
+      if (!node?.internals?.handleBounds?.source) {
         return [];
       }
 

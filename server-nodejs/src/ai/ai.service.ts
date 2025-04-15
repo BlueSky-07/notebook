@@ -39,8 +39,8 @@ export class AiService {
   }
 
   initModelClient(modelConfig: AiModelConfig): {
-    llm: LanguageModelV1;
-    image: ImageModel;
+    llm: LanguageModelV1 | null;
+    image: ImageModel | null;
   } {
     const dispatcher = modelConfig.proxy
       ? new ProxyAgent(modelConfig.proxy)

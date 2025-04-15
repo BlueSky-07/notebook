@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import {
   type Edge,
   type Node,
@@ -21,10 +22,10 @@ export interface FlowState extends FlowModel {
   subject?: FlowSubject;
 
   // Life Cycles
-  reactFlowRef: RefObject<ReactFlowRef>;
+  reactFlowRef: RefObject<ReactFlowRef | null> | null;
   bootstrap: (
     flowId: FlowEntity['id'],
-    reactFlowRef: RefObject<ReactFlowRef>,
+    reactFlowRef: RefObject<ReactFlowRef | null>,
   ) => Promise<void>;
   getFlowId: () => FlowEntity['id'];
   getNode: (nodeId: string) => Node | undefined;
@@ -42,8 +43,8 @@ export interface FlowState extends FlowModel {
     copyFrom?: Node,
     center?: XYPosition,
   ) => Promise<Node>;
-  deleteNode: (id: Node['id']) => ReturnType<NodeApi['deleteNode']>;
-  deleteEdge: (id: Edge['id']) => ReturnType<EdgeApi['deleteEdge']>;
+  deleteNode: (id: Node['id']) => ReturnType<NodeApi['deleteNode']> | undefined;
+  deleteEdge: (id: Edge['id']) => ReturnType<EdgeApi['deleteEdge']> | undefined;
   updateNodeData: (
     id: Node['id'],
     data: Node['data'],
@@ -97,7 +98,7 @@ const useFlowStore = create<FlowState>((set, get) => {
       });
     },
     getFlowId: () => {
-      return get().subject?.getFlowId();
+      return get().subject?.getFlowId()!;
     },
     getNode: (nodeId: string) => {
       return get().nodes.find((node) => node.id === nodeId);
@@ -196,25 +197,25 @@ const useFlowStore = create<FlowState>((set, get) => {
       copyFrom?: Node,
       center?: XYPosition,
     ) => {
-      return get().subject?.addNode(dataType, copyFrom, center);
+      return get().subject?.addNode(dataType, copyFrom, center)!;
     },
     deleteNode: async (id: Node['id']) => {
-      return get().subject?.deleteNode(id);
+      return get().subject?.deleteNode(id)!;
     },
     deleteEdge: async (id: Edge['id']) => {
-      return get().subject?.deleteEdge(id);
+      return get().subject?.deleteEdge(id)!;
     },
     updateNodeData: async (id: Node['id'], data: Node['data']) => {
-      return get().subject?.updateNodeData(id, data);
+      return get().subject?.updateNodeData(id, data)!;
     },
     updateNodeHidden: async (id: Node['id'], hidden: Node['hidden']) => {
-      return get().subject?.updateNodeHidden(id, hidden);
+      return get().subject?.updateNodeHidden(id, hidden)!;
     },
     updateEdgeData: async (id: Node['id'], data: Edge['data']) => {
-      return get().subject?.updateEdgeData(id, data);
+      return get().subject?.updateEdgeData(id, data)!;
     },
     selectedNodeIds: [],
-    modelId: localStorage.getItem('model-id'),
+    modelId: localStorage.getItem('model-id') || undefined,
     minimapVisible: localStorage.getItem('minimap-visible') !== 'false',
     updateModelId: (modelId?: AiModelInfo['id']) => {
       set({ modelId });

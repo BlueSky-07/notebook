@@ -19,19 +19,13 @@ import API from '@/services/api';
 import { EdgeDataTypeEnum, EdgeEntity, NodeEntity } from '@api/models';
 import { produce } from 'immer';
 import { debounceRequest } from '@/utils/debounce-request';
-import { get, random, set } from 'lodash-es';
-
-export enum FLOW_SUBJECT_STORAGE {
-  API,
-  LOCAL_STORAGE,
-}
+import { random } from 'lodash-es';
 
 export default class FlowSubject {
   private readonly flowId: number;
   private readonly localStorageKey: string;
   private subject: BehaviorSubject<FlowModel>;
   private observable: Observable<FlowModel>;
-  private storage: FLOW_SUBJECT_STORAGE = FLOW_SUBJECT_STORAGE.API;
 
   constructor(flowId: number) {
     this.flowId = flowId;
@@ -45,29 +39,11 @@ export default class FlowSubject {
   }
 
   async loadFromAPI() {
-    this.storage = FLOW_SUBJECT_STORAGE.API;
     try {
       const r = await API.flow.getFlowFull(this.flowId);
       this.subject.next(convertFlowFullToFlowModel(r.data));
     } catch (e) {
       console.error(e);
-    }
-  }
-
-  loadFromLocalStorage(autoSave = true) {
-    this.storage = FLOW_SUBJECT_STORAGE.LOCAL_STORAGE;
-    try {
-      const lastStore = localStorage.getItem(this.localStorageKey);
-      if (lastStore) {
-        this.subject.next(JSON.parse(lastStore));
-      }
-    } catch (error) {
-      this.subject.next(DEFAULT_FLOW_MODEL);
-    }
-    if (autoSave) {
-      this.subscribe((data) => {
-        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
-      });
     }
   }
 
@@ -87,26 +63,12 @@ export default class FlowSubject {
     return value as Path extends undefined ? FlowModel : FlowModel[Path];
   }
 
-  next(data: Partial<FlowModel>, replace = false) {
+  next(data: Partial<FlowModel>) {
     this.subject.next({
-      ...(!replace && this.subject.getValue()),
-      ...data,
+      nodes: data.nodes ?? this.subject.getValue().nodes,
+      edges: data.edges ?? this.subject.getValue().edges,
     });
   }
-
-  dispatchStorage = <Resp>(
-    handleAPI: () => Promise<Resp> | Resp,
-    handleLocalStorage?: () => typeof handleLocalStorage extends undefined
-      ? void
-      : Resp,
-  ): typeof handleAPI | typeof handleLocalStorage => {
-    switch (this.storage) {
-      case FLOW_SUBJECT_STORAGE.API:
-        return handleAPI;
-      case FLOW_SUBJECT_STORAGE.LOCAL_STORAGE:
-        return handleLocalStorage ?? ((() => {}) as typeof handleLocalStorage);
-    }
-  };
 
   async addNode(
     dataType: NodeEntity['dataType'],
@@ -119,22 +81,16 @@ export default class FlowSubject {
       newNode.position.x = center.x + random(-100, 100);
       newNode.position.y = center.y + random(-100, 100);
     }
-    const createResp = await this.dispatchStorage(
-      async () => {
-        const resp = await API.node.addNode(
-          convertFlowNodeToNodeEntity(newNode, this.flowId),
-        );
-        newNode.id = resp.data.id.toString();
-        return newNode;
-      },
-      () => newNode,
-    )();
+    const resp = await API.node.addNode(
+      convertFlowNodeToNodeEntity(newNode, this.flowId),
+    );
+    newNode.id = resp.data.id.toString();
     this.next({
       nodes: produce(this.getValue('nodes'), (draft) => {
-        draft.push(createResp);
+        draft.push(newNode);
       }),
     });
-    return createResp;
+    return newNode;
   }
 
   updateNodeData(id: string, data: Node['data']) {
@@ -146,10 +102,8 @@ export default class FlowSubject {
           draft[nodeIndex].data = data;
         }),
       });
-      return this.dispatchStorage(
-        debounceRequest(`update-node-data-${id}`, () =>
-          API.node.patchNode(parseInt(id), { data }),
-        ),
+      return debounceRequest(`update-node-data-${id}`, () =>
+        API.node.patchNode(parseInt(id), { data }),
       )();
     }
   }
@@ -160,7 +114,7 @@ export default class FlowSubject {
     if (nodeIndex !== -1) {
       this.next({
         nodes: produce(nodes, (draft) => {
-          draft[nodeIndex].position = change.position;
+          if (change.position) draft[nodeIndex].position = change.position;
         }),
       });
       const node = nodes[nodeIndex];
@@ -169,18 +123,16 @@ export default class FlowSubject {
         return;
       }
 
-      return this.dispatchStorage(
-        debounceRequest(`update-node-layout-${id}`, () =>
-          API.node.patchNode(parseInt(id), {
-            layout: {
-              positionX: change.position.x,
-              positionY: change.position.y,
-              width: node.width,
-              height: node.height,
-              hidden: node.hidden,
-            },
-          }),
-        ),
+      return debounceRequest(`update-node-layout-${id}`, () =>
+        API.node.patchNode(parseInt(id), {
+          layout: {
+            positionX: change.position!.x,
+            positionY: change.position!.y,
+            width: node.width!,
+            height: node.height!,
+            hidden: node.hidden,
+          },
+        }),
       )();
     }
   }
@@ -204,18 +156,16 @@ export default class FlowSubject {
         return;
       }
 
-      return this.dispatchStorage(
-        debounceRequest(`update-node-layout-${id}`, () =>
-          API.node.patchNode(parseInt(id), {
-            layout: {
-              positionX: node.position.x,
-              positionY: node.position.y,
-              width: change.dimensions?.width ?? node.width,
-              height: change.dimensions?.height ?? node.height,
-              hidden: node.hidden,
-            },
-          }),
-        ),
+      return debounceRequest(`update-node-layout-${id}`, () =>
+        API.node.patchNode(parseInt(id), {
+          layout: {
+            positionX: node.position.x,
+            positionY: node.position.y,
+            width: change.dimensions?.width ?? node.width!,
+            height: change.dimensions?.height ?? node.height!,
+            hidden: node.hidden,
+          },
+        }),
       )();
     }
   }
@@ -230,18 +180,16 @@ export default class FlowSubject {
         }),
       });
       const node = nodes[nodeIndex];
-      return this.dispatchStorage(
-        debounceRequest(`update-node-layout-${id}`, () =>
-          API.node.patchNode(parseInt(id), {
-            layout: {
-              positionX: node.position.x,
-              positionY: node.position.y,
-              width: node.width,
-              height: node.height,
-              hidden,
-            },
-          }),
-        ),
+      return debounceRequest(`update-node-layout-${id}`, () =>
+        API.node.patchNode(parseInt(id), {
+          layout: {
+            positionX: node.position.x,
+            positionY: node.position.y,
+            width: node.width!,
+            height: node.height!,
+            hidden,
+          },
+        }),
       )();
     }
   }
@@ -255,10 +203,8 @@ export default class FlowSubject {
           draft.splice(nodeIndex, 1);
         }),
       });
-      return this.dispatchStorage(
-        debounceRequest(`delete-node-${id}`, () =>
-          API.node.deleteNode(parseInt(id)),
-        ),
+      return debounceRequest(`delete-node-${id}`, () =>
+        API.node.deleteNode(parseInt(id)),
       )();
     }
   }
@@ -278,19 +224,13 @@ export default class FlowSubject {
       targetHandle,
       dataType,
     );
-    const createResp = await this.dispatchStorage(
-      async () => {
-        const resp = await API.edge.addEdge(
-          convertFlowEdgeToEdgeEntity(newEdge, this.flowId),
-        );
-        newEdge.id = resp.data.id.toString();
-        return newEdge;
-      },
-      () => newEdge,
-    )();
+    const resp = await API.edge.addEdge(
+      convertFlowEdgeToEdgeEntity(newEdge, this.flowId),
+    );
+    newEdge.id = resp.data.id.toString();
     this.next({
       edges: produce(this.getValue('edges'), (draft) => {
-        draft.push(createResp);
+        draft.push(newEdge);
       }),
     });
   }
@@ -304,10 +244,8 @@ export default class FlowSubject {
           draft[edgeIndex].data = data;
         }),
       });
-      return this.dispatchStorage(
-        debounceRequest(`update-edge-data-${id}`, () =>
-          API.edge.patchEdge(parseInt(id), { data }),
-        ),
+      return debounceRequest(`update-edge-data-${id}`, () =>
+        API.edge.patchEdge(parseInt(id), { data }),
       )();
     }
   }
@@ -321,10 +259,8 @@ export default class FlowSubject {
           draft.splice(edgeIndex, 1);
         }),
       });
-      return this.dispatchStorage(
-        debounceRequest(`delete-edge-${id}`, () =>
-          API.edge.deleteEdge(parseInt(id)),
-        ),
+      return debounceRequest(`delete-edge-${id}`, () =>
+        API.edge.deleteEdge(parseInt(id)),
       )();
     }
   }

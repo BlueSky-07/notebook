@@ -34,7 +34,7 @@ export interface GeneratingTaskOutput {
      * @type {number}
      * @memberof GeneratingTaskOutput
      */
-    'generatedFile'?: number;
+    'generatedFile'?: number | null;
     /**
      * generated reasoning
      * @type {string}

@@ -85,6 +85,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
             disabled={!modelId}
             disabledTooltip="Please select a model"
             onStartTask={() => {
+              if (!modelId) return;
               generatingTask.start({
                 targetNodeId: parseInt(id),
                 flowId: getFlowId(),

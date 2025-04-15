@@ -25,7 +25,7 @@ interface FlowDashboardProps {
 
 export const FlowDashboard = (props: FlowDashboardProps) => {
   const { flowId } = props;
-  const reactFlowRefForwarder = useRef<ReactFlowRef>(null);
+  const reactFlowRef = useRef<ReactFlowRef>(null);
 
   const nodeTypes = useCustomNodes();
   const edgeTypes = useCustomEdges();
@@ -63,7 +63,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
 
   useEffect(() => {
     if (flowId) {
-      bootstrap(flowId, reactFlowRefForwarder);
+      bootstrap(flowId, reactFlowRef);
     }
   }, [bootstrap, flowId]);
 
@@ -107,7 +107,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
           color="#ccc"
           variant={BackgroundVariant.Dots}
         />
-        <ReactFlowRefForwarder ref={reactFlowRefForwarder} />
+        <ReactFlowRefForwarder ref={reactFlowRef} />
       </ReactFlow>
     </ConfigProvider>
   );

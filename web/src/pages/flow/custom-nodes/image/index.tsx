@@ -135,6 +135,7 @@ export const CustomNodeImage = (props: CustomNodeImageProps) => {
                 !connections.length && 'Please connect a node as source',
               ].find(Boolean)}
               onStartTask={() => {
+                if (!modelId) return;
                 generatingTask.start({
                   targetNodeId: parseInt(id),
                   flowId: getFlowId(),

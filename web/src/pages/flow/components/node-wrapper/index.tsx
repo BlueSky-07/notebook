@@ -104,7 +104,9 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
                 updateNodeHidden(id, true);
               }}
             />
-            <CopyNode flowId={getFlowId()} node={getNode(id)} />
+            {getNode(id) && (
+              <CopyNode flowId={getFlowId()} node={getNode(id)!} />
+            )}
             <ColorPicker
               showPreset={true}
               value={background}

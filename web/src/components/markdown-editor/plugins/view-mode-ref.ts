@@ -1,5 +1,5 @@
 import { realmPlugin, ViewMode, viewMode$ } from '@mdxeditor/editor';
-import { MutableRefObject } from 'react';
+import { RefObject } from 'react';
 
 export interface ViewModeRef {
   getViewMode: () => void;
@@ -7,10 +7,10 @@ export interface ViewModeRef {
 }
 
 export const viewModeRefPlugin = realmPlugin<{
-  ref?: MutableRefObject<ViewModeRef | undefined>;
+  ref?: RefObject<ViewModeRef | null>;
 }>({
   init(realm, params) {
-    if (params.ref) {
+    if (params?.ref) {
       params.ref.current = {
         getViewMode: () => {
           return realm.getValue(viewMode$);

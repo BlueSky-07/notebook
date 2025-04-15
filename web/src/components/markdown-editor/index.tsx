@@ -146,7 +146,7 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
           }),
         ]}
         placeholder={placeholder}
-        markdown={value}
+        markdown={value || ''}
         onChange={(markdown) => {
           onChange?.(markdown);
         }}

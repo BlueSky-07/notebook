@@ -16,10 +16,10 @@ interface TipButtonProps extends ButtonProps {
 
 export const TipButton = (props: TipButtonProps) => {
   const { tip, tooltipProps, popconfirmProps, ...buttonProps } = props;
-  const [popconfirmVisbile, setPopconfirmVisbile] = useState<boolean>(
-    popconfirmProps?.popupVisible,
-  );
-  const [tooltipVisible, setTooltipVisible] = useState<boolean>(
+  const [popconfirmVisbile, setPopconfirmVisbile] = useState<
+    boolean | undefined
+  >(popconfirmProps?.popupVisible);
+  const [tooltipVisible, setTooltipVisible] = useState<boolean | undefined>(
     tooltipProps?.popupVisible,
   );
   const button = (

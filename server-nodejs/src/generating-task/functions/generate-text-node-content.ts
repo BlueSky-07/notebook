@@ -27,6 +27,7 @@ const GenerateTextNodeContentErrors = {
     'Generating Task status is not generating',
   ),
   EmptyGenerated: new NonRetriableError('Empty Generated'),
+  ModelIdIsMissing: new NonRetriableError('Model id is missing'),
   ModelNotFound: new NonRetriableError('Model not found'),
   ModelNotSupport: new NonRetriableError('Model not support generating text'),
 };
@@ -113,6 +114,8 @@ export const createGenerateTextNodeContentFunction = (
         );
         if (record.status !== GeneratingTaskStatus.Generating)
           throw GenerateTextNodeContentErrors.NotGenerating;
+        if (!record.input.modelId)
+          throw GenerateTextNodeContentErrors.ModelIdIsMissing;
         const models = aiService.getModel(record.input.modelId);
         if (!models) throw GenerateTextNodeContentErrors.ModelNotFound;
         const model = models.llm;
