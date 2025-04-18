@@ -11,7 +11,6 @@ import {
   imagePlugin,
   InsertCodeBlock,
   InsertTable,
-  InsertThematicBreak,
   linkPlugin,
   listsPlugin,
   ListsToggle,
@@ -106,11 +105,9 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
                 <Separator />
                 <BlockTypeSelect />
                 <Separator />
-                <CreateLink />
-                <InsertTable />
-                <InsertThematicBreak />
-                <InsertCodeBlock />
-                <ButtonWithTooltip title="Upload image">
+                {/* todo fix not working */}
+                {/*<CreateLink />*/}
+                <ButtonWithTooltip title="Insert image">
                   <Upload
                     accept="image/*"
                     fileList={[]}
@@ -141,6 +138,8 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
                     <IconImage style={{ fontSize: 24 }} />
                   </Upload>
                 </ButtonWithTooltip>
+                <InsertTable />
+                <InsertCodeBlock />
               </DiffSourceToggleWrapper>
             ),
           }),

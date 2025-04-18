@@ -28,6 +28,7 @@ export interface AiModelConfig {
   baseUrl: string;
   proxy?: string;
   disabled?: boolean;
+  adapter?: string;
   features: Array<
     'text-generation' | 'reasoning' | 'vision' | 'image-generation'
   >;

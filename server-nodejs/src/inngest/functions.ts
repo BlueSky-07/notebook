@@ -4,7 +4,7 @@ import {
   FlowUpdatedFunctionDependencies,
 } from '../flow/functions/update-flow-updated-at';
 import {
-  createDeleteEdgesAfterNodeDeleted,
+  createDeleteEdgesAfterNodeDeletedFunction,
   DeleteEdgesAfterNodeDeletedDependencies,
 } from '../edge/functions/delete-edges-after-node-deleted';
 import {
@@ -23,6 +23,10 @@ import {
   createUpdateFileReferencesForNodeFunction,
   UpdateFileReferencesForNodeDependencies,
 } from '../file/functions/update-file-references-for-node';
+import {
+  createProcessAIModelAdapterFunction,
+  ProcessAIModelAdapterDependencies,
+} from '../ai/functions/process-ai-model-adapter';
 
 type AllFunctionDependencies = // all dependencies
   FlowUpdatedFunctionDependencies &
@@ -30,7 +34,8 @@ type AllFunctionDependencies = // all dependencies
     GenerateTextNodeContentFunctionDependencies &
     GenerateImageNodeSrcFunctionDependencies &
     UpdateNodeByGeneratingTaskFunctionDependencies &
-    UpdateFileReferencesForNodeDependencies;
+    UpdateFileReferencesForNodeDependencies &
+    ProcessAIModelAdapterDependencies;
 
 export const createInngestFunctions = (
   inngest: Inngest,
@@ -38,7 +43,8 @@ export const createInngestFunctions = (
 ) => {
   return [
     createUpdateFlowUpdatedAtFunction(inngest, dependencies),
-    createDeleteEdgesAfterNodeDeleted(inngest, dependencies),
+    createDeleteEdgesAfterNodeDeletedFunction(inngest, dependencies),
+    createProcessAIModelAdapterFunction(inngest, dependencies),
     createGenerateTextNodeContentFunction(inngest, dependencies),
     createGenerateImageNodeSrcFunction(inngest, dependencies),
     createUpdateNodeByGeneratingTaskFunction(inngest, dependencies),

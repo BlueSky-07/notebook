@@ -491,7 +491,7 @@ paths:
         - GeneratingTask
   /ai/models:
     get:
-      operationId: getModels
+      operationId: getAllModels
       parameters: []
       responses:
         "200":

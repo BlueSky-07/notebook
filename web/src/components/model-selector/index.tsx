@@ -37,7 +37,7 @@ export const ModelSelector = (props: ModelSelectorProps) => {
     notAvailableContent = <Empty />,
     onSelectedNotFound,
   } = props;
-  const modelsResp = useRequest(() => API.ai.getModels());
+  const modelsResp = useRequest(() => API.ai.getAllModels());
 
   if (modelsResp.loading || !modelsResp.data?.data)
     return <Spin loading={true} />;

@@ -7,7 +7,7 @@ export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Get('models')
-  getModels(): AiModelsResponse {
-    return this.aiService.getModels();
+  getAllModels(): AiModelsResponse {
+    return this.aiService.getAllModels();
   }
 }

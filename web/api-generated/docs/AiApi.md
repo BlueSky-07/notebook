@@ -4,10 +4,10 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**getModels**](#getmodels) | **GET** /ai/models | |
+|[**getAllModels**](#getallmodels) | **GET** /ai/models | |
 
-# **getModels**
-> AiModelsResponse getModels()
+# **getAllModels**
+> AiModelsResponse getAllModels()
 
 
 ### Example
@@ -21,7 +21,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AiApi(configuration);
 
-const { status, data } = await apiInstance.getModels();
+const { status, data } = await apiInstance.getAllModels();
 ```
 
 ### Parameters

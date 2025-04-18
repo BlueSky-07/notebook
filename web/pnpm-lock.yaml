@@ -12,17 +12,17 @@ importers:
         specifier: ^2.66.1
         version: 2.66.1(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@lobehub/icons':
-        specifier: ^1.96.0
-        version: 1.96.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^1.97.0
+        version: 1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mdxeditor/editor':
-        specifier: ^3.30.0
-        version: 3.30.0(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.24)
+        specifier: ^3.30.1
+        version: 3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@xyflow/react':
-        specifier: ^12.5.6
-        version: 12.5.6(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^12.6.0
+        version: 12.6.0(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       ahooks:
         specifier: ^3.8.4
         version: 3.8.4(react@19.1.0)
@@ -51,14 +51,14 @@ importers:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
       react-router:
-        specifier: ^7.5.0
-        version: 7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^7.5.1
+        version: 7.5.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
       yjs:
-        specifier: ^13.6.24
-        version: 13.6.24
+        specifier: ^13.6.25
+        version: 13.6.25
       zustand:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.1.2)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.4.0(react@19.1.0))
@@ -1194,8 +1194,8 @@ packages:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
 
-  '@lobehub/icons@1.96.0':
-    resolution: {integrity: sha512-TzbSMPb70et/gvytdqc8M5Y4nNC+KSkYTdqH7t6VdhTeQ4aewldPpxCO5z0QhvOaIgc6BSGtS5Ss+nR3A1HGUw==}
+  '@lobehub/icons@1.97.0':
+    resolution: {integrity: sha512-MsIeWgt+Obkx+gcbRHiv2M2zYAaEA+i9b5h40MK2zl5mR3A+T967bU3UvmWgpOXoiSlJYxIk06DURtwxJHWz1A==}
     peerDependencies:
       antd: ^5.23.0
       react: ^18.0.0 || ^19.0.0
@@ -1220,8 +1220,8 @@ packages:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@mdxeditor/editor@3.30.0':
-    resolution: {integrity: sha512-FuwdSx7K2txvYRALY5wlBu2ANhLTrvlhkjSsGJ7TQ/MjF4/mBaI6je51QjaXouaAeo+ztFVp0OIrv6IxjBARNw==}
+  '@mdxeditor/editor@3.30.1':
+    resolution: {integrity: sha512-v4i+6dNhL86SXqQ+hXZqg/PcCKqTR114JmC8aivk4XZDYCT0OWeiKLZriNMqGNIQSAlZAOv6JsulcBZGyiWBTw==}
     engines: {node: '>=16'}
     peerDependencies:
       react: '>= 18 || >= 19'
@@ -2030,9 +2030,6 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
-  '@types/cookie@0.6.0':
-    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
-
   '@types/d3-array@3.2.1':
     resolution: {integrity: sha512-Y2Jn2idRrLzUfAKV2LyRImR+y4oa2AntrgID95SHJxuMUrkNXmanDSed71sRNZysveJVt1hLLemQZIady0FpEg==}
 
@@ -2236,14 +2233,14 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
 
-  '@xyflow/react@12.5.6':
-    resolution: {integrity: sha512-a6lL0WoeMSp7AC9AQzWMRMuqk12Dn+lVjMDLL93SZvpWv5D2BSq9woCv21JCUdWQ31MNpJVfLaV3TycaH1tsYw==}
+  '@xyflow/react@12.6.0':
+    resolution: {integrity: sha512-YzsSK4SlpC6e9Ki1g6O9B1UH7xvz/bzWF+tJ+vWDD8Am5xJmFn0jYnCEuqvzvH8dRKb1NFBmyuqEGqWN39xXsA==}
     peerDependencies:
       react: '>=17'
       react-dom: '>=17'
 
-  '@xyflow/system@0.0.56':
-    resolution: {integrity: sha512-Xc3LvEumjJD+CqPqlYkrlszJ4hWQ0DE+r5M4e5WpS/hKT4T6ktAjt7zeMNJ+vvTsXHulGnEoDRA8zbIfB6tPdQ==}
+  '@xyflow/system@0.0.57':
+    resolution: {integrity: sha512-1YpBo0WgmZLR5wQw9Jvk3Tu0gISi/oYc4uSimrDuAsA/G2rGleulLrKkM59uuT/QU5m6DYC2VdBDAzjSNMGuBA==}
 
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -4624,8 +4621,8 @@ packages:
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
 
-  react-router@7.5.0:
-    resolution: {integrity: sha512-estOHrRlDMKdlQa6Mj32gIks4J+AxNsYoE0DbTTxiMy2mPzZuWSDU+N85/r1IlNR7kGfznF3VCUlvc5IUO+B9g==}
+  react-router@7.5.1:
+    resolution: {integrity: sha512-/jjU3fcYNd2bwz9Q0xt5TwyiyoO8XjSEFXJY4O/lMAlkGTHWuHRAbR9Etik+lSDqMC7A7mz3UlXzgYT6Vl58sA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -5365,8 +5362,8 @@ packages:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
 
-  yjs@13.6.24:
-    resolution: {integrity: sha512-xn/pYLTZa3uD1uDG8lpxfLRo5SR/rp0frdASOl2a71aYNvUXdWcLtVL91s2y7j+Q8ppmjZ9H3jsGVgoFMbT2VA==}
+  yjs@13.6.25:
+    resolution: {integrity: sha512-bojrx9xmwh14yqaubNMyZ3/3CoTiRdpxaMo8wbJNsbHP8q/1Tdg+krggEaeek/Kh+325wthbWGseI4r72IKF+g==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yocto-queue@0.1.0:
@@ -6895,7 +6892,7 @@ snapshots:
       '@lexical/utils': 0.27.2
       lexical: 0.27.2
 
-  '@lexical/react@0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.24)':
+  '@lexical/react@0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)':
     dependencies:
       '@lexical/clipboard': 0.27.2
       '@lexical/code': 0.27.2
@@ -6914,7 +6911,7 @@ snapshots:
       '@lexical/table': 0.27.2
       '@lexical/text': 0.27.2
       '@lexical/utils': 0.27.2
-      '@lexical/yjs': 0.27.2(yjs@13.6.24)
+      '@lexical/yjs': 0.27.2(yjs@13.6.25)
       lexical: 0.27.2
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -6950,12 +6947,12 @@ snapshots:
       '@lexical/table': 0.27.2
       lexical: 0.27.2
 
-  '@lexical/yjs@0.27.2(yjs@13.6.24)':
+  '@lexical/yjs@0.27.2(yjs@13.6.25)':
     dependencies:
       '@lexical/offset': 0.27.2
       '@lexical/selection': 0.27.2
       lexical: 0.27.2
-      yjs: 13.6.24
+      yjs: 13.6.25
 
   '@lezer/common@1.2.3': {}
 
@@ -7078,7 +7075,7 @@ snapshots:
       - acorn
       - supports-color
 
-  '@lobehub/icons@1.96.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@lobehub/icons@1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@lobehub/ui': 1.170.8(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       antd: 5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -7107,7 +7104,7 @@ snapshots:
       '@floating-ui/react': 0.27.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@giscus/react': 3.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@lobehub/fluent-emoji': 1.2.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@lobehub/icons': 1.96.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@lobehub/icons': 1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@mdx-js/react': 3.1.0(@types/react@19.1.2)(react@19.1.0)
       '@radix-ui/react-slot': 1.1.2(@types/react@19.1.2)(react@19.1.0)
@@ -7199,7 +7196,7 @@ snapshots:
       '@types/react': 19.1.2
       react: 19.1.0
 
-  '@mdxeditor/editor@3.30.0(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.24)':
+  '@mdxeditor/editor@3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)':
     dependencies:
       '@codemirror/lang-markdown': 6.3.2
       '@codemirror/language-data': 6.5.1
@@ -7212,7 +7209,7 @@ snapshots:
       '@lexical/list': 0.27.2
       '@lexical/markdown': 0.27.2
       '@lexical/plain-text': 0.27.2
-      '@lexical/react': 0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.24)
+      '@lexical/react': 0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)
       '@lexical/rich-text': 0.27.2
       '@lexical/selection': 0.27.2
       '@lexical/utils': 0.27.2
@@ -8136,8 +8133,6 @@ snapshots:
     dependencies:
       '@types/node': 22.13.4
 
-  '@types/cookie@0.6.0': {}
-
   '@types/d3-array@3.2.1': {}
 
   '@types/d3-axis@3.0.6':
@@ -8376,9 +8371,9 @@ snapshots:
       '@use-gesture/core': 10.3.1
       react: 19.1.0
 
-  '@xyflow/react@12.5.6(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@xyflow/react@12.6.0(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@xyflow/system': 0.0.56
+      '@xyflow/system': 0.0.57
       classcat: 5.0.5
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -8387,7 +8382,7 @@ snapshots:
       - '@types/react'
       - immer
 
-  '@xyflow/system@0.0.56':
+  '@xyflow/system@0.0.57':
     dependencies:
       '@types/d3-drag': 3.0.7
       '@types/d3-selection': 3.0.11
@@ -11405,9 +11400,8 @@ snapshots:
       react-draggable: 4.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tslib: 2.6.2
 
-  react-router@7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  react-router@7.5.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@types/cookie': 0.6.0
       cookie: 1.0.2
       react: 19.1.0
       set-cookie-parser: 2.7.1
@@ -12247,7 +12241,7 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yjs@13.6.24:
+  yjs@13.6.25:
     dependencies:
       lib0: 0.2.99
 

@@ -12,7 +12,7 @@ export interface DeleteEdgesAfterNodeDeletedDependencies {
 
 const DELETE_EDGES_AFTER_NODE_DELETED = 'job/delete-edges-after-node-deleted';
 
-export const createDeleteEdgesAfterNodeDeleted = (
+export const createDeleteEdgesAfterNodeDeletedFunction = (
   inngest: Inngest,
   dependencies: DeleteEdgesAfterNodeDeletedDependencies,
 ) => {

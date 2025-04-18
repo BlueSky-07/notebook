@@ -17,10 +17,10 @@
   "homepage": "https://github.com/BlueSky-07/notebook/tree/master/web",
   "dependencies": {
     "@arco-design/web-react": "^2.66.1",
-    "@lobehub/icons": "^1.96.0",
-    "@mdxeditor/editor": "^3.30.0",
+    "@lobehub/icons": "^1.97.0",
+    "@mdxeditor/editor": "^3.30.1",
     "@monaco-editor/react": "^4.7.0",
-    "@xyflow/react": "^12.5.6",
+    "@xyflow/react": "^12.6.0",
     "ahooks": "^3.8.4",
     "axios": "^1.8.4",
     "classnames": "^2.5.1",
@@ -30,9 +30,9 @@
     "monaco-editor": "^0.52.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.5.0",
+    "react-router": "^7.5.1",
     "rxjs": "^7.8.2",
-    "yjs": "^13.6.24",
+    "yjs": "^13.6.25",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

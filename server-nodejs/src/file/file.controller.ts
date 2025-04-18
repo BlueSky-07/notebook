@@ -56,6 +56,7 @@ export class FileController {
      *   )
      *   res.setHeader('Content-Type', fileObject.ContentType)
      *   res.setHeader('Content-Length', fileObject.ContentLength)
+     *   res.setHeader('Content-Disposition', `inline; filename="${record.name}"`)
      *   readable.pipe(res)
      * }
      */
@@ -72,6 +73,7 @@ export class FileController {
     return new StreamableFile(readable, {
       type: fileObject.ContentType,
       length: fileObject.ContentLength,
+      disposition: `inline; filename="${record.name}"`,
     });
   }
 

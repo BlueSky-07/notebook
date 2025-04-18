@@ -14,7 +14,7 @@ import { EdgeModule } from '../edge/edge.module';
     forwardRef(() => NodeModule),
     forwardRef(() => EdgeModule),
     forwardRef(() => GeneratingTaskModule),
-    AiModule,
+    forwardRef(() => AiModule),
     ConfigModule,
     FileModule,
   ],

@@ -27,6 +27,7 @@ import { UserContent } from 'ai';
 import { extractFileFromLink } from '../file/file.helper';
 import { FileService } from '../file/file.service';
 import { FileEntity } from '../file/file.entity';
+import { fetch } from 'undici';
 
 @Injectable()
 export class GeneratingTaskService {
