@@ -38,9 +38,32 @@ export class FlowDeleteResponse {
 export class FlowListInput extends ListInput {
   @ApiProperty({ type: String, required: false })
   keyword?: string;
+
+  @ApiProperty({
+    type: Boolean,
+    required: false,
+    description: 'return node and edges count fields',
+  })
+  populateCount?: boolean;
 }
 
-export class FlowListResponse extends ListResponse<FlowEntity> {
-  @ApiProperty({ type: FlowEntity, isArray: true })
-  items: FlowEntity[];
+class FlowEntityPopulatedCount extends FlowEntity {
+  @ApiProperty({
+    type: Number,
+    required: false,
+    description: 'node count',
+  })
+  nodeCount?: number;
+
+  @ApiProperty({
+    type: Number,
+    required: false,
+    description: 'edge count',
+  })
+  edgeCount?: number;
+}
+
+export class FlowListResponse extends ListResponse<FlowEntityPopulatedCount> {
+  @ApiProperty({ type: FlowEntityPopulatedCount, isArray: true })
+  items: FlowEntityPopulatedCount[];
 }

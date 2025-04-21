@@ -130,11 +130,13 @@ const apiInstance = new FlowApi(configuration);
 let pageSize: number; // (optional) (default to 10)
 let pageNumber: number; // (optional) (default to 0)
 let keyword: string; // (optional) (default to undefined)
+let populateCount: boolean; //return node and edges count fields (optional) (default to undefined)
 
 const { status, data } = await apiInstance.getAllFlows(
     pageSize,
     pageNumber,
-    keyword
+    keyword,
+    populateCount
 );
 ```
 
@@ -145,6 +147,7 @@ const { status, data } = await apiInstance.getAllFlows(
 | **pageSize** | [**number**] |  | (optional) defaults to 10|
 | **pageNumber** | [**number**] |  | (optional) defaults to 0|
 | **keyword** | [**string**] |  | (optional) defaults to undefined|
+| **populateCount** | [**boolean**] | return node and edges count fields | (optional) defaults to undefined|
 
 
 ### Return type

@@ -14,18 +14,41 @@
   }
 
   .flow-item {
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-
-    .name {
-      color: var(--color-text-1);
-      font-weight: 500;
+    &:hover {
+      background: var(--color-neutral-2);
+    }
+    &.selected {
+      background: var(--color-primary-light-1);
     }
 
-    .description {
-      color: var(--color-text-3);
+    .count {
+      color: var(--color-text-2);
+      font-size: 12px;
+      .count-body {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        .icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    .flow-item-body {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+
+      .name {
+        color: var(--color-text-1);
+        font-weight: 500;
+      }
+
+      .description {
+        color: var(--color-text-3);
+      }
     }
   }
 }

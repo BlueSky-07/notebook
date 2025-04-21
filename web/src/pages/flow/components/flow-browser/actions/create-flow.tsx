@@ -3,8 +3,8 @@ import { Input } from '@arco-design/web-react';
 import { useState } from 'react';
 import { useRequest } from 'ahooks';
 import API from '@/services/api';
-import { IconDriveFile } from '@arco-design/web-react/icon';
 import { FlowEntity } from '@api/models';
+import { FilePlus } from 'lucide-react';
 
 interface CreateFlowProps {
   onCreate?: (flowId: FlowEntity['id']) => void;
@@ -27,10 +27,14 @@ export const CreateFlow = (props: CreateFlowProps) => {
   return (
     <TipButton
       tip="Create"
-      icon={<IconDriveFile />}
+      icon={<FilePlus style={{ width: 16, height: 16 }} />}
       type="text"
       popconfirmProps={{
-        icon: <IconDriveFile style={{ color: 'rgb(var(--primary-6))' }} />,
+        icon: (
+          <FilePlus
+            style={{ width: 16, height: 16, color: 'rgb(var(--primary-6))' }}
+          />
+        ),
         title: 'Create Flow',
         content: (
           <Input

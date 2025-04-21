@@ -76,7 +76,7 @@ export class FlowService {
   async getAllFlows(flowListInput: FlowListInput): Promise<FlowListResponse> {
     const paginationOptions =
       convertListInputPaginationToFindOptions(flowListInput);
-    const [items, count] = await this.flowRepository.findAndCount({
+    const [flows, count] = await this.flowRepository.findAndCount({
       where: {
         ...(flowListInput.keyword
           ? {
@@ -86,6 +86,13 @@ export class FlowService {
       },
       ...paginationOptions,
     });
+    const items: FlowListResponse['items'] = [...flows];
+    if (flowListInput.populateCount) {
+      for (const item of items) {
+        item.nodeCount = await this.nodeService.countNodesByFlowId(item.id);
+        item.edgeCount = await this.edgeService.countEdgesByFlowId(item.id);
+      }
+    }
     return {
       items,
       count,

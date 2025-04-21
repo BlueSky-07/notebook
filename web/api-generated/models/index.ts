@@ -29,6 +29,7 @@ export * from './flow-add-input';
 export * from './flow-add-response';
 export * from './flow-delete-response';
 export * from './flow-entity';
+export * from './flow-entity-populated-count';
 export * from './flow-full';
 export * from './flow-list-response';
 export * from './flow-patch-input';

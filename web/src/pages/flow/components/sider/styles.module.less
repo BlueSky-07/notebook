@@ -4,6 +4,21 @@
   height: 100%;
   width: 100%;
 
+  .tab-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    .icon {
+      line-height: 12px;
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+
   .tab-pane-body {
     padding: 10px;
   }
@@ -11,5 +26,26 @@
   :global(.arco-tabs-content) {
     overflow: auto;
     height: calc(100% - 32px);
+  }
+}
+
+.menu-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .icon {
+    line-height: 16px;
+    height: 16px;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+:global(.arco-tooltip-content) {
+  .menu-title {
+    gap: 6px;
   }
 }

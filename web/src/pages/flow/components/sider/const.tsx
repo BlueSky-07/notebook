@@ -1,19 +1,19 @@
-import { IconApps, IconBranch, IconBulb } from '@arco-design/web-react/icon';
+import { Bot, LayoutGrid, Workflow } from 'lucide-react';
 
 export const FLOW_SIDER_ITEMS = {
   flows: {
     key: 'flows',
     title: 'Flows',
-    icon: <IconBranch />,
+    icon: <Workflow />,
   },
   nodes: {
     key: 'nodes',
     title: 'Nodes',
-    icon: <IconApps />,
+    icon: <LayoutGrid />,
   },
   models: {
     key: 'models',
     title: 'Models',
-    icon: <IconBulb />,
+    icon: <Bot />,
   },
 };

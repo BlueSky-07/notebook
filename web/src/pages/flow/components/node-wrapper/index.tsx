@@ -74,7 +74,6 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
           minHeight={300}
           maxWidth={2000}
           maxHeight={2000}
-          lineClassName={styles.nodeResizerLine}
           {...props.resizerProps}
         />
       )}
@@ -84,7 +83,7 @@ export const NodeWrapper = <Data extends CustomNodeData, Type extends string>(
           {title}
           <Space className={styles.flex}>
             <TipButton
-              tip="Fit at center"
+              tip="Fit"
               icon={<IconFullscreen />}
               size="mini"
               type="text"

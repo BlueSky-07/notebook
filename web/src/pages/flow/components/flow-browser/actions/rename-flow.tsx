@@ -3,8 +3,8 @@ import { Input } from '@arco-design/web-react';
 import { useState } from 'react';
 import { useRequest } from 'ahooks';
 import API from '@/services/api';
-import { IconEdit } from '@arco-design/web-react/icon';
 import { FlowEntity } from '@api/models';
+import { SquarePen } from 'lucide-react';
 
 interface RenameFlowProps {
   flow: Pick<FlowEntity, 'id' | 'name'>;
@@ -28,11 +28,15 @@ export const RenameFlow = (props: RenameFlowProps) => {
   return (
     <TipButton
       tip="Rename"
-      icon={<IconEdit />}
+      icon={<SquarePen style={{ width: 16, height: 16 }} />}
       type="text"
       size="mini"
       popconfirmProps={{
-        icon: <IconEdit style={{ color: 'rgb(var(--primary-6))' }} />,
+        icon: (
+          <SquarePen
+            style={{ width: 16, height: 16, color: 'rgb(var(--primary-6))' }}
+          />
+        ),
         title: 'Rename Flow',
         content: (
           <Input

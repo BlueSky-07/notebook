@@ -20,6 +20,7 @@ export interface UseGeneratingTask {
   data?: GeneratingTaskEntity;
   start: (body: GeneratingTaskAddInput) => Promise<GeneratingTaskEntity['id']>;
   stop: () => Promise<void>;
+  refresh: (force?: boolean) => void;
 }
 
 export const useGeneratingTask = (
@@ -29,6 +30,7 @@ export const useGeneratingTask = (
 
   const [id, setId] = useState(props.id);
   const [status, setStatus] = useState(props.status);
+  const [force, setForce] = useState(0);
 
   const generating = (
     [
@@ -43,13 +45,15 @@ export const useGeneratingTask = (
       refreshDeps: [id],
       ready:
         (id != null && generating) ||
-        status === GeneratingTaskStatusEnum.Failed,
+        status === GeneratingTaskStatusEnum.Failed ||
+        Boolean(force),
       pollingInterval: generating ? 3000 : undefined,
       onSuccess: (resp) => {
         setStatus(resp.data.status);
         if (resp.data.status === GeneratingTaskStatusEnum.Done) {
           onDone?.(resp.data);
         }
+        setForce(0);
       },
     },
   );
@@ -69,6 +73,12 @@ export const useGeneratingTask = (
     stop: async () => {
       if (id != null) {
         await API.generatingTask.stopGeneratingTask(id);
+        generatingTaskResp.run();
+      }
+    },
+    refresh: (force = true) => {
+      if (force) setForce((x) => x + 1);
+      if (id != null) {
         generatingTaskResp.run();
       }
     },

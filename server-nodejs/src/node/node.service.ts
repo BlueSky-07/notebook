@@ -94,6 +94,12 @@ export class NodeService {
     });
   }
 
+  countNodesByFlowId(flowId: FlowEntity['id']): Promise<number> {
+    return this.nodeRepository.countBy({
+      flowId,
+    });
+  }
+
   async deleteNode(id: NodeEntity['id']): Promise<boolean> {
     const record = await this.getNode(id);
     const res = await this.nodeRepository.delete({

@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **count** | **number** |  | [default to undefined]
-**items** | [**Array&lt;FlowEntity&gt;**](FlowEntity.md) |  | [default to undefined]
+**items** | [**Array&lt;FlowEntityPopulatedCount&gt;**](FlowEntityPopulatedCount.md) |  | [default to undefined]
 
 ## Example
 

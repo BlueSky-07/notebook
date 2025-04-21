@@ -28,7 +28,10 @@ export const FlowSider = (props: FlowSiderProps) => {
         {Object.values(FLOW_SIDER_ITEMS).map((item) => {
           return (
             <Menu.Item key={item.key}>
-              {item.icon} {item.title}
+              <div className={styles.menuTitle}>
+                <div className={styles.icon}>{item.icon}</div>
+                <div>{item.title}</div>
+              </div>
             </Menu.Item>
           );
         })}
@@ -44,9 +47,10 @@ export const FlowSider = (props: FlowSiderProps) => {
       <Tabs.TabPane
         key={item.key}
         title={
-          <span>
-            {item.icon} {item.title}
-          </span>
+          <div className={styles.tabTitle}>
+            <div className={styles.icon}>{item.icon}</div>
+            <div>{item.title}</div>
+          </div>
         }
       >
         <div className={styles.tabPaneBody}>{children}</div>

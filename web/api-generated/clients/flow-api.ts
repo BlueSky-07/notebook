@@ -114,10 +114,11 @@ export const FlowApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {number} [pageSize] 
          * @param {number} [pageNumber] 
          * @param {string} [keyword] 
+         * @param {boolean} [populateCount] return node and edges count fields
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllFlows: async (pageSize?: number, pageNumber?: number, keyword?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllFlows: async (pageSize?: number, pageNumber?: number, keyword?: string, populateCount?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/flow`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -140,6 +141,10 @@ export const FlowApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (keyword !== undefined) {
                 localVarQueryParameter['keyword'] = keyword;
+            }
+
+            if (populateCount !== undefined) {
+                localVarQueryParameter['populateCount'] = populateCount;
             }
 
 
@@ -297,11 +302,12 @@ export const FlowApiFp = function(configuration?: Configuration) {
          * @param {number} [pageSize] 
          * @param {number} [pageNumber] 
          * @param {string} [keyword] 
+         * @param {boolean} [populateCount] return node and edges count fields
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllFlows(pageSize, pageNumber, keyword, options);
+        async getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, populateCount?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllFlows(pageSize, pageNumber, keyword, populateCount, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FlowApi.getAllFlows']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -376,11 +382,12 @@ export const FlowApiFactory = function (configuration?: Configuration, basePath?
          * @param {number} [pageSize] 
          * @param {number} [pageNumber] 
          * @param {string} [keyword] 
+         * @param {boolean} [populateCount] return node and edges count fields
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowListResponse> {
-            return localVarFp.getAllFlows(pageSize, pageNumber, keyword, options).then((request) => request(axios, basePath));
+        getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, populateCount?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<FlowListResponse> {
+            return localVarFp.getAllFlows(pageSize, pageNumber, keyword, populateCount, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -447,12 +454,13 @@ export class FlowApi extends BaseAPI {
      * @param {number} [pageSize] 
      * @param {number} [pageNumber] 
      * @param {string} [keyword] 
+     * @param {boolean} [populateCount] return node and edges count fields
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FlowApi
      */
-    public getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, options?: RawAxiosRequestConfig) {
-        return FlowApiFp(this.configuration).getAllFlows(pageSize, pageNumber, keyword, options).then((request) => request(this.axios, this.basePath));
+    public getAllFlows(pageSize?: number, pageNumber?: number, keyword?: string, populateCount?: boolean, options?: RawAxiosRequestConfig) {
+        return FlowApiFp(this.configuration).getAllFlows(pageSize, pageNumber, keyword, populateCount, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

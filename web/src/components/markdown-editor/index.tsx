@@ -31,7 +31,7 @@ import cs from 'classnames';
 import { useRef } from 'react';
 import { IconImage } from '@arco-design/web-react/icon';
 import viewModeRefPlugin, { ViewModeRef } from './plugins/view-mode-ref';
-import CodeEditor from './components/code-editor';
+import MarkdownCodeEditor from './components/code-editor';
 import { Upload } from '@arco-design/web-react';
 import API from '@/services/api';
 import { FileEntity } from '@api/models';
@@ -86,7 +86,7 @@ export const MarkdownEditor = (props: MarkdownEditorProps) => {
               {
                 match: () => true,
                 priority: 0,
-                Editor: CodeEditor,
+                Editor: MarkdownCodeEditor,
               },
             ],
             defaultCodeBlockLanguage: 'text',

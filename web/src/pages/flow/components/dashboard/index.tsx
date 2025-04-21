@@ -92,10 +92,11 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        // fitView={true}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         connectionLineComponent={ConnectionLine}
+        // fitView={true}
+        snapToGrid={true}
       >
         {minimapVisible && <MiniMap pannable={true} zoomable={true} />}
         <Panel position="bottom-left">

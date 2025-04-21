@@ -11,7 +11,7 @@ import {
   useCodeBlockEditorContext,
 } from '@mdxeditor/editor';
 
-export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
+export const MarkdownCodeEditor: FC<CodeBlockEditorProps> = (props) => {
   const { language, code } = props;
   const ctx = useCodeBlockEditorContext();
   const [activeEditor] = useCellValues(activeEditor$);
@@ -31,7 +31,7 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
 
   return (
     <div
-      className={styles.codeEditor}
+      className={styles.markdownCodeEditor}
       onKeyDown={(e) => e.nativeEvent.stopImmediatePropagation()}
     >
       <ResizeBox
@@ -99,7 +99,6 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
               // theme: 'vs-dark',
               automaticLayout: true,
             }}
-            height="100%"
             language={language}
             value={code}
             onChange={(value) => ctx.setCode(value || '')}
@@ -110,4 +109,4 @@ export const CodeEditor: FC<CodeBlockEditorProps> = (props) => {
   );
 };
 
-export default CodeEditor;
+export default MarkdownCodeEditor;

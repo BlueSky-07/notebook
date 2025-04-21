@@ -1,8 +1,8 @@
 import { FlowEntity } from '@api/models';
 import API from '@/services/api';
 import TipButton from '@/components/tip-button';
-import { IconDelete } from '@arco-design/web-react/icon';
 import { useRequest } from 'ahooks';
+import { FileX } from 'lucide-react';
 
 interface DeleteFlowProps {
   flow: Pick<FlowEntity, 'id' | 'name'>;
@@ -17,12 +17,16 @@ const DeleteFlow = (props: DeleteFlowProps) => {
   return (
     <TipButton
       tip="Delete"
-      icon={<IconDelete />}
+      icon={<FileX style={{ width: 16, height: 16 }} />}
       status="danger"
       type="text"
       size="mini"
       popconfirmProps={{
-        icon: <IconDelete style={{ color: 'rgb(var(--danger-6))' }} />,
+        icon: (
+          <FileX
+            style={{ width: 16, height: 16, color: 'rgb(var(--danger-6))' }}
+          />
+        ),
         title: (
           <span style={{ color: 'rgb(var(--danger-6))' }}>Delete Flow</span>
         ),

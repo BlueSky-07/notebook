@@ -91,6 +91,12 @@ export class EdgeService {
     });
   }
 
+  countEdgesByFlowId(flowId: FlowEntity['id']): Promise<number> {
+    return this.edgeRepository.countBy({
+      flowId,
+    });
+  }
+
   async deleteEdge(id: EdgeEntity['id']): Promise<boolean> {
     const record = await this.getEdge(id);
     const res = await this.edgeRepository.delete({

@@ -12,11 +12,11 @@ importers:
         specifier: ^2.66.1
         version: 2.66.1(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@lobehub/icons':
-        specifier: ^1.97.0
-        version: 1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^1.97.1
+        version: 1.97.1(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mdxeditor/editor':
         specifier: ^3.30.1
-        version: 3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)
+        version: 3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.26)
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -41,6 +41,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-react:
+        specifier: ^0.503.0
+        version: 0.503.0(react@19.1.0)
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -57,8 +60,8 @@ importers:
         specifier: ^7.8.2
         version: 7.8.2
       yjs:
-        specifier: ^13.6.25
-        version: 13.6.25
+        specifier: ^13.6.26
+        version: 13.6.26
       zustand:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.1.2)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.4.0(react@19.1.0))
@@ -70,8 +73,8 @@ importers:
         specifier: ^1.3.5
         version: 1.3.5
       '@rspack/plugin-react-refresh':
-        specifier: ^1.2.1
-        version: 1.2.1(react-refresh@0.17.0)
+        specifier: ^1.2.2
+        version: 1.2.2(react-refresh@0.17.0)
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.8.3)
@@ -82,8 +85,8 @@ importers:
         specifier: ^19.1.2
         version: 19.1.2
       eslint:
-        specifier: ^9.24.0
-        version: 9.24.0
+        specifier: ^9.25.0
+        version: 9.25.0
       less-loader:
         specifier: ^12.2.0
         version: 12.2.0(@rspack/core@1.3.5)(less@4.2.2)
@@ -928,28 +931,28 @@ packages:
     resolution: {integrity: sha512-fxlS1kkIjx8+vy2SjuCB94q3htSNrufYTXubwiBFeaQHbH6Ipi43gFJq2zCMt6PHhImH3Xmr0NksKDvchWlpQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/config-helpers@0.2.0':
-    resolution: {integrity: sha512-yJLLmLexii32mGrhW29qvU3QBVTu0GUmEf/J4XsBtVhp4JkIUFN/BjWqTF63yRvGApIDpZm5fa97LtYtINmfeQ==}
+  '@eslint/config-helpers@0.2.1':
+    resolution: {integrity: sha512-RI17tsD2frtDu/3dmI7QRrD4bedNKPM08ziRYaC5AhkGrzIAJelm9kJU1TznK+apx6V+cqRz8tfpEeG3oIyjxw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/core@0.12.0':
-    resolution: {integrity: sha512-cmrR6pytBuSMTaBweKoGMwu3EiHiEC+DoyupPmlZ0HxBJBtIxwe+j/E4XPIKNx+Q74c8lXKPwYawBf5glsTkHg==}
+  '@eslint/core@0.13.0':
+    resolution: {integrity: sha512-yfkgDw1KR66rkT5A8ci4irzDysN7FRpq3ttJolR88OqQikAWqwA8j5VZyas+vjyBNFIJ7MfybJ9plMILI2UrCw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/eslintrc@3.3.1':
     resolution: {integrity: sha512-gtF186CXhIl1p4pJNGZw8Yc6RlshoePRvE0X91oPGb3vZ8pM3qOS9W9NGPat9LziaBV7XrJWGylNQXkGcnM3IQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.24.0':
-    resolution: {integrity: sha512-uIY/y3z0uvOGX8cp1C2fiC4+ZmBhp6yZWkojtHL1YEMnRt1Y63HB9TM17proGEmeG7HeUY+UP36F0aknKYTpYA==}
+  '@eslint/js@9.25.0':
+    resolution: {integrity: sha512-iWhsUS8Wgxz9AXNfvfOPFSW4VfMXdVhp1hjkZVhXCrpgh/aLcc45rX6MPu+tIVUWDw0HfNwth7O28M1xDxNf9w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.6':
     resolution: {integrity: sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/plugin-kit@0.2.7':
-    resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
+  '@eslint/plugin-kit@0.2.8':
+    resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@floating-ui/core@0.7.3':
@@ -1194,8 +1197,8 @@ packages:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
 
-  '@lobehub/icons@1.97.0':
-    resolution: {integrity: sha512-MsIeWgt+Obkx+gcbRHiv2M2zYAaEA+i9b5h40MK2zl5mR3A+T967bU3UvmWgpOXoiSlJYxIk06DURtwxJHWz1A==}
+  '@lobehub/icons@1.97.1':
+    resolution: {integrity: sha512-AoUofdqr74TImbwNJrEjzFMnaBnQBJHFm7ElXS/sh+4kL10+O5o/APsLolpPXWmAvBIrCCVJweG258E5Q9qVzQ==}
     peerDependencies:
       antd: ^5.23.0
       react: ^18.0.0 || ^19.0.0
@@ -1892,8 +1895,8 @@ packages:
     resolution: {integrity: sha512-VynGOEsVw2s8TAlLf/uESfrgfrq2+rcXB1muPJYBWbsm1Oa6r5qVQhjA5ggM6z/coYPrsVMgovl3Ff7Q7OCp1w==}
     engines: {node: '>=16.0.0'}
 
-  '@rspack/plugin-react-refresh@1.2.1':
-    resolution: {integrity: sha512-zqf81473NYGpp/D4BOC0jmszZS4WFUUBNPK6auQB0zHxyyBzSIW+KjXpeNqCyTROJPZvwPr/Z33LCumR0Vd4Pg==}
+  '@rspack/plugin-react-refresh@1.2.2':
+    resolution: {integrity: sha512-3/PzqthI0/r2Dn+aM5UBGW74q6s0e3ee8b0eKt/7xc9iK0M6ri3PXUdcq/y8XWi5tcmYxBlg8ryS4IeYrkySCw==}
     peerDependencies:
       react-refresh: '>=0.10.0 <1.0.0'
       webpack-hot-middleware: 2.x
@@ -3055,8 +3058,8 @@ packages:
     resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  eslint@9.24.0:
-    resolution: {integrity: sha512-eh/jxIEJyZrvbWRe4XuVclLPDYSYYYgLy5zXGGxD6j8zjSAxFEzI2fL/8xNq6O2yKqVt+eF2YhV+hxjV6UKXwQ==}
+  eslint@9.25.0:
+    resolution: {integrity: sha512-MsBdObhM4cEwkzCiraDv7A6txFXEqtNXOb877TsSp2FCkBNl8JfVQrmiuDqC1IkejT6JLPzYBXx/xAiYhyzgGA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
     peerDependencies:
@@ -3738,6 +3741,11 @@ packages:
 
   lucide-react@0.484.0:
     resolution: {integrity: sha512-oZy8coK9kZzvqhSgfbGkPtTgyjpBvs3ukLgDPv14dSOZtBtboryWF5o8i3qen7QbGg7JhiJBz5mK1p8YoMZTLQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lucide-react@0.503.0:
+    resolution: {integrity: sha512-HGGkdlPWQ0vTF8jJ5TdIqhQXZi6uh3LnNgfZ8MHiuxFfX3RZeA79r2MW2tHAZKlAVfoNE8esm3p+O6VkIvpj6w==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -5362,8 +5370,8 @@ packages:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
 
-  yjs@13.6.25:
-    resolution: {integrity: sha512-bojrx9xmwh14yqaubNMyZ3/3CoTiRdpxaMo8wbJNsbHP8q/1Tdg+krggEaeek/Kh+325wthbWGseI4r72IKF+g==}
+  yjs@13.6.26:
+    resolution: {integrity: sha512-wiARO3wixu7mtoRP5f7LqpUtsURP9SmNgXUt3RlnZg4qDuF7dUjthwIvwxIDmK55dPw4Wl4QdW5A3ag0atwu7g==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yocto-queue@0.1.0:
@@ -6654,9 +6662,9 @@ snapshots:
 
   '@emotion/weak-memoize@0.4.0': {}
 
-  '@eslint-community/eslint-utils@4.5.1(eslint@9.24.0)':
+  '@eslint-community/eslint-utils@4.5.1(eslint@9.25.0)':
     dependencies:
-      eslint: 9.24.0
+      eslint: 9.25.0
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.1': {}
@@ -6669,9 +6677,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/config-helpers@0.2.0': {}
+  '@eslint/config-helpers@0.2.1': {}
 
-  '@eslint/core@0.12.0':
+  '@eslint/core@0.13.0':
     dependencies:
       '@types/json-schema': 7.0.15
 
@@ -6689,13 +6697,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.24.0': {}
+  '@eslint/js@9.25.0': {}
 
   '@eslint/object-schema@2.1.6': {}
 
-  '@eslint/plugin-kit@0.2.7':
+  '@eslint/plugin-kit@0.2.8':
     dependencies:
-      '@eslint/core': 0.12.0
+      '@eslint/core': 0.13.0
       levn: 0.4.1
 
   '@floating-ui/core@0.7.3': {}
@@ -6892,7 +6900,7 @@ snapshots:
       '@lexical/utils': 0.27.2
       lexical: 0.27.2
 
-  '@lexical/react@0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)':
+  '@lexical/react@0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.26)':
     dependencies:
       '@lexical/clipboard': 0.27.2
       '@lexical/code': 0.27.2
@@ -6911,7 +6919,7 @@ snapshots:
       '@lexical/table': 0.27.2
       '@lexical/text': 0.27.2
       '@lexical/utils': 0.27.2
-      '@lexical/yjs': 0.27.2(yjs@13.6.25)
+      '@lexical/yjs': 0.27.2(yjs@13.6.26)
       lexical: 0.27.2
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -6947,12 +6955,12 @@ snapshots:
       '@lexical/table': 0.27.2
       lexical: 0.27.2
 
-  '@lexical/yjs@0.27.2(yjs@13.6.25)':
+  '@lexical/yjs@0.27.2(yjs@13.6.26)':
     dependencies:
       '@lexical/offset': 0.27.2
       '@lexical/selection': 0.27.2
       lexical: 0.27.2
-      yjs: 13.6.25
+      yjs: 13.6.26
 
   '@lezer/common@1.2.3': {}
 
@@ -7075,7 +7083,7 @@ snapshots:
       - acorn
       - supports-color
 
-  '@lobehub/icons@1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@lobehub/icons@1.97.1(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@lobehub/ui': 1.170.8(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       antd: 5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -7104,7 +7112,7 @@ snapshots:
       '@floating-ui/react': 0.27.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@giscus/react': 3.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@lobehub/fluent-emoji': 1.2.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@lobehub/icons': 1.97.0(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@lobehub/icons': 1.97.1(@babel/core@7.26.9)(@types/react@19.1.2)(acorn@8.14.0)(antd@5.24.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@mdx-js/react': 3.1.0(@types/react@19.1.2)(react@19.1.0)
       '@radix-ui/react-slot': 1.1.2(@types/react@19.1.2)(react@19.1.0)
@@ -7196,7 +7204,7 @@ snapshots:
       '@types/react': 19.1.2
       react: 19.1.0
 
-  '@mdxeditor/editor@3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)':
+  '@mdxeditor/editor@3.30.1(@codemirror/language@6.11.0)(@lezer/highlight@1.2.1)(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.26)':
     dependencies:
       '@codemirror/lang-markdown': 6.3.2
       '@codemirror/language-data': 6.5.1
@@ -7209,7 +7217,7 @@ snapshots:
       '@lexical/list': 0.27.2
       '@lexical/markdown': 0.27.2
       '@lexical/plain-text': 0.27.2
-      '@lexical/react': 0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.25)
+      '@lexical/react': 0.27.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.26)
       '@lexical/rich-text': 0.27.2
       '@lexical/selection': 0.27.2
       '@lexical/utils': 0.27.2
@@ -7965,7 +7973,7 @@ snapshots:
 
   '@rspack/lite-tapable@1.0.1': {}
 
-  '@rspack/plugin-react-refresh@1.2.1(react-refresh@0.17.0)':
+  '@rspack/plugin-react-refresh@1.2.2(react-refresh@0.17.0)':
     dependencies:
       error-stack-parser: 2.1.4
       html-entities: 2.6.0
@@ -9301,16 +9309,16 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint@9.24.0:
+  eslint@9.25.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@9.24.0)
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.25.0)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.20.0
-      '@eslint/config-helpers': 0.2.0
-      '@eslint/core': 0.12.0
+      '@eslint/config-helpers': 0.2.1
+      '@eslint/core': 0.13.0
       '@eslint/eslintrc': 3.3.1
-      '@eslint/js': 9.24.0
-      '@eslint/plugin-kit': 0.2.7
+      '@eslint/js': 9.25.0
+      '@eslint/plugin-kit': 0.2.8
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.2
@@ -10095,6 +10103,10 @@ snapshots:
       react: 19.1.0
 
   lucide-react@0.484.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+
+  lucide-react@0.503.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -12241,7 +12253,7 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yjs@13.6.25:
+  yjs@13.6.26:
     dependencies:
       lib0: 0.2.99
 

@@ -56,15 +56,17 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 1. Backend server: http://localhost:9001
 
-2. sqlite-web: http://localhost:9105
+2. API Swagger: http://localhost:9001/api-docs
 
-3. Mysql: http://localhost:9106, root/password
+3. Minio OBJECT STORE: http://localhost:9101
 
-4. phpMyAdmin: http://localhost:9107, root/password
+4. sqlite-web: http://localhost:9105
 
-5. Inngest: http://localhost:9108
+5. Mysql: http://localhost:9106, root/password
 
-6. Swagger: http://localhost:9001/api-docs
+6. phpMyAdmin: http://localhost:9107, root/password
+
+7. Inngest: http://localhost:9108
 
 ![phpmyadmin.png](https://github.com/user-attachments/assets/50944063-8174-4854-a56c-72dc8f4ead5f)
 

@@ -14,7 +14,7 @@ const App = () => {
           path="/"
           element={
             <div>
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<></>}>
                 <Outlet />
               </Suspense>
             </div>

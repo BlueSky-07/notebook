@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { FlowEntity } from './flow-entity';
+import type { FlowEntityPopulatedCount } from './flow-entity-populated-count';
 
 /**
  * 
@@ -31,9 +31,9 @@ export interface FlowListResponse {
     'count': number;
     /**
      * 
-     * @type {Array<FlowEntity>}
+     * @type {Array<FlowEntityPopulatedCount>}
      * @memberof FlowListResponse
      */
-    'items': Array<FlowEntity>;
+    'items': Array<FlowEntityPopulatedCount>;
 }
 

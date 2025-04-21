@@ -1,12 +1,72 @@
+:global {
+  html, body {
+    background: var(--color-neutral-1);
+  }
+}
+
 .welcome {
-  width: 100%;
-  height: min(100vh, 200px);
-  display: flex;
+  width: min(100%, 960px);
+  height: 100vh;
+  margin: 0 auto;
+
+  .header {
+    .title .tag {
+      position: relative;
+      top: -16px;
+      .tag-content {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .body {
+    margin: 64px 0;
+    .sub-title {
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .footer {
+    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.link {
+  color: var(--color-text-2);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  .icon {
-    width: 12px;
-    height: 12px;
+  &:hover {
+    color: var(--color-text-1);
+    text-decoration: underline;
   }
+
+  :global(.arco-link-icon) {
+    height: 16px;
+  }
+}
+
+.popup-link-icon svg {
+  width: 14px;
+  height: 14px;
 }

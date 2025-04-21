@@ -45,6 +45,7 @@ docs/FlowAddResponse.md
 docs/FlowApi.md
 docs/FlowDeleteResponse.md
 docs/FlowEntity.md
+docs/FlowEntityPopulatedCount.md
 docs/FlowFull.md
 docs/FlowListResponse.md
 docs/FlowPatchInput.md
@@ -103,6 +104,7 @@ models/file-query-input.ts
 models/flow-add-input.ts
 models/flow-add-response.ts
 models/flow-delete-response.ts
+models/flow-entity-populated-count.ts
 models/flow-entity.ts
 models/flow-full.ts
 models/flow-list-response.ts

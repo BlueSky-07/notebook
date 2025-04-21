@@ -44,6 +44,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
       setTimeout(async () => {
         const latestNodeResp = await API.node.getNode(parseInt(id));
         setContent(latestNodeResp.data.data.content);
+        patchNodeResp.run({ content: latestNodeResp.data.data.content });
       }, 1000);
     },
   });

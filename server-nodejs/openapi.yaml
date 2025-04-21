@@ -57,6 +57,12 @@ paths:
           in: query
           schema:
             type: string
+        - name: populateCount
+          required: false
+          in: query
+          description: return node and edges count fields
+          schema:
+            type: boolean
       responses:
         "200":
           description: ""
@@ -815,6 +821,26 @@ components:
         - id
         - name
         - updatedAt
+    FlowEntityPopulatedCount:
+      type: object
+      properties:
+        nodeCount:
+          type: number
+          description: node count
+        edgeCount:
+          type: number
+          description: edge count
+        id:
+          type: number
+        name:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - updatedAt
     FlowListResponse:
       type: object
       properties:
@@ -823,7 +849,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/FlowEntity"
+            $ref: "#/components/schemas/FlowEntityPopulatedCount"
       required:
         - count
         - items
