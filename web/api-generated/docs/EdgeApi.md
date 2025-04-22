@@ -8,6 +8,7 @@ All URIs are relative to *http://localhost*
 |[**addEdges**](#addedges) | **POST** /edge/batch | |
 |[**deleteEdge**](#deleteedge) | **DELETE** /edge/{id} | |
 |[**deleteEdges**](#deleteedges) | **DELETE** /edge/batch | |
+|[**deleteEdgesByNodeId**](#deleteedgesbynodeid) | **DELETE** /edge/admin/delete-by-node-id | |
 |[**getEdge**](#getedge) | **GET** /edge/{id} | |
 |[**getEdges**](#getedges) | **GET** /edge/batch | |
 |[**patchEdge**](#patchedge) | **PATCH** /edge/{id} | |
@@ -198,6 +199,57 @@ const { status, data } = await apiInstance.deleteEdges(
 ### Return type
 
 **EdgeDeleteResponse**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteEdgesByNodeId**
+> AdminDeleteEdgeByNodeIdResponse deleteEdgesByNodeId(adminDeleteEdgeByNodeIdInput)
+
+
+### Example
+
+```typescript
+import {
+    EdgeApi,
+    Configuration,
+    AdminDeleteEdgeByNodeIdInput
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new EdgeApi(configuration);
+
+let adminDeleteEdgeByNodeIdInput: AdminDeleteEdgeByNodeIdInput; //
+
+const { status, data } = await apiInstance.deleteEdgesByNodeId(
+    adminDeleteEdgeByNodeIdInput
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **adminDeleteEdgeByNodeIdInput** | **AdminDeleteEdgeByNodeIdInput**|  | |
+
+
+### Return type
+
+**AdminDeleteEdgeByNodeIdResponse**
 
 ### Authorization
 

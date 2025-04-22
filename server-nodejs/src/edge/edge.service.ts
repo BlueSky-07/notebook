@@ -53,7 +53,7 @@ export class EdgeService {
         this.inngestService.inngest,
         EdgeEvent.EVENT_NAMES.EDGE_UPDATED,
         {
-          edgeId: id,
+          edgeId: record.id,
           flowId: record.flowId,
         },
       );
@@ -107,7 +107,7 @@ export class EdgeService {
         this.inngestService.inngest,
         EdgeEvent.EVENT_NAMES.EDGE_DELETED,
         {
-          edgeId: id,
+          edgeId: record.id,
           flowId: record.flowId,
         },
       );
@@ -214,12 +214,14 @@ export class EdgeService {
   }
 
   async deleteEdgesByNodeId(
+    dryRun = true,
     nodeId: EdgeEntity['id'],
   ): Promise<EdgeEntity['id'][]> {
     const records = await this.edgeRepository.find({
       where: [{ sourceNodeId: nodeId }, { targetNodeId: nodeId }],
     });
     if (!records.length) return [];
+    if (dryRun) return records.map((record) => record.id);
     const res = await this.edgeRepository.delete({
       id: In(records.map((record) => record.id)),
     });

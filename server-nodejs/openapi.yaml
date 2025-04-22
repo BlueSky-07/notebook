@@ -363,6 +363,25 @@ paths:
                 $ref: "#/components/schemas/EdgeDeleteResponse"
       tags:
         - Edge
+  /edge/admin/delete-by-node-id:
+    delete:
+      operationId: deleteEdgesByNodeId
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminDeleteEdgeByNodeIdInput"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminDeleteEdgeByNodeIdResponse"
+      tags:
+        - Edge
   /edge:
     post:
       operationId: addEdge
@@ -1070,6 +1089,30 @@ components:
           type: boolean
       required:
         - done
+    AdminDeleteEdgeByNodeIdInput:
+      type: object
+      properties:
+        dryRun:
+          type: boolean
+          default: true
+        nodeId:
+          type: number
+      required:
+        - nodeId
+    AdminDeleteEdgeByNodeIdResponse:
+      type: object
+      properties:
+        ids:
+          description: id of deleted edges
+          type: array
+          items:
+            type: number
+        count:
+          type: number
+          description: count of deleted edges
+      required:
+        - ids
+        - count
     EdgeAddResponse:
       type: object
       properties:

@@ -112,7 +112,7 @@ export class GeneratingTaskService {
       this.inngestService.inngest,
       GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_STATUS_UPDATED,
       {
-        generatingTaskId: id,
+        generatingTaskId: record.id,
         targetNodeId: record.targetNodeId,
         generatingTaskStatus: generatingTaskPatchInput.status,
       },
@@ -144,7 +144,7 @@ export class GeneratingTaskService {
       this.inngestService.inngest,
       GeneratingTaskEvent.EVENT_NAMES.GENERATING_TASK_STATUS_UPDATED,
       {
-        generatingTaskId: id,
+        generatingTaskId: record.id,
         targetNodeId: record.targetNodeId,
         generatingTaskStatus: GeneratingTaskStatus.Stopped,
       },

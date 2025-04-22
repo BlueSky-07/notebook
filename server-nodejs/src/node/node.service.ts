@@ -56,7 +56,7 @@ export class NodeService {
         this.inngestService.inngest,
         NodeEvent.EVENT_NAMES.NODE_UPDATED,
         {
-          nodeId: id,
+          nodeId: record.id,
           flowId: record.flowId,
         },
       );
@@ -110,7 +110,7 @@ export class NodeService {
         this.inngestService.inngest,
         NodeEvent.EVENT_NAMES.NODE_DELETED,
         {
-          nodeId: id,
+          nodeId: record.id,
           flowId: record.flowId,
         },
       );

@@ -1,16 +1,14 @@
 # Notebook
 
-A platform for recording your thoughts.
+A flow based note-taking tool.
 
 *Note: This project is currently in the early stages of development*
 
 ## Screenshots
 
-![preview.png](https://github.com/user-attachments/assets/c22bdf61-fc27-4a64-89ad-d52b04988ee8)
+![preview.png](https://github.com/user-attachments/assets/d2f47f00-d6bc-480e-b22e-844e8a88437a)
 
-https://github.com/user-attachments/assets/7c24bfec-cc3c-4073-99d9-e2ca36268006
-
-https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
+https://github.com/user-attachments/assets/96fe66fc-0408-4f7c-af7d-5971e6fdc898
 
 ## Features
 
@@ -18,74 +16,105 @@ https://github.com/user-attachments/assets/f93ad939-0389-4420-bcdc-94ad20a45232
 
 2. Add lines between nodes to illustrate the relationship between two thoughts.
 
-3. You can put a prompt text in the node, and then use AI to generate content. The generation process will refer to the content of associated nodes!
+3. You can place prompt text in the node and then use the AI ​​model to assist writing. The generation process will refer to the content of the associated node!
+
+4. You can upload or generate images and use them to generate other content.
 
 ## Features in development
 
-1. Image node, used to upload your photos.
+1. Supports file type nodes for uploading documents, slides, tables, etc.
 
-2. File node, used to upload your documents, slides, tables, etc.
+2. Supports multi-person collaborative editing, allowing joint creation through shared links.
 
-3. Collaborative editing by multiple people, sharing links to participate in joint creation.
+3. Export the entire file as a report, or a file that can be imported into other note-taking applications such as Obsidian.
 
-4. You can export the entire file as a report, or a file that can be imported into other note apps like Obsidian.
+4. Support flow nesting, referencing other files as nodes into the current flow.
 
-5. File nesting, supports referencing other files as a node of the current file.
+## Run in development mode
 
-6. Generate images by AI.
+### 1. start backend
 
-## Run the project in development mode
+currently backend is implemented by Node.js, project location: [server-nodejs/](server-nodejs/)
 
-### server-nodejs
+#### 1.1 Dependencies
 
-#### Dependencies
+1. Docker Compose, to run the following services:
 
-1. Docker Compose: Run Mysql/Inngest/OpenAPI Generator/phpMyAdmin/sqlitebrowser
+    - **MinIO & MinIO OBJECT STORE**: to store user's uploaded images, and llm's generated images.
+
+       *This service is optional, you can switch to any other S3 service.*
+
+    - **sqlite-web**: to view data in database, if using sqlite as database.
+
+       *This service is optional.*
+
+    - **MySQL**: to store data.
+
+       *This service is optional, check [1.2 Steps / prepare environment](#12-steps) below.*
+
+    - **phpMyAdmin**: to view data in database, if using mysql as database.
+
+      *This service is optional.*
+
+    - **Inngest**: to run async asynchronous tasks like calling llm for generating content.
+
+      **This service is required.**
 
 2. nodejs
 
-#### Steps
+#### 1.2 Steps
 
-1. `npm -g install pnpm && pnpm install`
+1. edit config file: [server-nodejs/config/app.yaml](server-nodejs/config/app.yaml)
 
-2. `pnpm compose:mysql` or `pnpm compose:sqlite`, depends on `db.type` in [config/app.yaml](./server-nodejs/config/app.yaml)
+2. create aksk config file: [server-nodejs/config/aksk.yaml](server-nodejs/config/aksk.yaml), configurations in this file can override `app.yaml`, used to store secrets like LLM's API Keys.
 
-3. `pnpm start:dev`
+3. install dependencies: `npm -g install pnpm && pnpm install`
 
-#### Running services
+4. prepare environment: `pnpm compose:mysql` or `pnpm compose:sqlite`, depends on `db.type` in [server-nodejs/config/app.yaml](./server-nodejs/config/app.yaml)
 
-1. Backend server: http://localhost:9001
+3. start the server: `pnpm start:dev`
 
-2. API Swagger: http://localhost:9001/api-docs
+#### 1.3 Running services
 
-3. Minio OBJECT STORE: http://localhost:9101
+- **Backend server**: http://localhost:9001
+- **API Swagger**: http://localhost:9001/api-docs
+- **MinIO OBJECT STORE**: http://localhost:9101
+  
+  `minioadmin/minioadmin`
 
-4. sqlite-web: http://localhost:9105
+- **sqlite-web**: http://localhost:9105
+- **MySQL**: http://localhost:9106
+  
+  `root/password`
 
-5. Mysql: http://localhost:9106, root/password
+- **phpMyAdmin**: http://localhost:9107
 
-6. phpMyAdmin: http://localhost:9107, root/password
+  `root/password`
 
-7. Inngest: http://localhost:9108
+- **Inngest**: http://localhost:9108
 
-![phpmyadmin.png](https://github.com/user-attachments/assets/50944063-8174-4854-a56c-72dc8f4ead5f)
+![swagger.png](https://github.com/user-attachments/assets/58bfcc62-c329-4c97-942d-450998fc41cf)
 
-![inngest.png](https://github.com/user-attachments/assets/01cf9df6-9dc3-40cd-b324-8aef4bc2e711)
+![sqlite-web.png](https://github.com/user-attachments/assets/13dfe81e-4cd3-4691-8724-c10656cd72d8)
 
-![swagger.png](https://github.com/user-attachments/assets/9f6df245-6dc9-46d1-86ee-396dd71d458b)
+![phpmyadmin.png](https://github.com/user-attachments/assets/bbae65a2-dafa-49ae-87c5-a56052f2206b)
 
-### web
+![inngest.png](https://github.com/user-attachments/assets/8c29c7f1-9b7d-4c4d-9c49-9472ffaa7963)
 
-#### Dependencies
+### 2. start frontend
+
+project location: [web/](web/)
+
+#### 2.1 Dependencies
 
 1. nodejs
 
-#### Steps
+#### 2.2 Steps
 
-1. `npm -g install pnpm && pnpm install`
+1. install dependencies: `npm -g install pnpm && pnpm install`
 
-2. `pnpm dev`
+2. start the dev server: `pnpm dev`
 
-#### Running services
+#### 2.3 Running services
 
-1. Frontend dev server: http://localhost:9000
+- Frontend dev server: http://localhost:9000

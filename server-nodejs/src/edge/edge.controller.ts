@@ -10,6 +10,8 @@ import {
 import { EdgeService } from './edge.service';
 import { EdgeEntity } from './edge.entity';
 import {
+  AdminDeleteEdgeByNodeIdInput,
+  AdminDeleteEdgeByNodeIdResponse,
   BatchEdgeAddInput,
   BatchEdgeAddResponse,
   BatchEdgeDeleteInput,
@@ -53,6 +55,17 @@ export class EdgeController {
       batchEdgeDeleteInput.ids,
     );
     return { done };
+  }
+
+  @Delete('admin/delete-by-node-id')
+  async deleteEdgesByNodeId(
+    @Body() adminDeleteEdgeByNodeIdInput: AdminDeleteEdgeByNodeIdInput,
+  ): Promise<AdminDeleteEdgeByNodeIdResponse> {
+    const deleteEdgeIds = await this.edgeService.deleteEdgesByNodeId(
+      adminDeleteEdgeByNodeIdInput.dryRun,
+      adminDeleteEdgeByNodeIdInput.nodeId,
+    );
+    return { ids: deleteEdgeIds, count: deleteEdgeIds.length };
   }
 
   @Post('')

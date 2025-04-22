@@ -10,6 +10,8 @@ clients/generating-task-api.ts
 clients/node-api.ts
 common.ts
 configuration.ts
+docs/AdminDeleteEdgeByNodeIdInput.md
+docs/AdminDeleteEdgeByNodeIdResponse.md
 docs/AiApi.md
 docs/AiModelInfo.md
 docs/AiModelsResponse.md
@@ -74,6 +76,8 @@ docs/NodeState.md
 docs/StorageBucketName.md
 git_push.sh
 index.ts
+models/admin-delete-edge-by-node-id-input.ts
+models/admin-delete-edge-by-node-id-response.ts
 models/ai-model-info.ts
 models/ai-models-response.ts
 models/batch-edge-add-input.ts

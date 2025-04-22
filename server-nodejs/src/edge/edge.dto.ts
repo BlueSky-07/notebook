@@ -1,3 +1,4 @@
+import { NodeEntity } from '../node/node.entity';
 import {
   EdgeEntity,
   EdgeData,
@@ -95,4 +96,24 @@ export class BatchEdgePatchInput {
 export class BatchEdgeDeleteInput {
   @ApiProperty({ type: Number, isArray: true })
   ids: EdgeEntity['id'][];
+}
+
+export class AdminDeleteEdgeByNodeIdInput {
+  @ApiProperty({ type: Boolean, required: false, default: true })
+  dryRun?: boolean;
+
+  @ApiProperty({ type: Number, required: true })
+  nodeId: NodeEntity['id'];
+}
+
+export class AdminDeleteEdgeByNodeIdResponse {
+  @ApiProperty({
+    type: Number,
+    description: 'id of deleted edges',
+    isArray: true,
+  })
+  ids: EdgeEntity['id'][];
+
+  @ApiProperty({ type: Number, description: 'count of deleted edges' })
+  count: number;
 }

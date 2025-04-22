@@ -1,3 +1,5 @@
+export * from './admin-delete-edge-by-node-id-input';
+export * from './admin-delete-edge-by-node-id-response';
 export * from './ai-model-info';
 export * from './ai-models-response';
 export * from './batch-edge-add-input';

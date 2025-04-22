@@ -32,6 +32,7 @@ export const createDeleteEdgesAfterNodeDeletedFunction = (
           await step.run('delete edges after node deleted', async () => {
             logger.log(`delete edges after node deleted: ${event.data.nodeId}`);
             const deletedEdgeIds = await edgeService.deleteEdgesByNodeId(
+              false,
               event.data.nodeId,
             );
             return {
