@@ -1,47 +1,103 @@
-import { Descriptions, Drawer } from '@arco-design/web-react';
+import {
+  Descriptions,
+  Drawer,
+  Dropdown,
+  Menu,
+  Spin,
+} from '@arco-design/web-react';
 import { UseGeneratingTask } from './use-generating-task';
-import { Bot } from 'lucide-react';
+import { Bot, Undo2, Redo2 } from 'lucide-react';
 import { useState } from 'react';
 import { formatRelativeDate } from '@/utils/dayjs';
 import CodeEditor from '@/components/code-editor';
 import ModelInfo from '@/components/model-info';
 import TipButton from '@/components/tip-button';
 import { GeneratingTaskStatusEnum } from '@api/models';
+import styles from './styles.module.less';
 
 type GeneratingTaskStatusProps = Pick<
   UseGeneratingTask,
   'id' | 'data' | 'status' | 'refresh'
->;
+> & {
+  onUndo?: () => void;
+  onRedo?: () => void;
+};
 
 export const GeneratingTaskStatus = (props: GeneratingTaskStatusProps) => {
-  const { id, data, status, refresh } = props;
+  const { id, data, status, refresh, onUndo, onRedo } = props;
   const [visible, setVisible] = useState(false);
 
   return (
     <>
       {id && (
-        <TipButton
-          tip={data?.output?.errorMessage}
-          icon={<Bot style={{ width: 16, height: 16 }} />}
-          type="text"
-          onClick={() => {
-            setVisible(true);
-            refresh();
+        <Dropdown
+          onVisibleChange={(visible) => {
+            if (visible && !data) {
+              refresh();
+            }
           }}
-          status={
-            (
-              {
-                [GeneratingTaskStatusEnum.Pending]: 'default',
-                [GeneratingTaskStatusEnum.Generating]: 'default',
-                [GeneratingTaskStatusEnum.Done]: 'success',
-                [GeneratingTaskStatusEnum.Stopped]: 'warning',
-                [GeneratingTaskStatusEnum.Failed]: 'danger',
-              } as Record<string, 'default' | 'danger' | 'success' | 'warning'>
-            )[status || ''] || 'default'
+          droplist={
+            <Menu>
+              <Spin loading={!data}>
+                {onUndo && (
+                  <Menu.Item
+                    key="undo"
+                    onClick={() => {
+                      onUndo?.();
+                    }}
+                  >
+                    <div className={styles.statusMenuItem}>
+                      <Undo2 className={styles.statusMenuItemIcon} />
+                      Undo
+                    </div>
+                  </Menu.Item>
+                )}
+                {onRedo && (
+                  <Menu.Item
+                    key="redo"
+                    onClick={() => {
+                      onRedo?.();
+                    }}
+                  >
+                    <div className={styles.statusMenuItem}>
+                      <Redo2 className={styles.statusMenuItemIcon} />
+                      Redo
+                    </div>
+                  </Menu.Item>
+                )}
+              </Spin>
+            </Menu>
           }
+          disabled={status !== GeneratingTaskStatusEnum.Done}
         >
-          {status}
-        </TipButton>
+          <div>
+            <TipButton
+              tip={data?.output?.errorMessage}
+              icon={<Bot style={{ width: 16, height: 16 }} />}
+              type="text"
+              onClick={() => {
+                setVisible(true);
+                if (!data) refresh();
+              }}
+              status={
+                (
+                  {
+                    [GeneratingTaskStatusEnum.Pending]: 'default',
+                    [GeneratingTaskStatusEnum.Generating]: 'default',
+                    [GeneratingTaskStatusEnum.Done]: 'success',
+                    [GeneratingTaskStatusEnum.Stopped]: 'warning',
+                    [GeneratingTaskStatusEnum.Failed]: 'danger',
+                  } as Record<
+                    string,
+                    'default' | 'danger' | 'success' | 'warning'
+                  >
+                )[status || ''] || 'default'
+              }
+            >
+              {status}
+            </TipButton>
+          </div>
+        </Dropdown>
       )}
       <Drawer
         title="Generating Task Detail"

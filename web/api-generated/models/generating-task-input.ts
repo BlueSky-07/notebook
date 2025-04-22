@@ -42,6 +42,12 @@ export interface GeneratingTaskInput {
      */
     'prompt'?: Array<GeneratingTaskInputPrompt>;
     /**
+     * generating to target node
+     * @type {NodeEntity}
+     * @memberof GeneratingTaskInput
+     */
+    'targetNodeSnapshot'?: NodeEntity;
+    /**
      * 
      * @type {Array<Array<NodeEntity>>}
      * @memberof GeneratingTaskInput

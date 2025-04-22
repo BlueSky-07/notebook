@@ -22,14 +22,16 @@ export interface GenerateTextNodeContentFunctionDependencies {
 }
 
 const GenerateTextNodeContentErrors = {
-  EmptyPrompt: new NonRetriableError('Empty Prompt'),
+  EmptyPrompt: new NonRetriableError('Prompt is empty'),
   NotGenerating: new NonRetriableError(
     'Generating Task status is not generating',
   ),
-  EmptyGenerated: new NonRetriableError('Empty Generated'),
+  EmptyGenerated: new NonRetriableError('Generated empty result'),
   ModelIdIsMissing: new NonRetriableError('Model id is missing'),
-  ModelNotFound: new NonRetriableError('Model not found'),
-  ModelNotSupport: new NonRetriableError('Model not support generating text'),
+  ModelNotFound: new NonRetriableError('Model is not found'),
+  ModelNotSupport: new NonRetriableError(
+    'Model does not support generating text',
+  ),
 };
 
 const GENERATE_TEXT_NODE_CONTENT_FUNCTION_ID = 'job/generate-text-node-content';

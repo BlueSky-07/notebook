@@ -51,13 +51,15 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
 
   const patchNodeResp = usePatchNode<CustomNodeTextData>({ id, data });
 
-  const { getFlowId, modelId } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'modelId'>>(
-      (state) => ({
-        getFlowId: state.getFlowId,
-        modelId: state.modelId,
-      }),
-    ),
+  const { getFlowId, modelId, updateModelId } = useFlowStore(
+    useShallow<
+      FlowState,
+      Pick<FlowState, 'getFlowId' | 'modelId' | 'updateModelId'>
+    >((state) => ({
+      getFlowId: state.getFlowId,
+      modelId: state.modelId,
+      updateModelId: state.updateModelId,
+    })),
   );
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
         minWidth: 500,
         minHeight: 300,
         maxWidth: 2000,
-        maxHeight: 1000,
+        maxHeight: 2000,
       }}
       title={
         <span>
@@ -81,10 +83,13 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
       footer={
         <>
           <GeneratingTaskTrigger
+            modelId={modelId}
+            modelFeatures={['text-generation', 'vision', 'reasoning']}
+            onChangeModelId={updateModelId}
             generating={generating || patchNodeResp.loading}
             icon={<IconItalic />}
             disabled={!modelId}
-            disabledTooltip="Please select a model"
+            disabledTooltip="Please select a model with text generation capability"
             onStartTask={() => {
               if (!modelId) return;
               generatingTask.start({
@@ -103,7 +108,43 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
             }}
             onStopTask={() => generatingTask.stop()}
           />
-          <GeneratingTaskStatus {...generatingTask} />
+          <GeneratingTaskStatus
+            {...generatingTask}
+            onUndo={
+              generatingTask.data?.input.targetNodeSnapshot
+                ? () => {
+                    if (generatingTask.data?.input.targetNodeSnapshot) {
+                      setContent(
+                        generatingTask.data?.input.targetNodeSnapshot.data
+                          ?.content,
+                      );
+                      patchNodeResp.run({
+                        content:
+                          generatingTask.data?.input.targetNodeSnapshot.data
+                            ?.content,
+                      });
+                    }
+                  }
+                : undefined
+            }
+            onRedo={
+              generatingTask.data?.output.generatedText
+                ? () => {
+                    if (generatingTask.data?.output.generatedText) {
+                      const content = [
+                        generatingTask.data?.input.targetNodeSnapshot?.data
+                          ?.content,
+                        generatingTask.data?.output.generatedText,
+                      ]
+                        .filter(Boolean)
+                        .join('\n\n');
+                      setContent(content);
+                      patchNodeResp.run({ content });
+                    }
+                  }
+                : undefined
+            }
+          />
         </>
       }
     >

@@ -2,12 +2,33 @@
   max-width: 165px;
   position: absolute;
   pointer-events: all;
+  padding: 5px;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius-medium);
+  background-color: rgba(var(--gray-1), 0.25);
+  transition: box-shadow 300ms;
+
+  &:hover {
+    background-color: var(--color-bg-white);
+    padding: 5px 10px;
+    border-color: var(--color-border-3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+  }
 
   .toolbar {
     text-align: center;
   }
 
-  .label {
-    margin-bottom: 0;
+  .label-wrapper {
+    display: flex;
+    justify-content: center;
+    .label-action-button {
+      margin: 0 8px;
+      color: rgb(var(--primary-6));
+      cursor: pointer;
+      &:hover {
+          color: rgb(var(--primary-5));
+      }
+    }
   }
 }

@@ -173,6 +173,15 @@ const useFlowStore = create<FlowState>((set, get) => {
             connection.targetHandle,
           );
         }
+      } else if (selectedNodeIds.includes(connection.target)) {
+        for (const target of selectedNodeIds) {
+          get().subject?.addEdge(
+            connection.source,
+            target,
+            connection.sourceHandle,
+            connection.targetHandle,
+          );
+        }
       } else {
         get().subject?.addEdge(
           connection.source,

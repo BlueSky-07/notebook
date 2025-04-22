@@ -80,6 +80,7 @@ export default class FlowSubject {
     if (center && !copyFrom) {
       newNode.position.x = center.x + random(-100, 100);
       newNode.position.y = center.y + random(-100, 100);
+      newNode.zIndex = this.subject.getValue().nodes.length;
     }
     const resp = await API.node.addNode(
       convertFlowNodeToNodeEntity(newNode, this.flowId),

@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Routes, Route } from 'react-router';
-const Welcome = lazy(() => import('@/pages/welcome'));
-const Flow = lazy(() => import('@/pages/flow'));
+const HomePage = lazy(() => import('@/pages/home'));
+const FlowPage = lazy(() => import('@/pages/flow'));
 import '@arco-design/web-react/dist/css/arco.css';
 import { ConfigProvider } from '@arco-design/web-react';
 import enUS from '@arco-design/web-react/es/locale/en-US';
@@ -20,9 +20,9 @@ const App = () => {
             </div>
           }
         >
-          <Route path="flow/:flowId?" element={<Flow />} />
-          <Route path="flow" element={<Flow />} />
-          <Route index element={<Welcome />} />
+          <Route path="flow/:flowId?" element={<FlowPage />} />
+          <Route path="flow" element={<FlowPage />} />
+          <Route index element={<HomePage />} />
         </Route>
       </Routes>
     </ConfigProvider>

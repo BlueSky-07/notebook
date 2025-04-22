@@ -1,4 +1,4 @@
-import { EdgeDataTypeEnum, EdgeEntity, EdgeHandleEnum } from '@api/models';
+import { EdgeDataTypeEnum, EdgeEntity } from '@api/models';
 import {
   BaseEdge,
   EdgeProps,
@@ -10,11 +10,16 @@ import {
 } from '@xyflow/react';
 import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useShallow } from 'zustand/shallow';
-import { Typography } from '@arco-design/web-react';
 import TipButton from '@/components/tip-button';
-import { IconDelete } from '@arco-design/web-react/icon';
+import {
+  IconDelete,
+  IconDoubleUp,
+  IconDoubleDown,
+} from '@arco-design/web-react/icon';
 import cs from 'classnames';
 import styles from './styles.module.less';
+import EditLabel from './actions/edit-label';
+import { Typography } from '@arco-design/web-react';
 
 type CustomEdgeLabelData = Pick<EdgeEntity['data'], 'label'>;
 
@@ -114,6 +119,7 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
         path={edgePath}
         markerStart={markerStart}
         markerEnd={markerEnd}
+        interactionWidth={50}
       />
       <EdgeLabelRenderer>
         <div
@@ -146,22 +152,35 @@ export const LabelEdge = (props: CustomEdgeLabelProps) => {
                 },
               }}
             />
-          </div>
-          <Typography.Text
-            className={styles.label}
-            editable={{
-              tooltipProps: {
-                content: 'Edit Label',
-              },
-              onChange: (v) => {
+            <EditLabel
+              value={data?.label}
+              onSubmit={(v) => {
                 updateEdgeData(id, {
                   label: v,
                 });
-              },
-            }}
-          >
-            {data?.label}
-          </Typography.Text>
+              }}
+            />
+          </div>
+
+          <div className={styles.labelWrapper}>
+            <Typography.Ellipsis
+              showTooltip={{
+                content: data?.label,
+                position: 'bottom',
+              }}
+              expandable={{ single: true }}
+              expandRender={(expanded) => {
+                if (!expanded) {
+                  return (
+                    <IconDoubleDown className={styles.labelActionButton} />
+                  );
+                }
+                return <IconDoubleUp className={styles.labelActionButton} />;
+              }}
+            >
+              {data?.label}
+            </Typography.Ellipsis>
+          </div>
         </div>
       </EdgeLabelRenderer>
     </>

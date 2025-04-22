@@ -13,10 +13,11 @@ import styles from './styles.module.less';
 import { NotebookPen, Bot, Workflow, Settings } from 'lucide-react';
 import FlowBrowser from '@/pages/flow/components/flow-browser';
 import { ADMIN_LINKS } from './const';
+import APersonSketching from '@assets/svg/a-person-sketching.svg';
 
-const Welcome = () => {
+const HomePage = () => {
   return (
-    <Layout className={styles.welcome}>
+    <Layout className={styles.homePage}>
       <Layout.Header>
         <div className={styles.header}>
           <Typography.Title className={styles.title}>
@@ -39,14 +40,14 @@ const Welcome = () => {
       </Layout.Header>
       <Layout.Content>
         <div className={styles.body}>
-          <Typography.Title className={styles.subTitle} heading={5}>
-            <Space size={12}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>
               <Workflow className={styles.icon} /> Flows
-            </Space>
-          </Typography.Title>
-          <FlowBrowser
-            features={['search', 'create', 'navigate', 'show-count']}
-          />
+            </div>
+            <FlowBrowser
+              features={['search', 'create', 'navigate', 'show-count']}
+            />
+          </div>
         </div>
       </Layout.Content>
       <Layout.Footer>
@@ -101,8 +102,11 @@ const Welcome = () => {
           </Dropdown>
         </div>
       </Layout.Footer>
+      <div className={styles.background}>
+        <APersonSketching />
+      </div>
     </Layout>
   );
 };
 
-export default Welcome;
+export default HomePage;

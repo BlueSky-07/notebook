@@ -91,7 +91,8 @@ export function generatePromptForTextTargetNode(
 ${
   targetNode.data.content ||
   {
-    [NodeDataType.Text]: '续写一段长度大约200字的文章。续写内容如下：',
+    [NodeDataType.Text]:
+      '续写一段长度大约200字的文章，续写内容不可以使用<reference>包裹。续写内容如下：',
     [NodeDataType.Image]: '生成一张图片',
   }[targetNode.dataType]
 }`,
@@ -114,7 +115,12 @@ export function generatePromptForImageTargetNode(
         if (!sourceNode.data.content) continue;
         prompts.push({
           type: GeneratingTaskInputPromptType.Text,
-          text: sourceNode.data.content,
+          text: [
+            edge.data.label && `${edge.data.label}:`,
+            sourceNode.data.content,
+          ]
+            .filter(Boolean)
+            .join('\n'),
         });
         break;
       }

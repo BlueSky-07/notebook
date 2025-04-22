@@ -18,6 +18,7 @@ import ConnectionLine from '../connection-line';
 import ReactFlowRefForwarder, {
   ReactFlowRef,
 } from '../react-flow-ref-forwarder';
+import './xy-theme.css';
 
 interface FlowDashboardProps {
   flowId?: FlowEntity['id'];
@@ -82,7 +83,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
           getPopupContainer: (node) => node,
         },
         Dropdown: {
-          getPopupContainer: (node) => node,
+          getPopupContainer: (node) => document.body,
         },
       }}
     >
@@ -97,6 +98,7 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
         connectionLineComponent={ConnectionLine}
         // fitView={true}
         snapToGrid={true}
+        deleteKeyCode={[]}
       >
         {minimapVisible && <MiniMap pannable={true} zoomable={true} />}
         <Panel position="bottom-left">
@@ -105,7 +107,8 @@ export const FlowDashboard = (props: FlowDashboardProps) => {
         <Background
           id="base"
           gap={10}
-          color="#ccc"
+          color="var(--color-neutral-5)"
+          bgColor="var(--color-neutral-1)"
           variant={BackgroundVariant.Dots}
         />
         <ReactFlowRefForwarder ref={reactFlowRef} />

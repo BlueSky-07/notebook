@@ -1171,6 +1171,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/GeneratingTaskInputPrompt"
+        targetNodeSnapshot:
+          description: generating to target node
+          allOf:
+            - $ref: "#/components/schemas/NodeEntity"
         sourceNodeSnapshots:
           type: array
           items:

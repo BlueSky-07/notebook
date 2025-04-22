@@ -16,7 +16,7 @@ export const ModelsPane = () => {
 
   return (
     <div className={styles.modelsPane}>
-      <div className={styles.description}>Select Model for Generating:</div>
+      <div className={styles.description}>Select a model for Generating:</div>
       <ModelSelector
         type="radio"
         id={modelId}
@@ -26,6 +26,7 @@ export const ModelsPane = () => {
             AI Models Not Available
           </Tag>
         }
+        showFilterByFeatures={true}
         selectProps={{
           placeholder: 'Model',
         }}

@@ -22,18 +22,31 @@ export const ConnectionLine = (props: ConnectionLineComponentProps) => {
     (userNode) => {
       const node = getInternalNode(userNode.id);
 
-      // we only want to draw a connection line from a source handle
-      if (!node?.internals?.handleBounds?.source) {
-        return [];
+      if (
+        fromHandle.type === 'source' &&
+        node?.internals?.handleBounds?.source
+      ) {
+        return node.internals.handleBounds.source
+          .filter((bounds) => bounds.id === fromHandle.id)
+          .map((bounds) => ({
+            id: node.id,
+            positionAbsolute: node.internals.positionAbsolute,
+            bounds,
+          }));
+      } else if (
+        fromHandle.type === 'target' &&
+        node?.internals?.handleBounds?.target
+      ) {
+        return node.internals.handleBounds.target
+          .filter((bounds) => bounds.id === fromHandle.id)
+          .map((bounds) => ({
+            id: node.id,
+            positionAbsolute: node.internals.positionAbsolute,
+            bounds,
+          }));
       }
 
-      return node.internals.handleBounds.source
-        ?.filter((bounds) => bounds.id === fromHandle.id)
-        ?.map((bounds) => ({
-          id: node.id,
-          positionAbsolute: node.internals.positionAbsolute,
-          bounds,
-        }));
+      return [];
     },
   );
 
@@ -51,7 +64,12 @@ export const ConnectionLine = (props: ConnectionLineComponentProps) => {
 
     return (
       <g key={`${id}-${bounds.id}`}>
-        <path fill="none" strokeWidth={1} stroke="#b1b1b7" d={d} />
+        <path
+          fill="none"
+          strokeWidth={6}
+          stroke="var(--xy-theme-edge-connection-connecting)"
+          d={d}
+        />
         <circle
           cx={toX}
           cy={toY}

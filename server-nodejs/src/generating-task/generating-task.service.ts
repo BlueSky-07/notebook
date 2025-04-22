@@ -71,6 +71,7 @@ export class GeneratingTaskService {
       input: {
         modelId: generatingTaskAddInput.input.modelId,
         prompt,
+        targetNodeSnapshot: targetNodeRecord,
         sourceNodeSnapshots: nodeRecords,
         edgeSnapshots: edgeRecords,
       },

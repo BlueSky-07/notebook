@@ -60,13 +60,15 @@ export const CustomNodeImage = (props: CustomNodeImageProps) => {
 
   const patchNodeResp = usePatchNode<CustomNodeImageData>({ id, data });
 
-  const { getFlowId, modelId } = useFlowStore(
-    useShallow<FlowState, Pick<FlowState, 'getFlowId' | 'modelId'>>(
-      (state) => ({
-        getFlowId: state.getFlowId,
-        modelId: state.modelId,
-      }),
-    ),
+  const { getFlowId, modelId, updateModelId } = useFlowStore(
+    useShallow<
+      FlowState,
+      Pick<FlowState, 'getFlowId' | 'modelId' | 'updateModelId'>
+    >((state) => ({
+      getFlowId: state.getFlowId,
+      modelId: state.modelId,
+      updateModelId: state.updateModelId,
+    })),
   );
 
   useEffect(() => {
@@ -113,8 +115,8 @@ export const CustomNodeImage = (props: CustomNodeImageProps) => {
     <NodeWrapper<CustomNodeImageData, typeof NodeDataTypeEnum.Image>
       {...props}
       resizerProps={{
-        minWidth: 300,
-        minHeight: 300,
+        minWidth: 400,
+        minHeight: 400,
         maxWidth: 1000,
         maxHeight: 1000,
       }}
@@ -127,11 +129,15 @@ export const CustomNodeImage = (props: CustomNodeImageProps) => {
         <>
           <Space>
             <GeneratingTaskTrigger
+              modelId={modelId}
+              modelFeatures={['image-generation']}
+              onChangeModelId={updateModelId}
               generating={generating || patchNodeResp.loading}
               icon={<IconPalette />}
               disabled={!modelId || !connections.length}
               disabledTooltip={[
-                !modelId && 'Please select a model',
+                !modelId &&
+                  'Please select a model with image generation capability',
                 !connections.length && 'Please connect a node as source',
               ].find(Boolean)}
               onStartTask={() => {
@@ -159,7 +165,41 @@ export const CustomNodeImage = (props: CustomNodeImageProps) => {
                 </Button>,
               )}
           </Space>
-          <GeneratingTaskStatus {...generatingTask} />
+          <GeneratingTaskStatus
+            {...generatingTask}
+            onUndo={
+              generatingTask.data?.input.targetNodeSnapshot
+                ? () => {
+                    if (generatingTask.data?.input.targetNodeSnapshot) {
+                      setSrc(
+                        generatingTask.data?.input.targetNodeSnapshot.data?.src,
+                      );
+                      patchNodeResp.run({
+                        fileId:
+                          generatingTask.data?.input.targetNodeSnapshot?.data
+                            ?.fileId,
+                        src: generatingTask.data?.input.targetNodeSnapshot.data
+                          ?.src,
+                      });
+                    }
+                  }
+                : undefined
+            }
+            onRedo={
+              generatingTask.data?.output.generatedFile != null
+                ? () => {
+                    if (generatingTask.data?.output.generatedFile != null) {
+                      patchNodeResp.run({
+                        fileId: generatingTask.data?.output.generatedFile,
+                        src: getFileEntityLink({
+                          id: generatingTask.data?.output.generatedFile,
+                        }),
+                      });
+                    }
+                  }
+                : undefined
+            }
+          />
         </>
       }
     >

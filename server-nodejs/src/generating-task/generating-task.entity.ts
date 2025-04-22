@@ -57,6 +57,13 @@ export class GeneratingTaskInput {
 
   @ApiProperty({
     type: NodeEntity,
+    required: false,
+    description: 'generating to target node',
+  })
+  targetNodeSnapshot?: NodeEntity;
+
+  @ApiProperty({
+    type: NodeEntity,
     isArray: true,
     required: false,
     description: 'generating from source nodes',

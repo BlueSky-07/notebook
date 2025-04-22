@@ -16,9 +16,34 @@
   }
 
   .welcome {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100vh;
+    background: var(--color-neutral-1);
+    position: relative;
+
+    .title {
+      position: absolute;
+      top: 120px;
+      left: 100px;
+
+      .flex {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+    }
+
+    .background {
+      overflow: hidden;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 500px;
+      height: 500px;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }

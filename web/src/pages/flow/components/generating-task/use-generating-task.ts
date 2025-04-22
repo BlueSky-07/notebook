@@ -76,7 +76,7 @@ export const useGeneratingTask = (
         generatingTaskResp.run();
       }
     },
-    refresh: (force = true) => {
+    refresh: async (force = true) => {
       if (force) setForce((x) => x + 1);
       if (id != null) {
         generatingTaskResp.run();

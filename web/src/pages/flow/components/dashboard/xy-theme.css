@@ -1,0 +1,62 @@
+.react-flow {
+  --xy-thtme-resize-control-hover: var(--xy-resize-background-color, var(--xy-resize-background-color-default));
+  --xy-theme-edge-hover: var(--xy-resize-background-color, var(--xy-resize-background-color-default));
+  --xy-theme-edge-connection-connecting: var(--xy-resize-background-color, var(--xy-resize-background-color-default));
+}
+
+.react-flow__resize-control.handle {
+  background-color: #ffffff;
+  border: 2px solid black;
+  border-radius: 0;
+  width: 10px;
+  height: 10px;
+}
+
+.react-flow__resize-control.handle:hover {
+  width: 18px;
+  height: 18px;
+  border: 4px solid var(--xy-thtme-resize-control-hover);
+}
+
+.react-flow__resize-control.line {
+  border-width: 1px;
+  background-color: var(--xy-thtme-resize-control-hover);
+}
+
+.react-flow__resize-control.line:hover {
+  border-width: 3px;
+  border-color: var(--xy-thtme-resize-control-hover);
+  background-color: var(--xy-thtme-resize-control-hover);
+}
+
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border: 1px solid black;
+  border-style: dashed;
+}
+
+.react-flow__handle.connectionindicator {
+  border: 2px solid black;
+}
+ 
+.react-flow__handle.connectionindicator:hover,
+.react-flow__handle.connectingfrom,
+.react-flow__handle.connectingto {
+  width: 18px;
+  height: 18px;
+  border: 4px solid var(--xy-theme-edge-hover);
+  z-index: 1;
+}
+
+.react-flow__handle.connectingto,
+.react-flow__handle.connectingto:hover {
+  width: 36px;
+  height: 36px;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2px;
+}

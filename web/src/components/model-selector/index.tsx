@@ -6,21 +6,28 @@ import {
   Select,
   Spin,
   type SelectProps,
-  Space,
+  Checkbox,
   Empty,
   Divider,
+  Space,
 } from '@arco-design/web-react';
 import styles from './styles.module.less';
 import ModelInfo from '@/components/model-info';
-import { createElement, CSSProperties, ReactNode } from 'react';
+import { createElement, CSSProperties, ReactNode, useState } from 'react';
 import cs from 'classnames';
-import { groupBy } from 'lodash-es';
+import { groupBy, intersection } from 'lodash-es';
 import { getModelProviderIcon } from '../model-info/helper';
+import { AiModelInfo } from '@api/models';
+import { MODEL_FEATURES } from '../model-info/const';
+import TipButton from '../tip-button';
+import { IconFilter } from '@arco-design/web-react/icon';
 
 interface ModelSelectorProps {
   type?: 'select' | 'radio';
   id?: string;
   onChange?: (id: string) => void;
+  features?: AiModelInfo['features'];
+  showFilterByFeatures?: boolean;
   notAvailableContent?: ReactNode;
   style?: CSSProperties;
   className?: string;
@@ -34,20 +41,45 @@ export const ModelSelector = (props: ModelSelectorProps) => {
     type = 'select',
     id,
     onChange,
+    features,
     notAvailableContent = <Empty />,
     onSelectedNotFound,
   } = props;
   const modelsResp = useRequest(() => API.ai.getAllModels());
+  const [filterByFeatures, setFilterByFeatures] = useState<string[]>([]);
 
   if (modelsResp.loading || !modelsResp.data?.data)
     return <Spin loading={true} />;
+
   const aiInfo = modelsResp.data.data;
-  const models = aiInfo.models;
-  const enabled = aiInfo.enabled && Boolean(models.length);
-  if (id && !models.find((model) => model.id === id) && onSelectedNotFound) {
+  const availableModels = aiInfo.models.filter((model) => {
+    if (features?.length) {
+      return Boolean(intersection(features, model.features).length);
+    }
+    return true;
+  });
+
+  const models = availableModels.filter((model) => {
+    if (filterByFeatures.length) {
+      return Boolean(intersection(filterByFeatures, model.features).length);
+    }
+    return true;
+  });
+  const groups = groupBy(models, (model) => model.provider) ?? {};
+
+  const enabled = aiInfo.enabled && Boolean(availableModels.length);
+  if (
+    id &&
+    !availableModels.find((model) => model.id === id) &&
+    onSelectedNotFound
+  ) {
     onSelectedNotFound(id);
   }
-  const group = groupBy(models, (model) => model.provider) ?? {};
+
+  const filterByFeatureOptions = new Set<string>();
+  for (const model of availableModels) {
+    for (const feature of model.features) filterByFeatureOptions.add(feature);
+  }
 
   return (
     <div
@@ -55,13 +87,39 @@ export const ModelSelector = (props: ModelSelectorProps) => {
       style={props.style}
     >
       {!enabled && notAvailableContent}
+      {enabled &&
+        props.showFilterByFeatures &&
+        filterByFeatureOptions.size > 1 && (
+          <Space size={16}>
+            <IconFilter />
+            <Checkbox.Group onChange={setFilterByFeatures}>
+              {Array.from(filterByFeatureOptions).map((feature) => {
+                const featureConfig = MODEL_FEATURES[feature] ?? {
+                  label: feature,
+                  icon: null,
+                };
+                return (
+                  <Checkbox value={feature}>
+                    {({ checked }) => (
+                      <TipButton
+                        size="mini"
+                        type={checked ? 'primary' : 'default'}
+                        tip={featureConfig.label}
+                        icon={featureConfig.icon}
+                      />
+                    )}
+                  </Checkbox>
+                );
+              })}
+            </Checkbox.Group>
+          </Space>
+        )}
       {enabled && type === 'select' && (
         <Select
           disabled={!enabled}
           style={{ width: '100%' }}
           value={id}
           onChange={onChange}
-          allowClear={true}
           renderFormat={(option, value) => {
             const model = models.find((model) => model.id === value);
             return model ? (
@@ -80,9 +138,10 @@ export const ModelSelector = (props: ModelSelectorProps) => {
               inputValue?.trim()?.toLowerCase(),
             );
           }}
+          placeholder="Please select a model"
           {...props.selectProps}
         >
-          {Object.entries(group).map(([provider, models]) => {
+          {Object.entries(groups).map(([provider, models]) => {
             const [providerName, providerIcon] = getModelProviderIcon(
               provider,
             ) ?? [provider];
@@ -128,7 +187,7 @@ export const ModelSelector = (props: ModelSelectorProps) => {
           {...props.radioGroupProps}
           className={cs(styles.radioGroup, props.radioGroupProps?.className)}
         >
-          {Object.entries(group).map(([provider, models], index) => {
+          {Object.entries(groups).map(([provider, models], index) => {
             const [providerName, providerIcon] = getModelProviderIcon(
               provider,
             ) ?? [provider];
@@ -148,25 +207,16 @@ export const ModelSelector = (props: ModelSelectorProps) => {
                   )}
                   {models.map((model) => (
                     <Radio key={model.id} value={model.id}>
-                      {(radioProps) => {
-                        return (
-                          <Radio
-                            {...radioProps}
-                            className={styles.radioWrapper}
-                          >
-                            <ModelInfo
-                              id={model.id}
-                              nameTooltipProps={{ position: 'top' }}
-                              providerIconVisible={false}
-                              features={model.features}
-                            />
-                          </Radio>
-                        );
-                      }}
+                      <ModelInfo
+                        id={model.id}
+                        nameTooltipProps={{ position: 'top' }}
+                        providerIconVisible={false}
+                        features={model.features}
+                      />
                     </Radio>
                   ))}
                 </div>
-                {index !== Object.keys(group).length - 1 && (
+                {index !== Object.keys(groups).length - 1 && (
                   <Divider className={styles.divider} />
                 )}
               </>

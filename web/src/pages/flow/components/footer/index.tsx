@@ -1,12 +1,14 @@
-import { Divider, Space } from '@arco-design/web-react';
+import { Divider, Space, Trigger } from '@arco-design/web-react';
 import { NodeDataTypeEnum, NodeEntity } from '@api/models';
 import {
   IconApps,
   IconFullscreen,
   IconImage,
+  IconLeftCircle,
   IconMinus,
   IconPen,
   IconPlus,
+  IconRightCircle,
 } from '@arco-design/web-react/icon';
 import { useShallow } from 'zustand/react/shallow';
 import useFlowStore, { type FlowState } from '@/stores/flow';
@@ -14,12 +16,14 @@ import { useReactFlow, useStoreApi, useViewport } from '@xyflow/react';
 import styles from './styles.module.less';
 import TipButton from '@/components/tip-button';
 import { LAYOUT_MAX_ZOOM, LAYOUT_MIN_ZOOM } from '@/pages/flow/const';
+import { CSSProperties, useState } from 'react';
 
 export const Footer = () => {
   const store = useStoreApi();
   const reactFlow = useReactFlow();
   const { x, y, zoom } = useViewport();
   const zoomPercent = Math.ceil(zoom * 100);
+  const [collapsed, setCollapsed] = useState(true);
 
   const handleAdd = (type: NodeEntity['dataType']) => {
     const { domNode } = store.getState();
@@ -46,12 +50,23 @@ export const Footer = () => {
     })),
   );
 
-  return (
-    <Space className={styles.footer}>
+  const renderToolbar = (hideToggle: boolean, style: CSSProperties = {}) => (
+    <Space className={styles.toolbar} style={style}>
+      {!hideToggle && (
+        <TipButton
+          tip="Hide Toolbar"
+          icon={<IconLeftCircle />}
+          size="mini"
+          shape="round"
+          onClick={() => setCollapsed(true)}
+          className={styles.triggerForInvisible}
+        />
+      )}
       <TipButton
         tip="Minimap"
         icon={<IconApps />}
         size="mini"
+        shape="round"
         type={minimapVisible ? 'primary' : 'default'}
         onClick={() => {
           toggleMinimapVisible();
@@ -61,6 +76,7 @@ export const Footer = () => {
         tip="Fit"
         icon={<IconFullscreen />}
         size="mini"
+        shape="round"
         onClick={() => {
           reactFlow.fitView({
             duration: 500,
@@ -71,6 +87,8 @@ export const Footer = () => {
         tip="Zoom Out"
         icon={<IconMinus />}
         size="mini"
+        shape="round"
+        type="text"
         onClick={() => {
           reactFlow.setViewport({
             x,
@@ -88,6 +106,8 @@ export const Footer = () => {
         tip="Zoom In"
         icon={<IconPlus />}
         size="mini"
+        shape="round"
+        type="text"
         onClick={() => {
           reactFlow.setViewport({
             x,
@@ -116,4 +136,26 @@ export const Footer = () => {
       />
     </Space>
   );
+
+  if (collapsed) {
+    return (
+      // @ts-ignore
+      <Trigger
+        position="right"
+        popup={() => renderToolbar(true, { paddingLeft: 10, marginLeft: 5 })}
+      >
+        <div className={styles.triggerForVisible}>
+          <TipButton
+            tip="Pin Toolbar"
+            icon={<IconRightCircle />}
+            size="mini"
+            shape="round"
+            onClick={() => setCollapsed(false)}
+          />
+        </div>
+      </Trigger>
+    );
+  }
+
+  return renderToolbar(false);
 };

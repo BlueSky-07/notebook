@@ -73,12 +73,10 @@ export function getInitialFlowEdge(
     type: dataType,
     markerEnd: {
       type: MarkerType.Arrow,
-      width: 40,
-      height: 40,
-      orient: {
-        [EdgeHandleEnum.Left]: 'horizontal',
-        // [EdgeHandleEnum.Top]: 'vertical'
-      }[targetHandle || ''],
+      width: 10,
+      height: 10,
+      strokeWidth: 2,
+      orient: 'auto',
     },
   };
 }
@@ -130,12 +128,10 @@ export function convertEdgeEntityToFlowEdge(edgeEntity: EdgeEntity): Edge {
     type: edgeEntity.dataType,
     markerEnd: {
       type: MarkerType.Arrow,
-      width: 40,
-      height: 40,
-      orient: {
-        [EdgeHandleEnum.Left]: 'horizontal',
-        // [EdgeHandleEnum.Top]: 'vertical'
-      }[edgeEntity.layout.targetHandle || ''] as string,
+      width: 10,
+      height: 10,
+      strokeWidth: 2,
+      orient: 'auto',
     },
   };
 }

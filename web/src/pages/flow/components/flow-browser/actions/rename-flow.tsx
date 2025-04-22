@@ -56,6 +56,9 @@ export const RenameFlow = (props: RenameFlowProps) => {
             /* empty */
           }
         },
+        onCancel: () => {
+          setNewName('');
+        },
         okButtonProps: {
           disabled: !newName,
           loading: patchReq.loading,

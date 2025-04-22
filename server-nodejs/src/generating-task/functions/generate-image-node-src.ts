@@ -25,15 +25,17 @@ export interface GenerateImageNodeSrcFunctionDependencies {
 }
 
 const GenerateImageNodeSrcErrors = {
-  EmptyPrompt: new NonRetriableError('Empty Prompt'),
+  EmptyPrompt: new NonRetriableError('Prompt is empty'),
   NotGenerating: new NonRetriableError(
     'Generating Task status is not generating',
   ),
-  EmptyGenerated: new NonRetriableError('Empty Generated'),
+  EmptyGenerated: new NonRetriableError('Generated empty result'),
   ModelIdIsMissing: new NonRetriableError('Model id is missing'),
-  AdapterError: new NonRetriableError('Adapter error'),
-  ModelNotFound: new NonRetriableError('Model not found'),
-  ModelNotSupport: new NonRetriableError('Model not support generating image'),
+  AdapterError: new NonRetriableError('Adapter has error'),
+  ModelNotFound: new NonRetriableError('Model is not found'),
+  ModelNotSupport: new NonRetriableError(
+    'Model does not support generating image',
+  ),
 };
 
 const GENERATE_IMAGE_NODE_SRC_FUNCTION_ID = 'job/generate-image-node-src';

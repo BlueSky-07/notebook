@@ -6,9 +6,10 @@ import styles from './styles.module.less';
 import { FlowSider } from '@/pages/flow/components/sider';
 import { useState } from 'react';
 import TipButton from '@/components/tip-button';
-import { House, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { House, PanelLeftClose, PanelLeftOpen, Workflow } from 'lucide-react';
+import Sketch from '@assets/svg/sketch.svg';
 
-export default function FlowPage() {
+export const FlowPage = () => {
   const { flowId: flowIdParams } = useParams<{ flowId?: string }>();
   const [query, setQuery] = useSearchParams();
   const flowId = flowIdParams ? parseInt(flowIdParams, 10) : undefined;
@@ -45,6 +46,7 @@ export default function FlowPage() {
                 onClick={() => {
                   navigate('/');
                 }}
+                type="outline"
               >
                 Home
               </TipButton>
@@ -73,14 +75,26 @@ export default function FlowPage() {
         {flowId && <FlowDashboard flowId={flowId} />}
         {!flowId && (
           <div className={styles.welcome}>
-            <Typography.Title style={{ color: 'gray' }}>
-              Welcome!
-              <br />
-              Open a flow at left panel to start.
-            </Typography.Title>
+            <div className={styles.title}>
+              <Typography.Title heading={1} type="secondary">
+                Welcome!
+              </Typography.Title>
+              <Typography.Title
+                heading={6}
+                type="secondary"
+                className={styles.flex}
+              >
+                Open the <Workflow /> flow at left sider to start.
+              </Typography.Title>
+            </div>
+            <div className={styles.background}>
+              <Sketch />
+            </div>
           </div>
         )}
       </Layout.Content>
     </Layout>
   );
-}
+};
+
+export default FlowPage;
