@@ -11,7 +11,6 @@ import { InngestModule } from './inngest/inngest.module';
 import { GeneratingTaskModule } from './generating-task/generating-task.module';
 import { GeneratingTaskEntity } from './generating-task/generating-task.entity';
 import { AiModule } from './ai/ai.module';
-import getConfiguration from './utils/configuration';
 import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { type BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlite3/BetterSqlite3ConnectionOptions';
 import { S3Module } from 'nestjs-s3';
@@ -19,14 +18,17 @@ import { StorageModule } from './storage/storage.module';
 import { FileEntity } from './file/file.entity';
 import { FileReferenceEntity } from './file/file-reference.entity';
 import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ServeStaticModuleOptions } from '@nestjs/serve-static/dist/interfaces/serve-static-options.interface';
+import { configModule } from './config/config.module';
+const isDev = process.env.NODE_ENV !== 'production';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [getConfiguration],
-    }),
+    configModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
         const dbType = configService.get<string>('db.type')?.toLowerCase();
         const baseOptions: Pick<
@@ -66,7 +68,6 @@ import { FileModule } from './file/file.module';
         }
         throw new Error('Unsupported database type: ' + dbType);
       },
-      inject: [ConfigService],
     }),
     S3Module.forRootAsync({
       imports: [ConfigModule],
@@ -90,6 +91,18 @@ import { FileModule } from './file/file.module';
             ),
           },
         };
+      },
+    }),
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        if (isDev) return [];
+        const serveStaticOptions = configService.get<
+          ServeStaticModuleOptions[]
+        >('app.serveStaticOptions');
+        if (!serveStaticOptions) return [];
+        return serveStaticOptions;
       },
     }),
 

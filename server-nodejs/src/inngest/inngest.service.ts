@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { FileReferenceService } from '../file/file-reference.service';
 import { EdgeService } from '../edge/edge.service';
 import { FileService } from '../file/file.service';
+import type { ClientOptions } from 'inngest/types';
 
 @Injectable()
 export class InngestService {
@@ -31,12 +32,9 @@ export class InngestService {
     private readonly fileService: FileService,
     private readonly fileReferenceService: FileReferenceService,
   ) {
-    this.inngest = new Inngest({
-      id: 'notebook-inngest',
-      schemas: new EventSchemas().fromRecord<InngestEvents>(),
-      baseUrl: this.configService.get<string>('inngest.baseUrl'),
-      isDev: this.configService.get<boolean>('inngest.dev'),
-    });
+    const clientOptions =
+      this.configService.getOrThrow<ClientOptions>('inngest.client');
+    this.inngest = new Inngest(clientOptions);
     this.functions = createInngestFunctions(this.inngest, {
       logger: this.logger,
       flowService,

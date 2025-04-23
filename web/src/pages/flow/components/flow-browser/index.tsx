@@ -81,11 +81,10 @@ export const FlowBrowser = (props: FlowBrowserProps) => {
 
       <Skeleton
         loading={!listResp.data?.data}
-        text={{ rows: 2, width: '90%' }}
+        text={{ rows: 10 }}
         animation={true}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
-          <div className={styles.header}></div>
           {listResp.data?.data && (
             <List<FlowEntityPopulatedCount>
               bordered={false}

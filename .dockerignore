@@ -1,0 +1,4 @@
+**/node_modules
+**/dist
+server-nodejs/config
+server-nodejs/database

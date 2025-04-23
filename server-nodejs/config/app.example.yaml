@@ -1,6 +1,20 @@
 app:
   port: 9001
-  nodeEnv: development
+#  globalPrefix: api # required for default web server
+#  serveStaticOptions: # required for default web server
+#    # optional, see https://github.com/nestjs/serve-static/blob/master/lib/interfaces/serve-static-options.interface.ts
+#    - rootPath: /app/web
+#      exclude: ['/api']
+#  cors:
+#    # optional, see https://github.com/expressjs/cors?tab=readme-ov-file#configuration-options
+#    origin: '*'
+#    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+#    preflightContinue: false
+#    optionsSuccessStatus: 204
+#  httpsOptions:
+#    # optional, see https://github.com/nestjs/nest/blob/master/packages/common/interfaces/external/https-options.interface.ts
+#    key: key.pem
+#    cert: cert.pem
 
 db:
   type: better-sqlite3  # mysql or better-sqlite3
@@ -27,11 +41,19 @@ storage:
     temp: temp
 
 inngest:
-  isDev: true
-  baseUrl: http://localhost:9108
+  client:
+    # required, see https://github.com/inngest/inngest-js/blob/main/packages/inngest/src/types.ts ClientOptions
+    id: notebook-inngest-dev
+    isDev: true
+    baseUrl: http://localhost:9108
+  register:
+    disabled: false # optional, to disable registering functions
+    # optional, see https://github.com/inngest/inngest-js/blob/main/packages/inngest/src/types.ts RegisterOptions
+    serveHost: http://host.docker.internal:9001
+    servePath: /inngest
 
 ai:
-  models: # create a aksk.yaml in config folder to override !!
+  models: # create aksk.yaml in config folder to override !!
     - id: gpt-4-turbo@openai                    # required
       provider: openai                          # required
       modelName: gpt-4-turbo                    # required

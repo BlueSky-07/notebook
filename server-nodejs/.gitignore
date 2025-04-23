@@ -399,5 +399,6 @@ dist
 .webpack
 .serverless/**/*.zip
 
-config/aksk.yaml
+config/*
+!config/*.example.yaml
 database/notebook.db

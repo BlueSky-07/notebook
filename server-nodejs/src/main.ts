@@ -3,20 +3,41 @@ import { AppModule } from './app.module';
 import { OpenApiNestFactory } from 'nest-openapi-tools';
 import { DocumentBuilder } from '@nestjs/swagger';
 import * as process from 'node:process';
-import { serve } from 'inngest/express';
+import { serve as InngestServe } from 'inngest/express';
 import { InngestService } from './inngest/inngest.service';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
+import { type NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
+import { type CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { type HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
+import type { RegisterOptions } from 'inngest/types';
+import { configModule } from './config/config.module';
+const isDev = process.env.NODE_ENV !== 'production';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    bodyParser: true,
-  });
-  const configService = app.get(ConfigService);
-  const port = configService.get<string>('app.port') || '9001';
-  const isDev = configService.get<string>('app.nodeEnv') !== 'production';
+  let app: NestExpressApplication;
+  const appOptions: NestApplicationOptions = { bodyParser: true };
+  const configService = (
+    await NestFactory.create<NestExpressApplication>(configModule)
+  ).get(ConfigService);
 
-  if (isDev) {
+  if (!isDev) {
+    const cors = configService.get<CorsOptions>('app.cors');
+    const httpsOptions = configService.get<HttpsOptions>('app.httpsOptions');
+    app = await NestFactory.create<NestExpressApplication>(AppModule, {
+      ...appOptions,
+      httpsOptions,
+      cors,
+    });
+    const globalPrefix = configService.get<string>('app.globalPrefix');
+    if (globalPrefix) {
+      app.setGlobalPrefix(globalPrefix);
+    }
+  } else {
+    app = await NestFactory.create<NestExpressApplication>(
+      AppModule,
+      appOptions,
+    );
     await OpenApiNestFactory.configure(
       app,
       new DocumentBuilder().setTitle('Notebook Server'),
@@ -41,18 +62,23 @@ async function bootstrap() {
       },
     );
   }
-
-  const inngestService = app.get(InngestService);
-
-  // Setup inngest
+  const port = configService.get<string>('app.port') || '9001';
   app.useBodyParser('json', { limit: '10mb' });
-  app.use(
-    '/inngest',
-    serve({
-      client: inngestService.inngest,
-      functions: inngestService.functions,
-    }),
-  );
+
+  if (!configService.get<boolean>('inngest.register.disabled')) {
+    // Register to Inngest
+    const inngestService = app.get(InngestService);
+    app.use(
+      configService.get<RegisterOptions['servePath']>(
+        'inngest.register.servePath',
+      ) || '/inngest',
+      InngestServe({
+        ...configService.get<RegisterOptions>('inngest.register'),
+        client: inngestService.inngest,
+        functions: inngestService.functions,
+      }),
+    );
+  }
 
   await app.listen(port);
 }

@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from '@rspack/cli'
 import { rspack } from '@rspack/core'
-import ReactRefreshPlugin from '@rspack/plugin-react-refresh'
+import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -99,7 +99,7 @@ export default defineConfig((env, argv) => {
         minify: true,
         publicPath: '/',
       }),
-      isDev && new ReactRefreshPlugin(),
+      isDev && new ReactRefreshRspackPlugin(),
       isDev && new rspack.HotModuleReplacementPlugin(),
       new rspack.CopyRspackPlugin({
         patterns: [
@@ -113,5 +113,13 @@ export default defineConfig((env, argv) => {
     experiments: {
       css: true,
     },
+    optimization: {
+      minimizer: [
+        new rspack.SwcJsMinimizerRspackPlugin(),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          removeUnusedLocalIdents: false,
+        }),
+      ],
+    }
   }
 })

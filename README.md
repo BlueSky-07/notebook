@@ -64,15 +64,15 @@ currently backend is implemented by Node.js, project location: [server-nodejs/](
 
 #### 1.2 Steps
 
-1. edit config file: [server-nodejs/config/app.yaml](server-nodejs/config/app.yaml)
+1. create app config file: `server-nodejs/config/app.yaml`, configurations can be found in [server-nodejs/config/app.example.yaml](server-nodejs/config/app.example.yaml)
 
-2. create aksk config file: [server-nodejs/config/aksk.yaml](server-nodejs/config/aksk.yaml), configurations in this file can override `app.yaml`, used to store secrets like LLM's API Keys.
+2. create aksk config file: `server-nodejs/config/aksk.yaml`, configurations in this file can override `app.yaml`, used to store secrets like LLM's API Keys.
 
 3. install dependencies: `npm -g install pnpm && pnpm install`
 
 4. prepare environment: `pnpm compose:mysql` or `pnpm compose:sqlite`, depends on `db.type` in [server-nodejs/config/app.yaml](./server-nodejs/config/app.yaml)
 
-3. start the server: `pnpm start:dev`
+5. start the server: `pnpm start:dev`
 
 #### 1.3 Running services
 
@@ -118,3 +118,46 @@ project location: [web/](web/)
 #### 2.3 Running services
 
 - Frontend dev server: http://localhost:9000
+
+## Run in Docker (backend and frontend only)
+
+### 1. Build app image
+
+```bash
+docker rmi notebook # optional, to delete legacy built image
+docker build -t notebook -f Dockerfile .
+```
+
+### 2. Run app
+
+#### 2.1 Prepare environment
+
+1. MySQL service is running
+
+    **optional, required if using mysql as database**
+
+2. Inngest service is running
+
+    **required**
+
+#### 2.2 Prepare config file
+
+1. create app config file: `app-docker.yaml`, configurations can be found in [server-nodejs/config/app-docker.example.yaml](server-nodejs/config/app-docker.example.yaml)
+
+2. create aksk config file: `aksk.yaml`, configurations in this file can override `app.yaml`, used to store secrets like LLM's API Keys.
+
+    ```bash
+    APP_CONFIG=$(pwd)/app-docker.yaml
+    AKSK_CONFIG=$(pwd)/aksk.yaml
+    SQLITE=$(pwd)/server-nodejs/database/notebook.db # optional, required if using sqlite as database
+    
+    docker run --rm -it \
+      -v "$APP_CONFIG":/app/config/app.yaml:ro \
+      -v "$AKSK_CONFIG":/app/config/aksk.yaml:ro \
+      -v "$SQLITE":/app/database/notebook.db \
+      -p 3000:3000 notebook
+    ```
+
+3. add app to Inngest Dev Server, url is `{inngest.register.serveHost}{inngest.register.servePath}` from config file
+
+4. app is running at localhost:3000

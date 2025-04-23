@@ -1,0 +1,71 @@
+app:
+  port: 3000
+  globalPrefix: api # required for default web server
+  serveStaticOptions: # required for default web server
+    # optional, see https://github.com/nestjs/serve-static/blob/master/lib/interfaces/serve-static-options.interface.ts
+    - rootPath: /app/web
+      exclude: ['/api']
+#  cors:
+#    # optional, see https://github.com/expressjs/cors?tab=readme-ov-file#configuration-options
+#    origin: '*'
+#    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+#    preflightContinue: false
+#    optionsSuccessStatus: 204
+#  httpsOptions:
+#    # optional, see https://github.com/nestjs/nest/blob/master/packages/common/interfaces/external/https-options.interface.ts
+#    key: key.pem
+#    cert: cert.pem
+
+db:
+  type: better-sqlite3  # mysql or better-sqlite3
+  mysql:
+    host: host.docker.internal
+    port: 9106
+    user: root
+    password: password
+    database: notebook
+  better-sqlite3:
+    database: database/notebook.db
+
+storage:
+  s3:
+    endpoint: http://host.docker.internal:9109 # minio endpoint
+    region: us-east-1
+    secretKey: minioadmin
+    accessKey: minioadmin
+    forcePathStyle: true
+    signatureVersion: v4
+  buckets: # override buckets, see STORAGE_BUCKET_NAME
+    uploaded: uploaded
+    generated: generated
+    temp: temp
+
+inngest:
+  client:
+    # required, see https://github.com/inngest/inngest-js/blob/main/packages/inngest/src/types.ts ClientOptions
+    id: notebook-inngest-docker
+    isDev: true
+    baseUrl: http://host.docker.internal:9108
+  register:
+    disabled: false # optional, to disable registering functions
+    # required, see https://github.com/inngest/inngest-js/blob/main/packages/inngest/src/types.ts RegisterOptions
+    serveHost: http://host.docker.internal:3000
+    servePath: /inngest
+
+ai:
+  models: # create aksk.yaml in config folder to override !!
+    - id: gpt-4-turbo@openai                    # required
+      provider: openai                          # required
+      modelName: gpt-4-turbo                    # required
+      apiKey: my-api-key                        # required
+      baseUrl: https://api.openai.com/v1/models # required
+      proxy: http://host.docker.internal:7890   # optional
+      disabled: true                            # optional
+      adapter: gpt4@openai                      # optional, see ai/adapters
+      features:                                 # optional, default: ['text-generation']
+        - text-generation
+        - reasoning
+        - vision                                # image recognition
+        - image-generation
+        - video-generation
+

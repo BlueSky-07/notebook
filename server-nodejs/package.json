@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
     "test:e2e": "jest --config ../test/jest-e2e.json"
   },
-  "author": "",
+  "author": "BlueSky-07",
   "license": "MIT",
   "description": "",
   "homepage": "https://github.com/BlueSky-07/notebook/tree/master/server-nodejs",
@@ -30,6 +30,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.20",
     "@nestjs/platform-express": "^11.0.20",
+    "@nestjs/serve-static": "^5.0.3",
     "@nestjs/typeorm": "^11.0.0",
     "ai": "^4.3.9",
     "better-sqlite3": "^11.9.1",
