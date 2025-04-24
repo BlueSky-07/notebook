@@ -155,6 +155,7 @@ docker build -t notebook -f Dockerfile .
       -v "$APP_CONFIG":/app/config/app.yaml:ro \
       -v "$AKSK_CONFIG":/app/config/aksk.yaml:ro \
       -v "$SQLITE":/app/database/notebook.db \
+      --add-host=host.docker.internal:host-gateway \
       -p 3000:3000 notebook
     ```
 

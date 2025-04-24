@@ -1,7 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { OpenApiNestFactory } from 'nest-openapi-tools';
-import { DocumentBuilder } from '@nestjs/swagger';
 import * as process from 'node:process';
 import { serve as InngestServe } from 'inngest/express';
 import { InngestService } from './inngest/inngest.service';
@@ -34,6 +32,8 @@ async function bootstrap() {
       app.setGlobalPrefix(globalPrefix);
     }
   } else {
+    const { OpenApiNestFactory } = require('nest-openapi-tools');
+    const { DocumentBuilder } = require('@nestjs/swagger');
     app = await NestFactory.create<NestExpressApplication>(
       AppModule,
       appOptions,
@@ -83,7 +83,17 @@ async function bootstrap() {
   await app.listen(port);
 }
 
-bootstrap().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+bootstrap()
+  .then(() => {
+    const signalHandler = () => {
+      process.exit();
+    };
+
+    process.on('SIGINT', signalHandler);
+    process.on('SIGTERM', signalHandler);
+    process.on('SIGQUIT', signalHandler);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
