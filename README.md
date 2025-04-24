@@ -60,7 +60,7 @@ currently backend is implemented by Node.js, project location: [server-nodejs/](
 
       **This service is required.**
 
-2. nodejs
+2. Node.js
 
 #### 1.2 Steps
 
@@ -107,7 +107,7 @@ project location: [web/](web/)
 
 #### 2.1 Dependencies
 
-1. nodejs
+Node.js
 
 #### 2.2 Steps
 
@@ -121,11 +121,17 @@ project location: [web/](web/)
 
 ## Run in Docker (backend and frontend only)
 
-### 1. Build app image
+### 1. Build Docker image
 
 ```bash
 docker rmi notebook # optional, to delete legacy built image
 docker build -t notebook -f Dockerfile .
+```
+
+Or pull from [GitHub Packages Container registry](https://github.com/BlueSky-07/notebook/pkgs/container/notebook)
+
+```bash
+docker pull ghcr.io/bluesky-07/notebook:master
 ```
 
 ### 2. Run app
@@ -156,8 +162,11 @@ docker build -t notebook -f Dockerfile .
       -v "$AKSK_CONFIG":/app/config/aksk.yaml:ro \
       -v "$SQLITE":/app/database/notebook.db \
       --add-host=host.docker.internal:host-gateway \
-      -p 3000:3000 notebook
+      -p 3000:3000 \
+      notebook # ghcr.io/bluesky-07/notebook:master
     ```
+
+    **Pay attention to the image name. If you use a pulled image, you need to specify it.**
 
 3. add app to Inngest Dev Server, url is `{inngest.register.serveHost}{inngest.register.servePath}` from config file
 
