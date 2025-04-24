@@ -5,7 +5,7 @@
   "types": "dist/main.d.js",
   "scripts": {
     "compose:mysql": "docker compose --profile mysql up --watch",
-    "compose:sqlite": "touch database/notebook.db && docker compose --profile sqlite up --watch",
+    "compose:sqlite": "mkdir -p database && touch database/notebook.db && docker compose --profile sqlite up --watch",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

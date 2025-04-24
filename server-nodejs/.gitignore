@@ -401,4 +401,5 @@ dist
 
 config/*
 !config/*.example.yaml
-database/notebook.db
+database/*
+!database/.gitkeep

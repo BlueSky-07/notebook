@@ -40,7 +40,7 @@ currently backend is implemented by Node.js, project location: [server-nodejs/](
 
 1. Docker Compose, to run the following services:
 
-    - **MinIO & MinIO OBJECT STORE**: to store user's uploaded images, and llm's generated images.
+    - **MinIO OBJECT STORE**: to store user's uploaded images, and llm's generated images.
 
        *This service is optional, you can switch to any other S3 service.*
 
@@ -78,7 +78,7 @@ currently backend is implemented by Node.js, project location: [server-nodejs/](
 
 - **Backend server**: http://localhost:9001
 - **API Swagger**: http://localhost:9001/api-docs
-- **MinIO OBJECT STORE**: http://localhost:9101
+- **MinIO WebUI**: http://localhost:9101
   
   `minioadmin/minioadmin`
 
@@ -92,6 +92,10 @@ currently backend is implemented by Node.js, project location: [server-nodejs/](
   `root/password`
 
 - **Inngest**: http://localhost:9108
+
+- **MinIO API**: http://localhost:9109
+  
+  `minioadmin/minioadmin`
 
 ![swagger.png](https://github.com/user-attachments/assets/58bfcc62-c329-4c97-942d-450998fc41cf)
 
@@ -148,14 +152,17 @@ docker pull ghcr.io/bluesky-07/notebook:master
 
 #### 2.2 Prepare config file
 
-1. create app config file: `app-docker.yaml`, configurations can be found in [server-nodejs/config/app-docker.example.yaml](server-nodejs/config/app-docker.example.yaml)
+1. create app config file: `deploy/config/app.yaml`, configurations can be found in [deploy/config/app.example.yaml](deploy/config/app-deploy.example.yaml)
 
-2. create aksk config file: `aksk.yaml`, configurations in this file can override `app.yaml`, used to store secrets like LLM's API Keys.
+2. create aksk config file: `deploy/config/aksk.yaml`, configurations in this file can override `deploy/config/app.yaml`, used to store secrets like LLM's API Keys.
 
     ```bash
-    APP_CONFIG=$(pwd)/app-docker.yaml
-    AKSK_CONFIG=$(pwd)/aksk.yaml
-    SQLITE=$(pwd)/server-nodejs/database/notebook.db # optional, required if using sqlite as database
+    APP_CONFIG=$(pwd)/deploy/config/app.yaml
+    AKSK_CONFIG=$(pwd)/deploy/config/aksk.yaml
+
+    SQLITE=$(pwd)/deploy/database/notebook.db # optional, required if using sqlite as database
+    mkdir -p $(dirname "$SQLITE")
+    touch "$SQLITE"
     
     docker run --rm -it \
       -v "$APP_CONFIG":/app/config/app.yaml:ro \

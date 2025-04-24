@@ -1,0 +1,4 @@
+config/*
+!config/*.example.yaml
+database/*
+!database/.gitkeep
