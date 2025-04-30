@@ -19,7 +19,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: notebook
-      TZ: Asia/Shanghai
+      # TZ: Asia/Shanghai
     ports:
       - "9106:3306"
     command:
