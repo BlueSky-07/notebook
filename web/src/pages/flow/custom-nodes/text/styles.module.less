@@ -10,3 +10,14 @@
     }
   }
 }
+
+.editor {
+  &:not(.selected) :global(.mdxeditor div[role="toolbar"]) {
+    background-color: var(--color-white);
+  }
+
+  :global(.mdxeditor div[role="toolbar"]) {
+    transition-property: background-color;
+    transition-duration: 300ms;
+  }
+}

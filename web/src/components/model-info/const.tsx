@@ -99,7 +99,7 @@ export const MODEL_NAME_ICON: Record<string, PresetModelIcon> = {
     icon: OpenAI,
   },
   Qwen: {
-    regex: /qwen|qwq/i,
+    regex: /qwen|qwq|wanx/i,
     icon: Qwen.Color,
   },
 };

@@ -7,6 +7,8 @@ import { AI_MODEL_ADAPTERS_INJECTION_NAME } from './adapter.type';
 import { InngestModule } from '../inngest/inngest.module';
 import { FileModule } from '../file/file.module';
 import { GeneratingTaskModule } from '../generating-task/generating-task.module';
+import { WanxV1AlibabaCloudAdapter } from './adapters/wanx-v1-alibabacloud.adapter';
+import { WanxV2AlibabaCloudAdapter } from './adapters/wanx-v2-alibabacloud.adapter';
 
 @Module({
   imports: [
@@ -21,7 +23,11 @@ import { GeneratingTaskModule } from '../generating-task/generating-task.module'
     AiService,
     {
       provide: AI_MODEL_ADAPTERS_INJECTION_NAME,
-      useValue: [CogviewZhipuAdapter],
+      useValue: [
+        CogviewZhipuAdapter,
+        WanxV1AlibabaCloudAdapter,
+        WanxV2AlibabaCloudAdapter,
+      ],
     },
   ],
 })

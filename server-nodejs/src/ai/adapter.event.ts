@@ -10,6 +10,8 @@ import { FileEntity } from '../file/file.entity';
 export enum EVENT_NAMES {
   AI_MODEL_ADAPTER_HANDLER_CREATED = 'ai-model-adapter-handler.created',
   AI_MODEL_ADAPTER_HANDLER_COMPLETED = 'ai-model-adapter-handler.completed',
+  AI_MODEL_ADAPTER_HANDLER_POLLING_CREATED = 'ai-model-adapter-handler.polling.created',
+  AI_MODEL_ADAPTER_HANDLER_POLLING_COMPLETED = 'ai-model-adapter-handler.polling.completed',
 }
 
 export interface AiModelAdapterHandlerEventSchemas
@@ -26,6 +28,24 @@ export interface AiModelAdapterHandlerEventSchemas
       generatingTaskId: GeneratingTaskEntity['id'];
       generatedFileId?: FileEntity['id'];
       status: AiModelAdapterStatus;
+      errorMessage?: string;
+    };
+  };
+  [EVENT_NAMES.AI_MODEL_ADAPTER_HANDLER_POLLING_CREATED]: {
+    data: {
+      modelId: GeneratingTaskEntity['input']['modelId'];
+      generatingTaskId: GeneratingTaskEntity['id'];
+      pollingTaskId: string;
+    };
+  };
+  [EVENT_NAMES.AI_MODEL_ADAPTER_HANDLER_POLLING_COMPLETED]: {
+    data: {
+      modelId: GeneratingTaskEntity['input']['modelId'];
+      generatingTaskId: GeneratingTaskEntity['id'];
+      pollingTaskId: string;
+      pollingTaskStatus?: string;
+      done: boolean;
+      generatedFileId?: FileEntity['id'];
       errorMessage?: string;
     };
   };

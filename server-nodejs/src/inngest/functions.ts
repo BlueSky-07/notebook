@@ -27,6 +27,10 @@ import {
   createProcessAIModelAdapterFunction,
   ProcessAIModelAdapterDependencies,
 } from '../ai/functions/process-ai-model-adapter';
+import {
+  createProcessAIModelAdapterPollingFunction,
+  ProcessAIModelAdapterPollingDependencies,
+} from '../ai/functions/process-ai-model-adapter-polling';
 
 type AllFunctionDependencies = // all dependencies
   FlowUpdatedFunctionDependencies &
@@ -35,7 +39,8 @@ type AllFunctionDependencies = // all dependencies
     GenerateImageNodeSrcFunctionDependencies &
     UpdateNodeByGeneratingTaskFunctionDependencies &
     UpdateFileReferencesForNodeDependencies &
-    ProcessAIModelAdapterDependencies;
+    ProcessAIModelAdapterDependencies &
+    ProcessAIModelAdapterPollingDependencies;
 
 export const createInngestFunctions = (
   inngest: Inngest,
@@ -45,6 +50,7 @@ export const createInngestFunctions = (
     createUpdateFlowUpdatedAtFunction(inngest, dependencies),
     createDeleteEdgesAfterNodeDeletedFunction(inngest, dependencies),
     createProcessAIModelAdapterFunction(inngest, dependencies),
+    createProcessAIModelAdapterPollingFunction(inngest, dependencies),
     createGenerateTextNodeContentFunction(inngest, dependencies),
     createGenerateImageNodeSrcFunction(inngest, dependencies),
     createUpdateNodeByGeneratingTaskFunction(inngest, dependencies),

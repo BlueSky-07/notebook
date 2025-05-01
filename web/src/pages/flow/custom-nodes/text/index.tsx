@@ -1,15 +1,11 @@
 import { NodeEntity, NodeDataTypeEnum } from '@api/models';
-import { Button, Spin, Tooltip } from '@arco-design/web-react';
+import { Spin } from '@arco-design/web-react';
 import { NodeProps, Node, useNodeConnections } from '@xyflow/react';
 import styles from './styles.module.less';
 import useFlowStore, { type FlowState } from '@/stores/flow';
 import { useShallow } from 'zustand/shallow';
 import { useEffect, useState } from 'react';
-import {
-  IconItalic,
-  IconPen,
-  IconRecordStop,
-} from '@arco-design/web-react/icon';
+import { IconItalic, IconPen } from '@arco-design/web-react/icon';
 import MarkdownEditor from '@/components/markdown-editor';
 import NodeWrapper, {
   CustomNodeData,
@@ -21,6 +17,7 @@ import {
   GeneratingTaskTrigger,
   GeneratingTaskStatus,
 } from '../../components/generating-task';
+import cs from 'classnames';
 
 export type CustomNodeTextData = Pick<NodeEntity['data'], 'content'> &
   CustomNodeData;
@@ -30,7 +27,7 @@ type CustomNodeTextProps = NodeProps<
 >;
 
 export const CustomNodeText = (props: CustomNodeTextProps) => {
-  const { data, id } = props;
+  const { data, id, selected } = props;
   const [content, setContent] = useState(data.content);
 
   const connections = useNodeConnections({
@@ -155,7 +152,10 @@ export const CustomNodeText = (props: CustomNodeTextProps) => {
             setContent(markdown);
             patchNodeResp.run({ content: markdown });
           }}
-          placeholder="Enter text content here, or prompt here then Generate"
+          placeholder="Enter text content here, or enter prompt here then Generate"
+          className={cs(styles.editor, {
+            [styles.selected]: selected,
+          })}
         />
       </Spin>
     </NodeWrapper>

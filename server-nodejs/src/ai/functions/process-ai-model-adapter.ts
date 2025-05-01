@@ -44,48 +44,91 @@ export const createProcessAIModelAdapterFunction = (
             .AI_MODEL_ADAPTER_HANDLER_CREATED,
         ])
       ) {
-        await step.run('process ai model adapter', async () => {
-          logger.log(
-            `${PROCESS_AI_MODEL_ADAPTER} modelId: ${event.data.modelId}, generatingTaskId: ${event.data.generatingTaskId} Processing`,
-          );
-          try {
-            if (!event.data.modelId) {
-              throw ProcessAIModelAdapterErrors.ModelIdIsMissing;
-            }
-            const adapter = aiService.getAdapter(event.data.modelId);
-            if (!adapter) {
-              throw ProcessAIModelAdapterErrors.AdapterNotFound;
-            }
+        if (!event.data.modelId) {
+          throw ProcessAIModelAdapterErrors.ModelIdIsMissing;
+        }
+        const adapter = aiService.getAdapter(event.data.modelId);
+        if (!adapter) {
+          throw ProcessAIModelAdapterErrors.AdapterNotFound;
+        }
 
-            const adapterProcessResult = await adapter.processGenerating(
-              event.data.generatingTaskId,
+        const adapterProcessResult = await step.run(
+          'process ai model adapter',
+          async () => {
+            logger.log(
+              `${PROCESS_AI_MODEL_ADAPTER} modelId: ${event.data.modelId}, generatingTaskId: ${event.data.generatingTaskId} Processing`,
             );
-            await AiModelAdapterHandlerEvent.trigger(
-              inngest,
-              AiModelAdapterHandlerEvent.EVENT_NAMES
-                .AI_MODEL_ADAPTER_HANDLER_COMPLETED,
+            try {
+              return await adapter.processGenerating(
+                event.data.generatingTaskId,
+              );
+            } catch (e) {
+              await AiModelAdapterHandlerEvent.trigger(
+                inngest,
+                AiModelAdapterHandlerEvent.EVENT_NAMES
+                  .AI_MODEL_ADAPTER_HANDLER_COMPLETED,
+                {
+                  modelId: event.data.modelId,
+                  generatingTaskId: event.data.generatingTaskId,
+                  status: AiModelAdapterStatus.Failed,
+                  errorMessage: (e as Error).message,
+                },
+              );
+              throw new NonRetriableError((e as Error).message);
+            }
+          },
+        );
+
+        if (adapterProcessResult) {
+          if (adapterProcessResult.pollingTaskId) {
+            const pollingResult = (await step.waitForEvent(
+              `wait for adapter polling`,
               {
-                modelId: event.data.modelId,
-                generatingTaskId: event.data.generatingTaskId,
-                generatedFileId: adapterProcessResult.fileId,
-                status: AiModelAdapterStatus.Done,
+                event:
+                  AiModelAdapterHandlerEvent.EVENT_NAMES
+                    .AI_MODEL_ADAPTER_HANDLER_POLLING_COMPLETED,
+                timeout:
+                  adapter.pollingTaskWaitForTimeout || adapter.waitForTimeout,
+                if: `async.data.generatingTaskId == event.data.generatingTaskId && async.data.modelId == "${event.data.modelId}" && async.data.pollingTaskId == "${adapterProcessResult.pollingTaskId}"`,
               },
-            );
-            return adapterProcessResult;
-          } catch (e) {
-            await AiModelAdapterHandlerEvent.trigger(
-              inngest,
-              AiModelAdapterHandlerEvent.EVENT_NAMES
-                .AI_MODEL_ADAPTER_HANDLER_COMPLETED,
-              {
-                modelId: event.data.modelId,
-                generatingTaskId: event.data.generatingTaskId,
-                status: AiModelAdapterStatus.Failed,
-                errorMessage: (e as Error).message,
-              },
-            );
+            )) as AiModelAdapterHandlerEventSchemas[typeof AiModelAdapterHandlerEvent.EVENT_NAMES.AI_MODEL_ADAPTER_HANDLER_POLLING_COMPLETED];
+
+            await step.run('ai model adapter done after polling', async () => {
+              await AiModelAdapterHandlerEvent.trigger(
+                inngest,
+                AiModelAdapterHandlerEvent.EVENT_NAMES
+                  .AI_MODEL_ADAPTER_HANDLER_COMPLETED,
+                {
+                  modelId: event.data.modelId,
+                  generatingTaskId: event.data.generatingTaskId,
+                  status: pollingResult.data.done
+                    ? AiModelAdapterStatus.Done
+                    : AiModelAdapterStatus.Failed,
+                  errorMessage: pollingResult.data.errorMessage,
+                  generatedFileId: pollingResult.data.generatedFileId,
+                },
+              );
+            });
+          } else {
+            await step.run('ai model adapter done', async () => {
+              await AiModelAdapterHandlerEvent.trigger(
+                inngest,
+                AiModelAdapterHandlerEvent.EVENT_NAMES
+                  .AI_MODEL_ADAPTER_HANDLER_COMPLETED,
+                {
+                  modelId: event.data.modelId,
+                  generatingTaskId: event.data.generatingTaskId,
+                  generatedFileId: adapterProcessResult.fileId,
+                  status:
+                    adapterProcessResult.fileId == null
+                      ? AiModelAdapterStatus.Failed
+                      : AiModelAdapterStatus.Done,
+                },
+              );
+            });
           }
-        });
+        }
+        return adapterProcessResult;
       }
     },
   );
