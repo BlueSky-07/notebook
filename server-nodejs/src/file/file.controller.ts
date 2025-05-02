@@ -10,6 +10,7 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  Header,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -41,14 +42,16 @@ export class FileController {
   }
 
   @Get('object')
+  @Header('Cache-Control', 'public, max-age=31536000')
   async getFileObject(
     @Query() fileQueryInput: FileQueryInput,
   ): Promise<StreamableFile> {
     /**
      * another way:
      *
-     * @Get(':id')
-     * async getFileObject(@Param() id: id, @Res() res: Response) {
+     * @Get('object')
+     * @Header('Cache-Control', 'public, max-age=31536000')
+     * async getFileObject(@Query() fileQueryInput: FileQueryInput, @Res() res: Response) {
      *   const record = await this.fileService.getFileById(fileQueryInput.id);
      *   const fileObject = await this.fileService.getFileObject(record);
      *   const readable = Readable.fromWeb(
