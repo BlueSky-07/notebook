@@ -4,8 +4,21 @@ import { GeneratingTaskEntity } from '../../generating-task/generating-task.enti
 import { get } from 'lodash';
 import { STORAGE_BUCKET_NAME } from '../../storage/storage.const';
 
+interface CogviewZhipuAdapterOptions {
+  generateUrl?: string;
+  apiKey: string;
+  modelName: string;
+}
+
+const DEFAULT_COGVIEW_ZHIPU_ADAPTER_OPTIONS: Required<CogviewZhipuAdapterOptions> =
+  {
+    generateUrl: 'https://open.bigmodel.cn/api/paas/v4/images/generations',
+    apiKey: '',
+    modelName: 'cogview-3-flash',
+  };
+
 @Injectable()
-export class CogviewZhipuAdapter extends AiModelAdapter {
+export class CogviewZhipuAdapter extends AiModelAdapter<CogviewZhipuAdapterOptions> {
   static adapterName = 'cogview@zhipu';
   waitForTimeout = '3min';
 
@@ -19,16 +32,18 @@ export class CogviewZhipuAdapter extends AiModelAdapter {
       );
     // https://www.bigmodel.cn/dev/api/image-model/cogview
     const json = await this.fetcher(
-      this.config.baseUrl ||
-        'https://open.bigmodel.cn/api/paas/v4/images/generations',
+      this.config.adapterOptions?.generateUrl ||
+        DEFAULT_COGVIEW_ZHIPU_ADAPTER_OPTIONS.generateUrl,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.config.apiKey}`,
+          Authorization: `Bearer ${this.config.adapterOptions?.apiKey}`,
         },
         body: JSON.stringify({
-          model: this.config.modelName,
+          model:
+            this.config.adapterOptions?.modelName ||
+            DEFAULT_COGVIEW_ZHIPU_ADAPTER_OPTIONS.modelName,
           prompt: prompt,
           // quality: 'standard',
           size: '1024x1024',

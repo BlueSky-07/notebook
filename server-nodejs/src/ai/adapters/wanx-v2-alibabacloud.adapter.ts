@@ -9,8 +9,24 @@ import { get } from 'lodash';
 import { STORAGE_BUCKET_NAME } from '../../storage/storage.const';
 import AiModelAdapterHandlerEvent from '../adapter.event';
 
+interface WanxV2AlibabaCloudAdapterOptions {
+  generateUrl?: string;
+  pollingTaskUrl?: string;
+  apiKey: string;
+  modelName: string;
+}
+
+const DEFAULT_WANX_V2_ALIBABACLOUD_ADAPTER_OPTIONS: Required<WanxV2AlibabaCloudAdapterOptions> =
+  {
+    generateUrl:
+      'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',
+    pollingTaskUrl: 'https://dashscope.aliyuncs.com/api/v1/tasks/',
+    apiKey: '',
+    modelName: 'wanx2.1-t2i-turbo',
+  };
+
 @Injectable()
-export class WanxV2AlibabaCloudAdapter extends AiModelAdapter {
+export class WanxV2AlibabaCloudAdapter extends AiModelAdapter<WanxV2AlibabaCloudAdapterOptions> {
   static adapterName = 'wanx-v2@alibabacloud';
   waitForTimeout = '5min';
   pollingTaskWaitForTimeout = '3min';
@@ -25,17 +41,19 @@ export class WanxV2AlibabaCloudAdapter extends AiModelAdapter {
       );
     // https://help.aliyun.com/zh/model-studio/text-to-image-v2-api-reference
     const json = await this.fetcher(
-      this.config.baseUrl ||
-        'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',
+      this.config.adapterOptions?.generateUrl ||
+        DEFAULT_WANX_V2_ALIBABACLOUD_ADAPTER_OPTIONS.generateUrl,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.config.apiKey}`,
+          Authorization: `Bearer ${this.config.adapterOptions?.apiKey}`,
           'X-DashScope-Async': `enable`, // must set as enable
         },
         body: JSON.stringify({
-          model: this.config.modelName,
+          model:
+            this.config.adapterOptions?.modelName ||
+            DEFAULT_WANX_V2_ALIBABACLOUD_ADAPTER_OPTIONS.modelName,
           input: {
             prompt: prompt,
             // negative_prompt: ''
@@ -77,12 +95,12 @@ export class WanxV2AlibabaCloudAdapter extends AiModelAdapter {
   ): Promise<AiModelAdapterPollingResult> {
     // https://help.aliyun.com/zh/model-studio/text-to-image-v2-api-reference
     const json = await this.fetcher(
-      `https://dashscope.aliyuncs.com/api/v1/tasks/${pollingTaskId}`,
+      `${this.config.adapterOptions?.pollingTaskUrl || DEFAULT_WANX_V2_ALIBABACLOUD_ADAPTER_OPTIONS.pollingTaskUrl}${pollingTaskId}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.config.apiKey}`,
+          Authorization: `Bearer ${this.config.adapterOptions?.apiKey}`,
         },
       },
     ).then((resp) => resp.json());

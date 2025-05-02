@@ -42,16 +42,16 @@ export class AiService {
       this.configService.get<AiModelConfig[]>('ai.models') ?? [];
     const enabledModelConfigs = modelConfigs.filter((mc) => !mc.disabled);
     for (let i = 0; i < enabledModelConfigs.length; i++) {
-      const mc = enabledModelConfigs[i];
-      const fetcher = this.initFetcher(mc);
-      this.models.set(mc.id, {
-        models: this.initModelClient(mc, fetcher),
+      const modelConfig = enabledModelConfigs[i];
+      const fetcher = this.initFetcher(modelConfig);
+      this.models.set(modelConfig.id, {
+        models: this.initModelClient(modelConfig, fetcher),
         options: {
-          ...pick(mc, ['id', 'provider', 'modelName']),
-          features: mc.features ?? ['text-generation'],
+          ...pick(modelConfig, ['id', 'provider', 'modelName']),
+          features: modelConfig.features ?? ['text-generation'],
         },
-        adapter: mc.adapter
-          ? this.initAdapter(mc.adapter, mc, fetcher)
+        adapter: modelConfig.adapter
+          ? this.initAdapter(modelConfig.adapter, modelConfig, fetcher)
           : undefined,
       });
     }
@@ -81,6 +81,8 @@ export class AiService {
     llm: LanguageModelV1 | null;
     image: ImageModel | null;
   } {
+    if (modelConfig.adapter || !modelConfig.modelName)
+      return { llm: null, image: null };
     this.logger.verbose(`${modelConfig.id} initialized`);
     const provider = createOpenAI({
       name: modelConfig.provider,

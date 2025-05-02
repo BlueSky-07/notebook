@@ -19,16 +19,16 @@ export class AiModelsResponse {
   models: AiModelInfo[];
 }
 
-export interface AiModelConfig {
-  id: string;
+export interface AiModelConfig<AdapterOptions = Record<string, unknown>> {
+  id: string; // unique id, format: ${modelName}@${provider}
   provider: string;
-  apiName?: string;
   modelName: string;
-  apiKey: string;
-  baseUrl: string;
+  apiKey?: string;
+  baseUrl?: string;
   proxy?: string;
   disabled?: boolean;
   adapter?: string;
+  adapterOptions?: AdapterOptions;
   features: Array<
     'text-generation' | 'reasoning' | 'vision' | 'image-generation'
   >;

@@ -32,8 +32,8 @@ async function bootstrap() {
       app.setGlobalPrefix(globalPrefix);
     }
   } else {
-    const { OpenApiNestFactory } = require('nest-openapi-tools');
-    const { DocumentBuilder } = require('@nestjs/swagger');
+    const { OpenApiNestFactory } = await import('nest-openapi-tools');
+    const { DocumentBuilder } = await import('@nestjs/swagger');
     app = await NestFactory.create<NestExpressApplication>(
       AppModule,
       appOptions,

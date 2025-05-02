@@ -57,11 +57,13 @@ ai:
     - id: gpt-4-turbo@openai                    # required
       provider: openai                          # required
       modelName: gpt-4-turbo                    # required
-      apiKey: my-api-key                        # required
-      baseUrl: https://api.openai.com/v1/models # required
+      apiKey: my-api-key                        # optional, required if OpenAI API compatible, chat-completion & image-generation
+      baseUrl: https://api.openai.com/v1/models # optional, required if OpenAI API compatible, chat-completion & image-generation
       proxy: http://host.docker.internal:7890   # optional
       disabled: true                            # optional
       adapter: gpt4@openai                      # optional, see ai/adapters
+      adapterOptions:                           # optional, depends on adapter options definition
+        adapterOptionKey: ''
       features:                                 # optional, default: ['text-generation']
         - text-generation
         - reasoning

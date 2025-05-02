@@ -45,6 +45,7 @@
     "nestjs-s3": "^2.1.0-next.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "tencentcloud-sdk-nodejs-hunyuan": "^4.1.23",
     "typeorm": "^0.3.22",
     "undici": "^7.8.0",
     "uuid": "^11.1.0",

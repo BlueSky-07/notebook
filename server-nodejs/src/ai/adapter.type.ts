@@ -5,6 +5,7 @@ import { GeneratingTaskEntity } from '../generating-task/generating-task.entity'
 import { GeneratingTaskService } from '../generating-task/generating-task.service';
 import { FileEntity } from '../file/file.entity';
 import { fetch } from 'undici';
+import { Logger } from '@nestjs/common';
 
 export type AiModelAdapterProcessResult = {
   fileId?: FileEntity['id'];
@@ -19,19 +20,23 @@ export type AiModelAdapterPollingResult = {
   errorMessage?: string;
 };
 
-export class AiModelAdapter {
+export class AiModelAdapter<AdapterOptions = AiModelConfig['adapterOptions']> {
+  private readonly logger: Logger;
   static adapterName: string;
 
   waitForTimeout: number | string | Date; // Total timeout
   pollingTaskWaitForTimeout?: number | string | Date; // Timeout for polling task
 
   constructor(
-    protected readonly config: AiModelConfig,
+    protected readonly config: AiModelConfig<AdapterOptions>,
     protected readonly fileService: FileService,
     protected readonly inngestService: InngestService,
     protected readonly generatingTaskService: GeneratingTaskService,
     protected readonly fetcher: typeof fetch,
-  ) {}
+  ) {
+    this.logger = new Logger(this.constructor.name);
+    this.logger.verbose(`${this.config.id} adapter initialized`);
+  }
 
   processGenerating(
     taskId: GeneratingTaskEntity['id'],

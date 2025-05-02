@@ -67,7 +67,7 @@ export const MODEL_PROVIDER_ICON: Record<string, PresetModelIcon> = {
 
 export const MODEL_NAME_ICON: Record<string, PresetModelIcon> = {
   ChatGLM: {
-    regex: /chatglm|glm/i,
+    regex: /chatglm|glm|cogview|cogvideox/i,
     icon: ChatGLM.Color,
   },
   DeepSeek: {
@@ -95,7 +95,7 @@ export const MODEL_NAME_ICON: Record<string, PresetModelIcon> = {
     icon: Hunyuan.Color,
   },
   ChatGPT: {
-    regex: /chatgpt|gpt|openai/i,
+    regex: /chatgpt|gpt|openai|o[134]|[4]o/i,
     icon: OpenAI,
   },
   Qwen: {
