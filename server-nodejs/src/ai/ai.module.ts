@@ -11,6 +11,7 @@ import { CogviewZhipuAdapter } from './adapters/cogview-zhipu.adapter';
 import { WanxV1AlibabaCloudAdapter } from './adapters/wanx-v1-alibabacloud.adapter';
 import { WanxV2AlibabaCloudAdapter } from './adapters/wanx-v2-alibabacloud.adapter';
 import { HunyuanImageTencentCloudAdapter } from './adapters/hunyuan-image-tencentcloud.adapter';
+import { DoubaoT2iVolcengineAdapter } from './adapters/doubao-t2i-volcengine.adapter';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { HunyuanImageTencentCloudAdapter } from './adapters/hunyuan-image-tencen
         WanxV1AlibabaCloudAdapter,
         WanxV2AlibabaCloudAdapter,
         HunyuanImageTencentCloudAdapter,
+        DoubaoT2iVolcengineAdapter,
       ],
     },
   ],

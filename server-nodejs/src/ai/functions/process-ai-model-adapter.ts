@@ -63,6 +63,7 @@ export const createProcessAIModelAdapterFunction = (
                 event.data.generatingTaskId,
               );
             } catch (e) {
+              logger.error(e);
               await AiModelAdapterHandlerEvent.trigger(
                 inngest,
                 AiModelAdapterHandlerEvent.EVENT_NAMES
@@ -93,6 +94,11 @@ export const createProcessAIModelAdapterFunction = (
               },
             )) as AiModelAdapterHandlerEventSchemas[typeof AiModelAdapterHandlerEvent.EVENT_NAMES.AI_MODEL_ADAPTER_HANDLER_POLLING_COMPLETED];
 
+            if (!pollingResult) {
+              throw new NonRetriableError(
+                `Polling timeout for modelId: ${event.data.modelId}, generatingTaskId: ${event.data.generatingTaskId}`,
+              );
+            }
             await step.run('ai model adapter done after polling', async () => {
               await AiModelAdapterHandlerEvent.trigger(
                 inngest,

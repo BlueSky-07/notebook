@@ -156,7 +156,7 @@ export class WanxV2AlibabaCloudAdapter extends AiModelAdapter<WanxV2AlibabaCloud
     } else {
       return {
         done: false,
-        failed: ['FAILED', 'CANCELED', 'UNKNOWN'].includes(status),
+        failed: ['FAILED', 'CANCELED', 'UNKNOWN'].includes(status) || true,
         status,
         errorMessage,
       };

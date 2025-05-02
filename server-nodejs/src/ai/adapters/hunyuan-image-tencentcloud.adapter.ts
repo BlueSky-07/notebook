@@ -147,7 +147,7 @@ export class HunyuanImageTencentCloudAdapter extends AiModelAdapter<HunyuanImage
     } else {
       return {
         done: false,
-        failed: status === '4',
+        failed: status === '4' || true,
         status,
         errorMessage,
       };

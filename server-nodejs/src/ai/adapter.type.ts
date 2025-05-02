@@ -21,7 +21,7 @@ export type AiModelAdapterPollingResult = {
 };
 
 export class AiModelAdapter<AdapterOptions = AiModelConfig['adapterOptions']> {
-  private readonly logger: Logger;
+  protected readonly logger: Logger;
   static adapterName: string;
 
   waitForTimeout: number | string | Date; // Total timeout
